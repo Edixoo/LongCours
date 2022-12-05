@@ -13,11 +13,11 @@ class carte_mouvement(carte):
 
 class carte_tempete(carte):
     def __init__(self) -> None:
-        super().__init__(1,'carte_temepete')
+        super().__init__(1,'carte_tempete')
         pass
 
 class carte_bdf(carte):
-    def __init__(self) -> None:
+    def __init__(self,force:int,typenom:str) -> None:
         super().__init__(2,'carte_bdf')
         self.force: int
         self.typenom: str
