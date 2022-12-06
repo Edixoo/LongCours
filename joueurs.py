@@ -2,7 +2,7 @@ from paquetcarte import *
 from marchandises import *
 import random
 
-class joueur:
+class joueurs:
     def __init__(self,pseudos,monnaie):
         self.pseudos = pseudos
         self.paquet = paquetdecarte()
