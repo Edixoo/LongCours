@@ -1,2 +1,3 @@
 class port:
-    def __init__(self) -> None:
+    def __init__(self, marchandise) -> None:
+        
