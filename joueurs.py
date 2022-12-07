@@ -1,17 +1,16 @@
-from paquetcarte import *
-from marchandises import *
+import cartes
+import bateau
 import random
 
-class joueurs:
-    def __init__(self,pseudos,monnaie):
-        self.pseudos = pseudos
-        self.paquet = paquetdecarte()
-        self.monnaie : int = monnaie
-        self.marchandises : marchandises.marchandises
-        self.liste_joueurs : str = []
-        
-    def getPseudos(self):
-        return self.pseudos
+class joueur:
+    def __init__(self,pseudo: str, cartes: list):
+        self.pseudo=pseudo
+        self.bateau=bateau.bateau
+        self.monnaie=2000
+        self.cartes=cartes
+
+    def getPseudo(self):
+        return self.pseudo
         
     def getMonnaie(self):
         return self.monnaie
@@ -27,9 +26,11 @@ class joueurs:
         else:
          self.monnaie -= n
 
-    def retirerCarte(self):
-        return self.carte.retirer()#methode a crée
-    
+    def retirerCarte(self, carte):
+        return self.cartes.pop(carte)
+
+"""  
+
     def declencher_combat(self):
         pass
     
@@ -46,3 +47,4 @@ class joueurs:
         pass
         
         
+"""

@@ -1,4 +1,4 @@
-class inventaire():
+class inventaire:
     
     def __init__(self) -> None:
         self.inventaire=[]
