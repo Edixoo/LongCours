@@ -8,7 +8,7 @@ class carte:
 class carte_mouvdirect(carte):
     def __init__(self) -> None:
         super().__init__(0,'carte_mouvdirect')
-        self.typemouv: int | None = 0 #0: Mouvement direct | 1: Mouvement ordinaire
+        self.typemouv: int | None = 0
         self.typenom: str
 
 class carte_tempete(carte):
