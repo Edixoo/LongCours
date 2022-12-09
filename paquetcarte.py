@@ -5,7 +5,7 @@ class paquetdecarte():
         self.listecartemouv = []
         self.listecartebdf = []
         self.listecartetemp = []
-        #Ajout de 12 cartes mouvement au paquet du jeu (6 de chaque)
+        #Ajout de 12 cartes mouvement au paquet du jeu
         for i in range (12):
             carte=cartes.carte_mouvdirect()   
             self.listecartemouv.append(carte)

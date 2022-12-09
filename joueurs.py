@@ -1,14 +1,16 @@
 import cartes
 import bateau
-import random
+
 
 class joueur:
-    def __init__(self,pseudo: str, cartes: list):
+    def __init__(self,pseudo: str, cartes):
         self.pseudo=pseudo
         self.bateau=bateau.bateau
         self.monnaie=2000
-        self.cartes=cartes
-
+        self.listecartes= cartes
+        self.positionzone=0
+        self.position=0
+        
     def getPseudo(self):
         return self.pseudo
         
