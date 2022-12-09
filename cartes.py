@@ -8,9 +8,8 @@ class carte:
 class carte_mouvdirect(carte):
     def __init__(self) -> None:
         super().__init__(0,'carte_mouvdirect')
-        self.typemouv: int | None = 0
-        self.typenom: str
-
+        pass
+    
 class carte_tempete(carte):
     def __init__(self) -> None:
         super().__init__(1,'carte_tempete')
@@ -20,7 +19,7 @@ class carte_bdf(carte):
     def __init__(self,force:int,typenom:str) -> None:
         super().__init__(2,'carte_bdf')
         self.force: int = force
-        self.typenom: str
+        self.typenom: str = typenom
 
 
 
