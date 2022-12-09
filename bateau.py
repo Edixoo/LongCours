@@ -4,7 +4,7 @@ class bateau:
     def __init__(self, couleur : str):
    
         self.couleur: str = couleur
-        self.inventaire: inventaire.inventaire = inventaire.inventaire()
+        self.inventaire: inventaire.inventaire
         
     def ajouter(self, marchandise):
         self.inventaire.ajouter(marchandise)
