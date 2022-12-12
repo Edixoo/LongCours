@@ -33,19 +33,17 @@ class joueur:
 
 """  
 
-    def declencher_combat(self):
-        pass
     
-    def declencher_tempete(self):
-        pass
+    
+    
 
-    def acheter_marchandises(self,marchandises):
+    def acheter_marchandises(self,port):
         pass
         
     def deplacer(self,zone):
         pass
     
-    def revente(self):
+    def revente(self,port):
         pass
         
         

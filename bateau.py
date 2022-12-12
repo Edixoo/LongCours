@@ -6,10 +6,11 @@ class bateau:
         self.couleur: str = couleur
         self.inventaire: inventaire.inventaire
         
-    def ajouter(self, marchandise):
+        
+    def ajoutermarchandises(self, marchandise):
         self.inventaire.ajouter(marchandise)
 
-    def retirer(self, marchandise):
+    def retirermarchandises(self, marchandise):
         self.inventaire.retirer(marchandise)
 
     

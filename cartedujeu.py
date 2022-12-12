@@ -8,5 +8,6 @@ class cartejeu:
 
         for i in range(6):
             ajout=zone.zonedejeu
+            ajout.zonedejeu.idzone=i
             self.zones.append(ajout)
     

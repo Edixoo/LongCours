@@ -6,7 +6,7 @@ class marchandises:
         self.valeurachat: int
 
 
-class tresort (marchandises):
+class tresor (marchandises):
     def __init__(self) -> None:
         super().__init__(40, 'or', 'jaune')
 

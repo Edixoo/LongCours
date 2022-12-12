@@ -7,3 +7,7 @@ class zonedejeu:
         self.idzone: int 
         self.listeport= [port.port]
         self.cimetière: cimetiere.cimetiere
+
+        for i in range (3):
+            self.listeport.append(port)
+        
