@@ -18,11 +18,13 @@ class world:
 
 
     def inflation(self) -> None:
+        """Fonction d'appel de l'inflation, permettant d'augmenter les prix des marchandises dans les ports de 5% """
         for i in self.map.zones:
             for w in i.listeport:
                 w.marchandise.inflation()  
 
     def distribuercarte(self) -> None:
+        """Fonction de distribution des cartes (utile au début de la partie)"""
         nbcarte = len(self.jeudecarte.listecartemouv)+len(self.jeudecarte.listecartebdf)+len(self.jeudecarte.listecartetemp)
         nbjoueur = len(self.listejoueur)
         cartesbdf = self.jeudecarte.listecartebdf

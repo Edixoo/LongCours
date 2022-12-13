@@ -2,6 +2,7 @@ import marchandises
 class inventaire:
     
     def __init__(self) -> None:
+        """Constructeur de l'inventaire"""
         self.gold=[]
         self.textile=[]
         self.bois=[]
@@ -10,6 +11,7 @@ class inventaire:
         self.machine_outils=[]
 
     def ajouter(self, march:marchandises.marchandises):
+        """Fonction d'ajout d'une marchandise (utile lors de l'achat)"""
         match march.nom:
             case "or":
                 self.gold.append(march)
@@ -25,6 +27,7 @@ class inventaire:
                 self.machine_outils.append(march)
 
     def retirer(self, march):
+        """Fonction de retrait d'une marchandise (utile lors de l'achat)"""
         match march.nom:
             case "or":
                 self.gold.remove(march)
@@ -40,6 +43,7 @@ class inventaire:
                 self.machine_outil.remove(march)
 
     def echouer(self):
+        """Fonction remettant l'inventaire à 0"""
         self.gold=[]
         self.textile=[]
         self.bois=[]
@@ -47,6 +51,7 @@ class inventaire:
         self.cereale=[]
         self.machine_outils=[]
 
+#Fonction à terminer:
     def __str__(self) -> str:
         print("Contenu de l'inventaire:")
         resultat=""

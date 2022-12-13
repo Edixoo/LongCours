@@ -14,19 +14,19 @@ class port:
                 march=marchandises.cereale(0)
                 self.marchandise=march
             case "gold":
-                march=marchandises.cereale(0)
+                march=marchandises.gold(0)
                 self.marchandise=march
             case "textile":
-                march=marchandises.cereale(0)
+                march=marchandises.textile(0)
                 self.marchandise=march
             case "petrole":
-                march=marchandises.cereale(0)
+                march=marchandises.petrole(0)
                 self.marchandise=march
             case "bois":
-                march=marchandises.cereale(0)
+                march=marchandises.bois(0)
                 self.marchandise=march
             case "machine_outils":
-                march=marchandises.cereale(0)
+                march=marchandises.machine_outils(0)
                 self.marchandise=march
             case _:
                 march=marchandises.marchandises(0,"Marchandise invalide","Pas de couleur")

@@ -13,15 +13,19 @@ class joueur:
         self.posidport:int =0
         
     def getPseudo(self):
+        """Fonction d'obtention du pseudo du joueur"""
         return self.pseudo
         
     def getMonnaie(self):
+        """Fonction d'obtention de l'argent du joueur"""
         return self.monnaie
 
     def ajout_monnaie(self,n:int):
+        """Fonction d'ajout d'un montant N d'argent au joueur"""
         self.monnaie += n
     
     def retirer_monnaie(self, n:int):
+        """Fonction de retrait d'un montant N d'argent au joueur"""
         if(n > self.monnaie):
             print("Le montant est supérieur au portefeuille du joueur, reesayez")
         elif n <= 0:
@@ -30,6 +34,7 @@ class joueur:
          self.monnaie -= n
 
     def jouercarte(self, indcarte):
+        """Fonction permettant au joueur de jouer une carte"""
         if(indcarte>=len(self.listecartes) or indcarte<0):
             return 0
         cartejoue=self.listecartes[indcarte]
