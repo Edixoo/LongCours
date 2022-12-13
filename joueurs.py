@@ -1,15 +1,15 @@
 import cartes as c
-import bateau
+import bateau as b
 
 
 class joueur:
-    def __init__(self,pseudo: str, ):
-        self.pseudo=pseudo
-        self.bateau=bateau.bateau
-        self.monnaie=2000
-        self.listecartes: list[c.carte]
-        self.positionzone=0
-        self.position=0
+    def __init__(self,pseudo: str):
+        self.pseudo:str =pseudo
+        self.bateau:b.bateau
+        self.monnaie:int =2000
+        self.listecartes: list[c.carte] =[]
+        self.posidzone:int =0
+        self.posidport:int =0
         
     def getPseudo(self):
         return self.pseudo
@@ -20,11 +20,11 @@ class joueur:
     def ajout_monnaie(self,n):
         self.monnaie += n
     
-    def retirer_monnaie(self, n):
+    def retirer_monnaie(self, n:int):
         if(n > self.monnaie):
-            print("Le montant est supérieur aux portefeuilles du joueur, reesayé")
+            print("Le montant est supérieur au portefeuille du joueur, reesayez")
         elif n <= 0:
-            print("Le montant doit etre strictement supérieur à 0, reesayé")
+            print("Le montant doit etre strictement supérieur à 0, reesayez")
         else:
          self.monnaie -= n
 

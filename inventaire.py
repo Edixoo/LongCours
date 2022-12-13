@@ -1,14 +1,15 @@
+import marchandises
 class inventaire:
     
     def __init__(self) -> None:
-        self.gold=[];
-        self.textile=[];
-        self.bois=[];
-        self.petrole=[];
-        self.cereale=[];
-        self.machine_outil=[];
+        self.gold=[]
+        self.textile=[]
+        self.bois=[]
+        self.petrole=[]
+        self.cereale=[]
+        self.machine_outils=[]
 
-    def ajouter(self, march):
+    def ajouter(self, march:marchandises.marchandises):
         match march.nom:
             case "or":
                 self.gold.append(march)
@@ -37,6 +38,14 @@ class inventaire:
                 self.cereale.remove(march)
             case "machine_outils":
                 self.machine_outil.remove(march)
+
+    def echouer(self):
+        self.gold=[]
+        self.textile=[]
+        self.bois=[]
+        self.petrole=[]
+        self.cereale=[]
+        self.machine_outils=[]
 
     def __str__(self) -> str:
         print("Contenu de l'inventaire:")

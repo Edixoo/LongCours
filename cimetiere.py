@@ -1,21 +1,25 @@
 import bateau
+import inventaire
+import joueurs
 
 class cimetiere:
-    def __init__(self) -> None:
-        self.cargaisons = [bateau.inventaire]
+    def __init__(self):
+        self.inventaire : list[inventaire.inventaire] = []
+        self.presence : list[joueurs.joueur]
         
-        def echouer(self, bateau):
-            self.cargaisons.append(bateau.inventaire)
-        
-        def ramassercargaison(self, bateau):
-            for i in range(len(self.cargaisons)):
-                bateau.cargaisons.gold+=self.cargaisons[0].gold
-                bateau.cargaisons.textile+=self.cargaisons[0].textile
-                bateau.cargaisons.bois+=self.cargaisons[0].bois
-                bateau.cargaisons.petrole+=self.cargaisons[0].petrole
-                bateau.cargaisons.cereale+=self.cargaisons[0].cereale
-                bateau.cargaisons.machine_outils+=self.cargaisons[0].machine_outils
-                del self.cargaison[0]
+    def recupechouage(self, bateau:bateau.bateau):
+        self.inventaire.append(bateau.inventaire)
+        bateau.inventaire.echouer()
+
+    def ramassercargaison(self, bateau:bateau.bateau):
+        for i in range(len(self.inventaire)):
+            bateau.inventaire.gold+=self.inventaire[0].gold
+            bateau.inventaire.textile+=self.inventaire[0].textile
+            bateau.inventaire.bois+=self.inventaire[0].bois
+            bateau.inventaire.petrole+=self.inventaire[0].petrole
+            bateau.inventaire.cereale+=self.inventaire[0].cereale
+            bateau.inventaire.machine_outils+=self.inventaire[0].machine_outils
+            del self.inventaire[0]
             
 
                 

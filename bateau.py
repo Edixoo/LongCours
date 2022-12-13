@@ -1,10 +1,10 @@
 import inventaire
 
 class bateau:
-    def __init__(self, couleur : str):
+    def __init__(self,couleur:str):
    
-        self.couleur: str = couleur
-        self.inventaire: inventaire.inventaire
+        self.couleur: str 
+        self.inventaire: inventaire.inventaire = inventaire.inventaire()
         
         
     def ajoutermarchandises(self, marchandise):

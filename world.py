@@ -12,6 +12,11 @@ class world:
         self.nbtour : int
         self.jeuon: bool
 
+    
+
+
+
+
     def inflation(self) -> None:
         for i in self.map.zones:
             for w in i.listeport:
