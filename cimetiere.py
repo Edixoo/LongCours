@@ -5,7 +5,7 @@ import joueurs
 class cimetiere:
     def __init__(self):
         self.inventaire : list[inventaire.inventaire] = []
-        self.presence : list[joueurs.joueur]
+        self.presence : list[joueurs.joueur] = []
         
     def recupechouage(self, bateau:bateau.bateau):
         self.inventaire.append(bateau.inventaire)

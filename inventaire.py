@@ -22,7 +22,7 @@ class inventaire:
             case "cereale":
                 self.cereale.append(march)
             case "machine_outils":
-                self.machine_outil.append(march)
+                self.machine_outils.append(march)
 
     def retirer(self, march):
         match march.nom:

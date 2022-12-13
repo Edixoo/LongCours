@@ -1,33 +1,36 @@
 class marchandises:
-    def __init__(self):
-        self.qtt:int = 0
-        self.nom:str
-        self.couleur: str 
+    def __init__(self,qttach:int,type:str,couleur:str):
+        self.qttachete:int =qttach
+        self.nom:str = type
+        self.couleur: str = couleur
         self.valeurachat: int = 150
 
-    def cereale(self):
-        self.nom = 'cereale'
-        self.couleur = 'bleu'
-    
-    def gold(self):
-        self.nom = 'or'
-        self.couleur = 'jaune'
 
-    def textile(self):
-        self.nom = 'textile'
-        self.couleur = 'vert'
+class cereale(marchandises):
+    def __init__(self,qttach:int) -> None:
+        super().__init__(qttach,'cereale','bleu')
+        pass
+class gold(marchandises):
+    def __init__(self,qttach:int) -> None:
+        super().__init__(qttach,'gold','jaune')
+        pass
+class textile(marchandises):
+    def __init__(self,qttach:int) -> None:
+        super().__init__(qttach,'textile','vert')
+        pass
+class petrole(marchandises):
+    def __init__(self,qttach:int) -> None:
+        super().__init__(qttach,'petrole','noir')
+        pass
+class bois(marchandises):
+    def __init__(self,qttach:int) -> None:
+        super().__init__(qttach,'bois','marron')
+        pass
+class machine_outils(marchandises):
+    def __init__(self,qttach:int) -> None:
+        super().__init__(qttach,'machine_outils','gris')
+        pass
 
-    def petrole(self):
-        self.nom = 'petrole'
-        self.couleur = 'noir'
-    
-    def bois(self):
-        self.nom = 'bois'
-        self.couleur = 'marron'
-
-    def machines_outils(self):
-        self.nom = 'machine_outils'
-        self.couleur = 'gris'
 
 
 
