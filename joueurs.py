@@ -1,13 +1,13 @@
-import cartes
+import cartes as c
 import bateau
 
 
 class joueur:
-    def __init__(self,pseudo: str, cartes):
+    def __init__(self,pseudo: str, ):
         self.pseudo=pseudo
         self.bateau=bateau.bateau
         self.monnaie=2000
-        self.listecartes= cartes
+        self.listecartes: list[c.carte]
         self.positionzone=0
         self.position=0
         
@@ -28,8 +28,12 @@ class joueur:
         else:
          self.monnaie -= n
 
-    def retirerCarte(self, carte):
-        return self.cartes.pop(carte)
+    def jouercarte(self, indcarte):
+        if(indcarte>=len(self.listecartes) or indcarte<0):
+            return 0
+        cartejoue=self.listecartes[indcarte]
+        del self.listecartes[indcarte]
+        return cartejoue
 
 """  
 
