@@ -13,7 +13,7 @@ class inventaire:
     def ajouter(self, march:marchandises.marchandises):
         """Fonction d'ajout d'une marchandise (utile lors de l'achat)"""
         match march.nom:
-            case "or":
+            case "gold":
                 self.gold.append(march)
             case "textile":
                 self.textile.append(march)
@@ -51,7 +51,6 @@ class inventaire:
         self.cereale=[]
         self.machine_outils=[]
 
-#Fonction à terminer:
     def __str__(self) -> str:
         print("Contenu de l'inventaire:")
         resultat=""
@@ -61,16 +60,39 @@ class inventaire:
             resultat+="- Or: \n"
             for i in self.gold:
                 resultat+="     - "+i
-        
-
-
-        # resultat=""
-        # resultat+=" - Or: " + str(self.gold) + "\n"
-        # resultat+=" - Pétrole: " + str(self.petrole) + "\n"
-        # resultat+=" - Céréale: " + str(self.cereale) + "\n"
-        # resultat+=" - Bois: " + str(self.bois) + "\n"
-        # resultat+=" - F: " + str(sel) + "\n"
+                
+        if(len(self.textile)==0):
+            resultat+="- Textile: Vide\n"
+        else: 
+            resultat+="- Textile: \n"
+            for i in self.textile:
+                resultat+="     - "+i
+                
+        if(len(self.cereale)==0):
+            resultat+="- Cereale: Vide\n"
+        else:
+            resultat+="- Cereale: \n"
+            for i in self.cereale:
+                resultat+="     - "+i
+                
+        if(len(self.bois)==0):
+            resultat+="- Bois: Vide\n"
+        else:
+            resultat+="- Bois: \n"
+            for i in self.bois:
+                resultat+="     - "+i
+            
+        if(len(self.machine_outils)==0):
+            resultat+="- Machine_outils : Vide\n"
+        else:
+            resultat+="- Machine_outils \n"
+            for i in self.machine_outils:
+                resultat+="     - "+i
+ 
+ 
         return resultat
+    
 if __name__=="__main__":
     r=inventaire()
-    r.ajouter
+    r.ajouter(marchandises.cereale)
+    print(r)
