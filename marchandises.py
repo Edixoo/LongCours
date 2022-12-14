@@ -3,16 +3,18 @@ class marchandises:
         self.qttachete:int =qttach
         self.nom:str = type
         self.couleur: str = couleur
-        self.prix: int = 150
+        self.prix_achat: int = 150
+            
     def inflation(self):
         """Fonction inflation de la valeur de la marchandise"""
-        self.prix*=1.05
+        self.prix_achat*=1.05
+                
 
 class cereale(marchandises):
     """Constructeur de cereale(marchandise)"""
     def __init__(self,qttach:int) -> None:
         super().__init__(qttach,'cereale','bleu')
-        pass
+        
 class gold(marchandises):
     """Constructeur de gold(marchandise)"""
     def __init__(self,qttach:int) -> None:
@@ -40,6 +42,8 @@ class machine_outils(marchandises):
         pass
 
 
+if __name__ == "__main__":
+ 
 
 
 
