@@ -1,24 +1,27 @@
 import json
-from PyQt6.QtWidgets import QApplication, QWidget, QLineEdit, QPushButton, QHBoxLayout, QVBoxLayout, QComboBox, QFormLayout, QLabel
+from PyQt6.QtWidgets import QApplication, QWidget, QLineEdit, QPushButton, QHBoxLayout, QVBoxLayout, QComboBox, QFormLayout, QLabel, QMessageBox
 
 
 class Player(QWidget):
     def __init__(self):
         super().__init__()
-        
         self.mainLayout : QVBoxLayout = QVBoxLayout() ; self.setLayout(self.mainLayout)
         
         self.name_edit = QLineEdit() ; self.mainLayout.addWidget(self.name_edit)
         self.name_edit.setPlaceholderText("Entrez le pseudos du joueur ")
         
         self.selecteur_couleurs = QComboBox() ; self.mainLayout.addWidget(self.selecteur_couleurs)
-        self.selecteur_couleurs.addItems(['Noir','Bleu','Jaune', 'Vert', 'Rouge'])#juste pour test
+        self.selecteur_couleurs.addItems(['Noir','Bleu','Jaune', 'Vert', 'jaune'])
 
+    def __str__(self):
+        return f"Joueur : {self.playerList.name_edit.text()}"
 
 class Form(QWidget):
     def __init__(self):
         super().__init__()
         self.resize(400,400)
+        self.setWindowTitle("Long Cour")
+
         # self.move(50, 50)
 
         # Création des widgets pour saisir les informations
@@ -28,7 +31,7 @@ class Form(QWidget):
 
         # Création du bouton pour enregistrer les informations dans un fichier JSON
         self.save_button = QPushButton("Enregistrer")
-        self.save_button1 = QPushButton("Save")
+        self.save_button1 = QPushButton("Commenez")
 
 
         # Mise en place de la disposition de la fenêtre
@@ -56,42 +59,38 @@ class Form(QWidget):
         self.selecteur.hide()
         self.save_button.hide()
         self.choix.hide()
+        
         self.mainLayout.addWidget(self.save_button1)
         self.mainLayout.addWidget(self.choix1)
+        
         nb = int(self.selecteur.currentText())
+        self.data = {}
 
         self.playersLayout : QVBoxLayout = QVBoxLayout() ; self.mainLayout.addLayout(self.playersLayout)
         self.playersList : list[Player] = []
         for i in range (0, nb):
-            # self.midLayout = QFormLayout()
             p = Player() ; self.playersLayout.addWidget(p)
             self.playersList.append(p)
-
-            
         self.save_button1.clicked.connect(self.save_data)
-
 
     def save_data(self):
         
-        #TODO faire ca        
-        # self.playersList[i].name_edit.text()
-        # A chaque tour de boucle tu ajoutes un nv joueur (comme dans l'annuaire avec des personnes)
-        
-        
-        
-        
-        
-        # name = self.name_edit.text()
-        # bateau = self.selecteur_couleurs.currentText()
-        # data = {"name" : name, "coulduf bateau": bateau}
-        # # Récupération des données saisies par l'utilisateur
+        for i in range(0,len(self.playersList)):
+            p = Player()
+            self.playersList[i] = self.playersList[i].name_edit.text()
+            self.couleurs = p.selecteur_couleurs.currentText()
+            if not self.playersList[i]:
+                QMessageBox.warning(self, "Erreur", "Veuillez saisir le nom de chaque joueur.")
+                return
             
-        # self.records.append(data)
+       
+        # Récupération des données saisies par l'utilisateur
+        data = {"Joueurs" : self.playersList, "couleurs": self.couleurs}
 
-        # # Ecriture des données dans un fichier JSON
-        # with open("data.json", "w") as f:
-        #     json.dump(self.records, f)
-        pass
+        self.records.append(data)
+        # Ecriture des données dans un fichier JSON
+        with open("data.json", "w") as f:
+            json.dump(self.records, f)
 
 
 
