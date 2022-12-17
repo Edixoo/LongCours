@@ -6,15 +6,38 @@ class Player(QWidget):
     def __init__(self):
         super().__init__()
         self.mainLayout : QVBoxLayout = QVBoxLayout() ; self.setLayout(self.mainLayout)
-        
         self.name_edit = QLineEdit() ; self.mainLayout.addWidget(self.name_edit)
         self.name_edit.setPlaceholderText("Entrez le pseudos du joueur ")
         
         self.selecteur_couleurs = QComboBox() ; self.mainLayout.addWidget(self.selecteur_couleurs)
-        self.selecteur_couleurs.addItems(['Noir','Bleu','Jaune', 'Vert', 'jaune'])
+        self.selecteur_couleurs.addItems(['Noir','Bleu','Jaune', 'Vert', 'jaune'])#juste pour test
+        self.selected_items = []
+        #slots ie back
 
-    def __str__(self):
-        return f"Joueur : {self.playerList.name_edit.text()}"
+        self.selecteur_couleurs.currentIndexChanged.connect(self.on_combo_box_changed)
+
+    # def __str__(self):
+    #     return f"Joueur : {self.playerList.name_edit.text()}"
+    
+    def on_combo_box_changed(self, index):
+    # Récupération de l'élément sélectionné
+        selected_item = self.selecteur_couleurs.currentText()
+
+        # Vérification si l'élément sélectionné est déjà présent dans la liste des éléments sélectionnés par d'autres utilisateurs
+        if selected_item in self.selected_items:
+            # Si oui, affichage d'un message d'erreur et réinitialisation de la sélection
+            self.QMessageBox.warning(self, "Erreur", "Cet élément est déjà sélectionné par un autre utilisateur")
+            self.selecteur_couleurs.setCurrentIndex(-1)
+        else:
+            # Si non, ajout de l'élément sélectionné à la liste des éléments sélectionnés et envoi de cette informatin à tous les utilisateurs
+            self.selected_items.append(selected_item)
+            self.send_selected_items_to_other_users()
+            
+            
+    def send_selected_items_to_other_users(self):
+        pass
+        # Code pour envoyer la liste self.selected_items à d'autres utilisateurs
+        #TODO fichier partagé ?
 
 class Form(QWidget):
     def __init__(self):
@@ -22,17 +45,13 @@ class Form(QWidget):
         self.resize(400,400)
         self.setWindowTitle("Long Cour")
 
-        # self.move(50, 50)
-
         # Création des widgets pour saisir les informations
         self.choix = QLabel("Choissisez le nombre de joueur")
         self.choix1 = QLabel("Choissisez la couleur du bateau")
 
-
         # Création du bouton pour enregistrer les informations dans un fichier JSON
         self.save_button = QPushButton("Enregistrer")
-        self.save_button1 = QPushButton("Commenez")
-
+        self.save_button1 = QPushButton("Commenecez")
 
         # Mise en place de la disposition de la fenêtre
         self.mainLayout = QHBoxLayout()
@@ -42,7 +61,6 @@ class Form(QWidget):
         self.selecteur.addItems(['2','3','4', '5', '6'])
         
         #addWidget
-        
         self.mainLayout.addWidget(self.choix)
         self.mainLayout.addWidget(self.selecteur)
         self.mainLayout.addWidget(self.save_button)
@@ -56,6 +74,7 @@ class Form(QWidget):
 
 
     def getpseudos(self):
+        
         self.selecteur.hide()
         self.save_button.hide()
         self.choix.hide()
@@ -72,7 +91,7 @@ class Form(QWidget):
             p = Player() ; self.playersLayout.addWidget(p)
             self.playersList.append(p)
         self.save_button1.clicked.connect(self.save_data)
-
+        
     def save_data(self):
         
         for i in range(0,len(self.playersList)):
