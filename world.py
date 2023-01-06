@@ -57,7 +57,42 @@ class world:
                 numjou+=1
                 if (numjou==nbjoueur):
                     numjou=0
+    def obtind(self,ind):
+        port=self.listejoueur[ind].posidport
+        zone=self.listejoueur[ind].posidzone
+        return zone,port
+    def echouer(self,zone,port):
+        for i in self.listejoueur:
+            if(i.posidport==port and i.posidzone==zone):
+                a=i.echouer()
+                self.map.zones[zone].cimetière.inventaire+=a
 
+
+            
+    def tourdejeu(self,jou:joueurs.joueur):
+        """Fonction permettant au joueur de jouer son tour"""
+        print('Que souhaitez vous faire ? \n Vous déplacer (mouvement normal) ? [0] \n Vendre ? [1] \n Acheter ? [2] \n Jouer une carte ? [3]\n')
+        choix=input()
+        match choix:
+            case 0:
+                jou.deplacementnormal()
+            case 1:
+                jou.vendre()
+            case 2:
+                jou.acheter()
+            case 3:
+                cartechoix=jou.choixcarte()
+                cartechoix=jou.SelectEtRetraitCarte(cartechoix)
+                if(cartechoix.type==0):
+                    a,b=cartechoix.use()
+                if(cartechoix.type==1):
+                    indcible=-1
+                    while(indcible>=len(self.listejoueur) or indcible<0):
+                        indcible=cartechoix.use()
+                    zone,port=self.obtind(indcible)
+                    self.echouer(zone,port)
+                    
+                if(cartechoix.type==2):
     
         
 

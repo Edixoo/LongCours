@@ -51,6 +51,14 @@ class inventaire:
         self.cereale=[]
         self.machine_outils=[]
 
+    def nettoyer(self):
+        self.gold.clear()
+        self.bois.clear()
+        self.cereale.clear()
+        self.machine_outils.clear()
+        self.petrole.clear()
+        self.textile.clear()
+
     def __str__(self) -> str:
         print("Contenu de l'inventaire:")
         resultat=""
@@ -92,7 +100,3 @@ class inventaire:
  
         return resultat
     
-if __name__=="__main__":
-    r=inventaire()
-    r.ajouter(marchandises.cereale)
-    print(r)

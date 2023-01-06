@@ -33,13 +33,43 @@ class joueur:
         else:
          self.monnaie -= n
 
-    def jouercarte(self, indcarte):
+    def choixcarte(self):
+        """Fonction permettant de définir quelle carte jouer"""
+        choix=-1
+        while(choix>=len(self.listecartes) or choix<0):
+            for i in self.listecartes:
+                numcarte=1
+                print('Carte N°',numcarte)
+                i.affichercarte()
+                numcarte+=1
+            print('Quelle carte souhaitez vous jouer ?')
+            choix=input()
+        choix=choix-1
+        return choix
+        
+    def SelectEtRetraitCarte(self, choix):
         """Fonction permettant au joueur de jouer une carte"""
-        if(indcarte>=len(self.listecartes) or indcarte<0):
-            return 0
-        cartejoue=self.listecartes[indcarte]
-        del self.listecartes[indcarte]
+        cartejoue=self.listecartes[choix]
+        del self.listecartes[choix]
         return cartejoue
+
+    def mouvement(self,idzone,idport):
+        """Fonction permettant au joueur de se déplacer"""
+        self.posidzone=idzone
+        self.posidport=idport
+
+    def echouer(self):
+        a=self.bateau.echouer()
+        self.posidport=0
+        self.posidzone=0
+        return a
+        
+
+
+    
+
+
+
 
 """  
 
