@@ -40,16 +40,7 @@ class inventaire:
             case "cereale":
                 self.cereale.remove(march)
             case "machine_outils":
-                self.machine_outil.remove(march)
-
-    def echouer(self):
-        """Fonction remettant l'inventaire à 0"""
-        self.gold=[]
-        self.textile=[]
-        self.bois=[]
-        self.petrole=[]
-        self.cereale=[]
-        self.machine_outils=[]
+                self.machine_outils.remove(march)
 
     def nettoyer(self):
         self.gold.clear()

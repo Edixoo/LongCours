@@ -65,7 +65,7 @@ class world:
         for i in self.listejoueur:
             if(i.posidport==port and i.posidzone==zone):
                 a=i.echouer()
-                self.map.zones[zone].cimetière.inventaire+=a
+                self.map.zones[zone].cimetiere.inventaire+=a
 
 
             
