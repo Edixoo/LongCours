@@ -4,8 +4,8 @@ class carte:
         
         self.type : int | None = None #0: Mouvement | 1: Tempête | 2: Bras de fer
         self.nom : str 
-    def use(self)-> int,int:
-        pass
+    # def use(self)-> int,int:
+    #     pass
 
     def affichercarte(self)->None:
         for i in self:
@@ -15,13 +15,13 @@ class carte_mouvdirect(carte):
     def __init__(self) -> None:
         super().__init__(0,'carte_mouvdirect')
         pass
-    def use(self) -> int,int:
+    def use(self) -> int:
         a=-1;b=-1
         while((a<0 or a>5) and (b<0 or b>4)):
             print('Où souhaitez vous aller ? (Zone: 0->5)')
-            a=input()
+            a=int(input())
             print('Port: 0->4 [4 = cimetiere]')
-            b=input()
+            b=int(input())
         return a,b
 class carte_tempete(carte):
     """Constructeur de la classe carte tempête"""

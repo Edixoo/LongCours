@@ -1,12 +1,9 @@
-from __future__ import annotations
+
 import pygame
 import sys
 
 pygame.init()
-pygame.display.set_caption("Button!")
 main_font = pygame.font.SysFont("cambria", 50)
-
-screen = pygame.display.set_mode((800, 800))
 
 class Button():
 	def __init__(self, x_pos, y_pos, text_input, screen) -> None:
