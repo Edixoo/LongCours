@@ -1,7 +1,8 @@
 import pygame
-import buttons
 import port
 import portgraphique
+import CartesGraphique
+import marchandises
 
 class Map:
     def __init__(self) -> None:
@@ -10,28 +11,34 @@ class Map:
         self.clock=pygame.time.Clock()
 
         pygame.display.set_caption("Long Cours")
-        self.button=buttons.Acheter(100,700, self.screen)
 
         porte=port.port(1,"cereale","Le Cap")
         self.lecap=portgraphique.Portgraphique(porte,100,100, self.screen)
+
+        self.carte=CartesGraphique.Cartes(marchandises.cereale(150), 150, self.screen.get_width()/2, self.screen.get_height()/2, self.screen)
 
     def handling_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running= False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                self.button.checkForInput(pygame.mouse.get_pos())
+                self.lecap.checkforInput(pygame.mouse.get_pos())
 
     def update(self):
-        self.button.changeColor(pygame.mouse.get_pos(), "red")
-        self.lecap.hovered(pygame.mouse.get_pos())
+        self.lecap.update(pygame.mouse.get_pos())
 
     def display(self):
         image=pygame.image.load("./MapSAE/Test.png").convert()
         button_surface = pygame.transform.scale(image, (922, 800))
         self.screen.blit(button_surface,(0,0))
         self.lecap.display()
-        self.button.update()
+        self.carte.display()
+        if self.lecap.ishovered:
+            self.lecap.afficher_interface()
+        else:
+            self.screen.blit(button_surface,(0,0))
+            self.lecap.display()
+            self.carte.display()
         pygame.display.flip()
 
     def run(self):
