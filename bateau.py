@@ -16,4 +16,7 @@ class bateau:
         """ Fonction permettant le retrait d'une marchandise au bateau (appel de la fonction retirer d'inventaire) """
         self.inventaire.retirer(marchandise)
 
-    
+    def echouer(self):
+        a = self.inventaire
+        self.inventaire.nettoyer()
+        return a

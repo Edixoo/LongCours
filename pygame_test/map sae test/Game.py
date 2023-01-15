@@ -1,16 +1,16 @@
 import pygame
-import pytmx
+from pytmx.util_pygame import load_pygame
 import pyscroll
 
 class Game:
     def __init__(self) -> None:
-        self.screen=screen=pygame.display.set_mode((1080,720))
+        self.screen=pygame.display.set_mode((,720))
         self.running = True
         self.clock=pygame.time.Clock()
 
         pygame.display.set_caption("Zizigame")
 
-        tmx_data=pytmx.load_pygame('map_test.tmx')
+        tmx_data= load_pygame('map_test.tmx')
         map_data=pyscroll.data.TiledMapData(tmx_data)
         map_layer= pyscroll.orthographic.BufferedRenderer(map_data, self.screen.get_size())
 

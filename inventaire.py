@@ -40,16 +40,15 @@ class inventaire:
             case "cereale":
                 self.cereale.remove(march)
             case "machine_outils":
-                self.machine_outil.remove(march)
+                self.machine_outils.remove(march)
 
-    def echouer(self):
-        """Fonction remettant l'inventaire à 0"""
-        self.gold=[]
-        self.textile=[]
-        self.bois=[]
-        self.petrole=[]
-        self.cereale=[]
-        self.machine_outils=[]
+    def nettoyer(self):
+        self.gold.clear()
+        self.bois.clear()
+        self.cereale.clear()
+        self.machine_outils.clear()
+        self.petrole.clear()
+        self.textile.clear()
 
     def __str__(self) -> str:
         print("Contenu de l'inventaire:")
@@ -92,7 +91,3 @@ class inventaire:
  
         return resultat
     
-if __name__=="__main__":
-    r=inventaire()
-    r.ajouter(marchandises.cereale)
-    print(r)

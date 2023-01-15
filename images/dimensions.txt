@@ -1,0 +1,24 @@
+Emplacement sur la carte:
+
+
+	Nom:
+		X:368
+		Y:144
+		Taille Police: 24
+
+	Valeur:
+		X: 529
+		Y: 855
+		Taille Police: 30
+
+	Quantité:
+		X: 529
+		Y: 1102
+		Taille Police: 30
+
+Image (à voir plus tard):
+	X: 119
+	Y: 330
+	L: 662
+	H: 473
+
