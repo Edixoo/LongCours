@@ -40,6 +40,7 @@ class Map:
     def update(self):
         self.lecap.update(pygame.mouse.get_pos())
         self.inventaire.update(pygame.mouse.get_pos())
+        self.cimetiere.update(pygame.mouse.get_pos())
 
     def display(self):
         image=pygame.image.load("./MapSAE/Test.png").convert()
@@ -55,6 +56,8 @@ class Map:
             self.lecap.afficher_interface()
         elif self.cimetiere.cimeclicked:
             self.cimetiere.afficher_interface()
+            if self.cimetiere.invclick:
+                self.cimetiere.inventaire.afficher_inv()
         else:
             self.screen.blit(button_surface,(0,0))
             self.lecap.display()
