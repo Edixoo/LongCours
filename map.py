@@ -4,6 +4,8 @@ import portgraphique
 import InventaireGraphique
 import inventaire
 import marchandises
+import cimetiere
+from cimetiereGraphique import CimetiereGraphique
 
 class Map:
     def __init__(self) -> None:
@@ -22,6 +24,9 @@ class Map:
         inv.ajouter(marchan)
         self.inventaire=InventaireGraphique.InventaireGraphique(self.screen, inv)
 
+        cimet=cimetiere.cimetiere(inv)
+        self.cimetiere=CimetiereGraphique([150,150],cimet,self.screen)
+
     def handling_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -30,6 +35,7 @@ class Map:
                 print(pygame.mouse.get_pos())
                 self.lecap.checkforInput(pygame.mouse.get_pos())
                 self.inventaire.checkforInput(pygame.mouse.get_pos())
+                self.cimetiere.checkForInput(pygame.mouse.get_pos())
 
     def update(self):
         self.lecap.update(pygame.mouse.get_pos())
@@ -40,22 +46,22 @@ class Map:
         button_surface = pygame.transform.scale(image, (922, 800))
         self.screen.blit(button_surface,(0,0))
         self.lecap.display()
+        self.cimetiere.display()
         self.inventaire.display()
 
-        if self.lecap.isclicked:
-            self.lecap.afficher_interface()
-        else:
-            self.screen.blit(button_surface,(0,0))
-            self.lecap.display()
-            self.inventaire.display()
-
-        
         if self.inventaire.isclickedinv:
             self.inventaire.afficher_inv()
+        elif self.lecap.isclicked:
+            self.lecap.afficher_interface()
+        elif self.cimetiere.cimeclicked:
+            self.cimetiere.afficher_interface()
         else:
             self.screen.blit(button_surface,(0,0))
             self.lecap.display()
+            self.cimetiere.display()
             self.inventaire.display()
+
+
 
         pygame.display.flip()
 
