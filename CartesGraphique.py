@@ -12,10 +12,9 @@ class Cartes:
         self.x_pos=posx
         self.y_pos=posy
         self.rect = self.fond.get_rect(center=(self.x_pos, self.y_pos))
-        self.marchandise=marchandise
-        self.text = main_font.render(self.marchandise.nom, True, "black")
+        self.text = main_font.render(marchandise.nom, True, "black")
         self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos-100))
-        self.valeur=main_font.render(str(self.marchandise.prix_achat), True, "black")
+        self.valeur=main_font.render(str(marchandise.prix_achat), True, "black")
         self.valeurect=self.valeur.get_rect(center=(self.x_pos+ 35, self.y_pos+33))
         self.quantite=quantite
         self.textquantite=main_font.render(str(self.quantite),True,"black")
