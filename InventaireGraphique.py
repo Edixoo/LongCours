@@ -34,7 +34,7 @@ class InventaireGraphique:
         self.fonttitre=pygame.font.SysFont("Arial", 40, True)
 
         self.titre=self.fonttitre.render("Inventaire", True, "white")
-        self.screen.blit(self.titre, center=[382, 80])
+        self.screen.blit(self.titre, [382, 80])
 
         self.contenu=self.font.render("Or :     " + self.inventaire.getGold(), True, "white")
         self.screen.blit(self.contenu, [145, 251])

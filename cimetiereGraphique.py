@@ -1,6 +1,7 @@
 import pygame
 import cimetiere
 from InventaireGraphique import InventaireGraphique
+from buttons import Cancel, Button
 
 class CimetiereGraphique:
 
@@ -9,17 +10,29 @@ class CimetiereGraphique:
         self.cimetiere=cimetiere
         self.rect=self.port=pygame.Rect(position[0],position[1],50,50)
         self.cimeclicked=False
+        self.invclick=False
         self.inventaire= InventaireGraphique(self.screen, self.cimetiere.inventaire)
-    
+        self.cancel=Cancel(self.screen.get_width()/2-75, self.screen.get_height()/2+125,self.screen)
+        self.bouton=Button([503, 527], [100,50], "Montrer", self.screen, 20)
 
     def display(self):
         pygame.draw.rect(self.screen, "red", self.rect)
+
+    def update(self,position):
+        self.bouton.update(position, "grey")
+        self.inventaire.update(position)
+        self.cancel.update(position, "red")
 
 
     def checkForInput(self, position):
         if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
             self.cimeclicked=True
-    
+        if self.bouton.checkForInput(position)==1:
+            self.invclick=True
+        elif self.invclick==True and self.inventaire.cancel.checkForInput(position):
+            self.invclick=False
+        if self.cimeclicked==True and self.invclick==False and self.cancel.checkForInput(position):
+            self.cimeclicked=False
 
     def afficher_interface(self):
         rectangle=pygame.image.load("./images/Rectangle.png").convert_alpha()
@@ -30,3 +43,9 @@ class CimetiereGraphique:
 
         self.titre=self.fontTitre.render("Cimetière", True, "white")
         self.screen.blit(self.titre, [420,241])
+        self.cancel.display()
+        self.bouton.display()
+        
+        
+
+        
