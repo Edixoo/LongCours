@@ -41,6 +41,9 @@ class carte_bdf(carte):
         super().__init__(2,'carte_bdf')
         self.force: int = force
         self.typenom: str = typenom
+    def use(self)-> None:
+        print("Vous jouez la carte bras de fer de force",self.force)
+        return self.force
 
 
 
