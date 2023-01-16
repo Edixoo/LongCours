@@ -19,8 +19,8 @@ class Map:
 
         self.carte=CartesGraphique.Cartes(marchandises.cereale(150), 150, self.screen.get_width()/2, self.screen.get_height()/2, self.screen)
 
-        cimet=cimetiere.cimetiere(inv)
-        self.cimetiere=CimetiereGraphique([150,150],cimet,self.screen)
+        # cimet=cimetiere.cimetiere(inv)
+        # self.cimetiere=CimetiereGraphique([150,150],cimet,self.screen)
 
     def handling_events(self):
         for event in pygame.event.get():
@@ -28,11 +28,8 @@ class Map:
                 self.running= False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self.lecap.checkforInput(pygame.mouse.get_pos())
-<<<<<<< HEAD
-=======
                 self.inventaire.checkforInput(pygame.mouse.get_pos())
                 self.cimetiere.checkForInput(pygame.mouse.get_pos())
->>>>>>> ed3396bcfd632864b973affbf667d4dbac8109a6
 
     def update(self):
         self.lecap.update(pygame.mouse.get_pos())
@@ -42,7 +39,6 @@ class Map:
         button_surface = pygame.transform.scale(image, (922, 800))
         self.screen.blit(button_surface,(0,0))
         self.lecap.display()
-<<<<<<< HEAD
         self.carte.display()
         if self.lecap.ishovered:
             self.lecap.afficher_interface()
@@ -50,7 +46,6 @@ class Map:
             self.screen.blit(button_surface,(0,0))
             self.lecap.display()
             self.carte.display()
-=======
         self.cimetiere.display()
         self.inventaire.display()
 
@@ -66,9 +61,6 @@ class Map:
             self.cimetiere.display()
             self.inventaire.display()
 
-
-
->>>>>>> ed3396bcfd632864b973affbf667d4dbac8109a6
         pygame.display.flip()
 
     def run(self):
