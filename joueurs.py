@@ -11,7 +11,7 @@ class joueur:
         self.listecartes: list[c.carte] =[]
         self.posidzone:int =0
         self.posidport:int =0
-        self.id:int
+        self.id:int=id
         
     def getPseudo(self):
         """Fonction d'obtention du pseudo du joueur"""
@@ -41,8 +41,9 @@ class joueur:
             return False
         
         while(choix>=len(self.listecartes) or choix<0):
+            numcarte=1
             for i in self.listecartes:
-                numcarte=1
+                
                 print('Carte N°',numcarte)
                 i.affichercarte()
                 numcarte+=1

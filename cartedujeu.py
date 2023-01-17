@@ -5,6 +5,7 @@ class cartejeu:
     def __init__(self) -> None:
 
         self.zones : list[zone.zonedejeu]
+        self.zones=[]
 
         for i in range(6):
             self.zones.append(zone.zonedejeu(i))

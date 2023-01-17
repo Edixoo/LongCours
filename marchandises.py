@@ -3,11 +3,11 @@ class marchandises:
         self.qttachete:int =qttach
         self.nom:str = type
         self.couleur: str = couleur
-        self.prix_achat: float = 150
+        self.prix_achat: int = 150
             
     def inflation(self):
         """Fonction inflation de la valeur de la marchandise"""
-        self.prix_achat*=1.05
+        self.prix_achat*=1.1
                 
 
 class cereale(marchandises):

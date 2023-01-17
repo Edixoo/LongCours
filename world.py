@@ -7,12 +7,12 @@ import marchandises as march
 class world:
     """Constructeur de base du monde"""
     def __init__(self) -> None:
-        self.map: cartedujeu.cartejeu 
-        self.jeudecarte: paquetcarte.paquetdecarte
-        self.listejoueur: list[joueurs.joueur]
-        self.nbtour : int
-        self.jeuon: bool
-
+        self.map: cartedujeu.cartejeu = cartedujeu.cartejeu()
+        self.jeudecarte: paquetcarte.paquetdecarte = paquetcarte.paquetdecarte() 
+        self.listejoueur: list[joueurs.joueur] 
+        self.nbtour : int =0
+        self.jeuon: bool = True
+        self.listejoueur=[]
     def inflation(self) -> None:
         """Fonction d'appel de l'inflation, permettant d'augmenter les prix des marchandises dans les ports de 5% """
         for i in self.map.zones:
@@ -24,7 +24,7 @@ class world:
         nbjoueur = 0
         while (nbjoueur<1 or nbjoueur>6):
             print('Combien de joueurs désirez vous ?')
-            nbjoueur=input()
+            nbjoueur=int(input())
         for i in range (nbjoueur):
             print('Joueur',i+1,'Quel pseudo désirez vous ?')
             pseudo=input()
@@ -46,29 +46,30 @@ class world:
             if(nbcarte%nbjoueur!=0):
                 del cartesbdf[rd.randint(0,len(cartesbdf)-1)]
             paquet=cartesbdf+cartesmouv+cartestemp
+            numjou=0
             for i in range(0,len(paquet)):
-                numjou=0
+                
                 self.listejoueur[numjou].listecartes.append(paquet[0])
                 del paquet[0]
                 numjou+=1
                 if (numjou==nbjoueur):
                     numjou=0
+    
     def obtind(self,ind):
         port=self.listejoueur[ind].posidport
         zone=self.listejoueur[ind].posidzone
         return zone,port
+    
     def echouer(self,zone,port):
         for i in self.listejoueur:
             if(i.posidport==port and i.posidzone==zone):
                 a=i.echouer()
                 self.map.zones[zone].cimetiere.inventaire+=a
-
-
-            
+    
     def tourdejeu(self,jou:joueurs.joueur):
         """Fonction permettant au joueur de jouer son tour"""
         print('Que souhaitez vous faire ? \n Vous déplacer (mouvement normal) ? [0] \n Vendre ? [1] \n Acheter ? [2] \n Jouer une carte ? [3]\n')
-        choix=input()
+        choix=int(input())
         match choix:
             case 0:
                 jou.deplacementnormal()
@@ -97,7 +98,7 @@ class world:
                     print("Qui est votre cible ?")
                     for i in listecible:
                         print("Le joueur", i.id+1,"?")
-                    cible+=input()
+                    cible+=int(input())
                     print("Début du BRAS DE FER !")
 
                     combat=0
@@ -105,7 +106,7 @@ class world:
                         print("Joueur",jou.id+1)
                         forceattaq=cartechoix.use()
                         print("Joueur",cible+1,"Souhaitez-vous vous défendre ? (Oui: 0 | Non: 1)")
-                        choixattq=input()
+                        choixattq=int(input())
                         if(choixattq==1):
                             self.listejoueur[jou.id].bateau.inventaire+=self.listejoueur[cible].bateau.inventaire
                             self.listejoueur[cible].bateau.inventaire.nettoyer()
@@ -116,7 +117,7 @@ class world:
                             forcedef=carteattaque.use()
                             while(forcedef>forceattaq):
                                 print("Joueur",jou.id+1,"Voulez vous jouer une autre carte bras de fer ? (Oui: 0 | Non: 1)")
-                                choixattaquant=input()
+                                choixattaquant=int(input())
                                 if(choixattaquant==1):
                                     self.listejoueur[cible].bateau.inventaire+=self.listejoueur[jou.id].bateau.inventaire
                                     self.listejoueur[jou.id].bateau.inventaire.nettoyer()
@@ -138,13 +139,13 @@ class world:
                                         combat=1
                             while(forceattaq>forcedef):
                                 print("Joueur",cible+1,"Voulez vous jouer une autre carte bras de fer ? (Oui: 0 | Non: 1)")
-                                choixattq=input()
+                                choixattq=int(input())
                                 if(choixattq==1):
                                     self.listejoueur[jou.id].bateau.inventaire+=self.listejoueur[cible].bateau.inventaire
                                     self.listejoueur[cible].bateau.inventaire.nettoyer()
                                     combat=1
                                 else:
-                                    cartedef=self.listejoueur[jou.id].choixcarte())
+                                    cartedef=self.listejoueur[jou.id].choixcarte()
                                     if(cartedef!=False):
                                         cartedef=self.listejoueur[jou.id].SelectEtRetraitCarte(cartedef)
                                         if(cartedef.type!=2):
@@ -161,15 +162,17 @@ class world:
                     print("Bras de fer terminé, Bravo !")
     
     def jouerpartie(self):
-        termine=0
         self.definirjoueurs()
         self.distribuercarte()
-        while(termine==0):
+        while(self.jeuon==True):
             for jou in self.listejoueur:
                 self.tourdejeu(jou)
                 if(len(jou.listecartes)==0):
                     print("Joueur",jou.id+1,"vous n'avez plus de carte à jouer, vous avez donc perdu")
                     del self.listejoueur[jou.id]
+            if(len(self.listejoueur)==1):
+                print("Joueur",self.listejoueur[0].id+1,"BRAVO ! Vous avez gagné avec",self.listejoueur[0].monnaie,"$")
+                self.jeuon=False
             self.inflation
 
                             

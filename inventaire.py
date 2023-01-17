@@ -3,12 +3,12 @@ class inventaire:
     
     def __init__(self) -> None:
         """Constructeur de l'inventaire"""
-        self.gold=[marchandises.marchandises]
-        self.textile=[marchandises.marchandises]
-        self.bois=[marchandises.marchandises]
-        self.petrole=[marchandises.marchandises]
-        self.cereale=[marchandises.marchandises]
-        self.machine_outils=[marchandises.marchandises]
+        self.gold: list[marchandises.marchandises] =[]
+        self.textile: list[marchandises.marchandises] =[]
+        self.bois: list[marchandises.marchandises] =[]
+        self.petrole: list[marchandises.marchandises] =[]
+        self.cereale: list[marchandises.marchandises] =[]
+        self.machine_outils: list[marchandises.marchandises] =[]
 
     def ajouter(self, march:marchandises.marchandises):
         """Fonction d'ajout d'une marchandise (utile lors de l'achat)"""

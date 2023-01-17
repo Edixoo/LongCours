@@ -3,8 +3,9 @@ import inventaire
 import joueurs
 
 class cimetiere:
-    def __init__(self, invetaire):
-        self.inventaire : inventaire.inventaire=invetaire
+    def __init__(self,):
+        self.inventaire : inventaire.inventaire
+        self.inventaire=inventaire.inventaire()
         #self.presence : list[joueurs.joueur] = []
         
     def recupechouage(self, bateau:bateau.bateau):
