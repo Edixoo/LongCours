@@ -85,6 +85,7 @@ class world:
                 cartechoix=jou.SelectEtRetraitCarte(cartechoix)
                 if(cartechoix.type==0): #Carte deplacement instantannée choisie
                     a,b=cartechoix.use()
+                    jou.mouvement(a,b)
                 if(cartechoix.type==1): #Carte tempête choisie
                     indcible=-1
                     while(indcible>=len(self.listejoueur) or indcible<0):

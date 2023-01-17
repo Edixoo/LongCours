@@ -69,18 +69,72 @@ class joueur:
         return a
     
     def acheter(self):
-        # A faire
+        
         return 0
+
+    def deplacementnormal(self):
+        print("Souhaitez vous vous déplacer au port le plus proche (port) ou changer de zone ? (zone)")
+        choix = input()
+        while(choix!="port" and choix!="zone"):
+            print("erreur de saisie")
+            print("Souhaitez vous vous déplacer au port le plus proche (port) ou changer de zone ? (zone)")
+            choix = input()
+        if(choix=="port"):
+            choixport=[0,1,2,3]
+            print("Dans quel port souhaitez vous aller ?")
+            for i in range (len(choixport)):
+                if(choixport[i]==self.posidport):
+                    choixport.remove(i)
+                else:
+                    if(i==3):
+                        print("Le cimetière ?(",i,")")
+                    else:
+                        print("Le port ? (",i,")")
+            choixportuser=input()
+            self.posidport=choixportuser
+        else:
+            if(self.posidzone==0):
+                print("Zone disponibles : 1 / 5")
+                choixzoneuser=input()
+                while(choixzoneuser!=1 and choixzoneuser!=5):
+                    print("Erreur de saisie")
+                    print("Zone disponibles : 1 / 5")
+                    choixzoneuser=input() 
+                print("Déplacement vers la zone",choixzoneuser,"(le port sera le 0)")
+                self.posidzone=choixzoneuser
+                self.posidport=0
+            else:
+                if(self.posidzone==5):
+                    print("Zone disponibles : 0 / 4")
+                    choixzoneuser=input()
+                    while(choixzoneuser!=0 and choixzoneuser!=4):
+                        print("Erreur de saisie")
+                        print("Zone disponibles : 0 / 4")
+                        choixzoneuser=input() 
+                    print("Déplacement vers la zone",choixzoneuser,"(le port sera le 0)")
+                    self.posidzone=choixzoneuser
+                    self.posidport=0
+                else:
+                    print("Zones disponibles:",self.posidzone-1,"/",self.posidzone+1)
+                    choixzoneuser=input()
+                    while(choixzoneuser!=self.posidzone-1 and choixzoneuser!=self.posidzone+1):
+                        print("Erreur de saisie")
+                        print("Zones disponibles:",self.posidzone-1,"/",self.posidzone+1)
+                        choixzoneuser=input() 
+                    print("Déplacement vers la zone",choixzoneuser,"(le port sera le 0)")
+                    self.posidzone=choixzoneuser
+                    self.posidport=0
 
     def vendre(self):
         typemarch = r.randint(0,5)
         match typemarch:
             case 0:
                 print("Après lancé du dè, vous pouvez vendre de l'or")
-                qtt = int(self.bateau.inventaire.getGold())
+                qtt = self.bateau.inventaire.getGold()
                 if(qtt=="vide"):
                     print("Vous n'avez pas d'or à vendre")
                     return 0
+                qtt=int(qtt)
                 print("Vous pouvez vendre:",qtt,"or, combien voulez-vous en vendre ?")
                 choix=input()
                 while(choix<0 or choix>qtt):
@@ -88,30 +142,107 @@ class joueur:
                     print("Vous pouvez vendre:",qtt,"or, combien voulez-vous en vendre ?")
                     choix=input()
                 print("Vous avez décidé d'en vendre:",choix)
+                prixacq=self.bateau.inventaire.retirer(qtt,typemarch)
+                prixacq=3*prixacq
+                self.ajout_monnaie(prixacq)
+                print("Cette vente vous a rapporté",prixacq,"$")
 
             case 1:
                 print("Après lancé du dè, vous pouvez vendre du textile")
                 qtt = int(self.bateau.inventaire.getTextile())
+                if(qtt=="vide"):
+                    print("Vous n'avez pas de textile à vendre")
+                    return 0
+                qtt=int(qtt)
+                print("Vous pouvez vendre:",qtt,"textile, combien voulez-vous en vendre ?")
+                choix=input()
+                while(choix<0 or choix>qtt):
+                    print("Erreur dans le nombre choisis")
+                    print("Vous pouvez vendre:",qtt,"textile, combien voulez-vous en vendre ?")
+                    choix=input()
+                print("Vous avez décidé d'en vendre:",choix)
+                prixacq=self.bateau.inventaire.retirer(qtt,typemarch)
+                prixacq=3*prixacq
+                self.ajout_monnaie(prixacq)
+                print("Cette vente vous a rapporté",prixacq,"$")
             case 2:
                 print("Après lancé du dè, vous pouvez vendre du bois")
                 qtt = int(self.bateau.inventaire.getBois())
+                if(qtt=="vide"):
+                    print("Vous n'avez pas de bois à vendre")
+                    return 0
+                qtt=int(qtt)
+                print("Vous pouvez vendre:",qtt,"bois, combien voulez-vous en vendre ?")
+                choix=input()
+                while(choix<0 or choix>qtt):
+                    print("Erreur dans le nombre choisis")
+                    print("Vous pouvez vendre:",qtt,"bois, combien voulez-vous en vendre ?")
+                    choix=input()
+                print("Vous avez décidé d'en vendre:",choix)
+                prixacq=self.bateau.inventaire.retirer(qtt,typemarch)
+                prixacq=3*prixacq
+                self.ajout_monnaie(prixacq)
+                print("Cette vente vous a rapporté",prixacq,"$")
             case 3:
                 print("Après lancé du dè, vous pouvez vendre du pétrole")
                 qtt = int(self.bateau.inventaire.getPetrole())
+                if(qtt=="vide"):
+                    print("Vous n'avez pas de pétrole à vendre")
+                    return 0
+                qtt=int(qtt)
+                print("Vous pouvez vendre:",qtt,"pétrole, combien voulez-vous en vendre ?")
+                choix=input()
+                while(choix<0 or choix>qtt):
+                    print("Erreur dans le nombre choisis")
+                    print("Vous pouvez vendre:",qtt,"pétrole, combien voulez-vous en vendre ?")
+                    choix=input()
+                print("Vous avez décidé d'en vendre:",choix)
+                prixacq=self.bateau.inventaire.retirer(qtt,typemarch)
+                prixacq=3*prixacq
+                self.ajout_monnaie(prixacq)
+                print("Cette vente vous a rapporté",prixacq,"$")
             case 4:
                 print("Après lancé du dè, vous pouvez vendre des céréales")
                 qtt = int(self.bateau.inventaire.getCereale())
+                if(qtt=="vide"):
+                    print("Vous n'avez pas de céréales à vendre")
+                    return 0
+                qtt=int(qtt)
+                print("Vous pouvez vendre:",qtt,"céréales, combien voulez-vous en vendre ?")
+                choix=input()
+                while(choix<0 or choix>qtt):
+                    print("Erreur dans le nombre choisis")
+                    print("Vous pouvez vendre:",qtt,"céréales, combien voulez-vous en vendre ?")
+                    choix=input()
+                print("Vous avez décidé d'en vendre:",choix)
+                prixacq=self.bateau.inventaire.retirer(qtt,typemarch)
+                prixacq=3*prixacq
+                self.ajout_monnaie(prixacq)
+                print("Cette vente vous a rapporté",prixacq,"$")
             case 5:
                 print("Après lancé du dè, vous pouvez vendre des machines à outils")
                 qtt = int(self.bateau.inventaire.getMachineOutils())
+                if(qtt=="vide"):
+                    print("Vous n'avez pas de machine à outils à vendre")
+                    return 0
+                qtt=int(qtt)
+                print("Vous pouvez vendre:",qtt,"machine à outils, combien voulez-vous en vendre ?")
+                choix=input()
+                while(choix<0 or choix>qtt):
+                    print("Erreur dans le nombre choisis")
+                    print("Vous pouvez vendre:",qtt,"machine à outils, combien voulez-vous en vendre ?")
+                    choix=input()
+                print("Vous avez décidé d'en vendre:",choix)
+                prixacq=self.bateau.inventaire.retirer(qtt,typemarch)
+                prixacq=3*prixacq
+                self.ajout_monnaie(prixacq)
+                print("Cette vente vous a rapporté",prixacq,"$")
             
             
             
             
         
-    def deplacementnormal(self):
-        # A faire
-        return 0
+    
 
 
     
