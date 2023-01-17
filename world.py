@@ -2,20 +2,16 @@ import paquetcarte
 import joueurs
 import cartedujeu
 import random as rd
+import marchandises as march
 
 class world:
     """Constructeur de base du monde"""
     def __init__(self) -> None:
-        self.map: cartedujeu.cartejeu #Class à créer
+        self.map: cartedujeu.cartejeu 
         self.jeudecarte: paquetcarte.paquetdecarte
         self.listejoueur: list[joueurs.joueur]
         self.nbtour : int
         self.jeuon: bool
-
-    
-
-
-
 
     def inflation(self) -> None:
         """Fonction d'appel de l'inflation, permettant d'augmenter les prix des marchandises dans les ports de 5% """
