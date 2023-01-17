@@ -5,7 +5,7 @@ import joueurs
 class cimetiere:
     def __init__(self, invetaire):
         self.inventaire : inventaire.inventaire=invetaire
-        self.presence : list[joueurs.joueur] = []
+        #self.presence : list[joueurs.joueur] = []
         
     def recupechouage(self, bateau:bateau.bateau):
         """Fonction permettant au bateau entré en paramètre de déposer son inventaire(le bateau à subis un tempête)"""

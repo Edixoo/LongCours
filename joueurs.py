@@ -69,7 +69,7 @@ class joueur:
         return a
     
     def acheter(self):
-        
+
         return 0
 
     def deplacementnormal(self):
