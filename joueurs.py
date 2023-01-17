@@ -1,6 +1,6 @@
 import cartes as c
 import bateau as b
-
+import random as r
 
 class joueur:
     def __init__(self, id:int ,pseudo: str, couleur:str):
@@ -70,12 +70,43 @@ class joueur:
     
     def acheter(self):
         # A faire
-        
+        return 0
+
     def vendre(self):
-        # A faire
+        typemarch = r.randint(0,5)
+        match typemarch:
+            case 0:
+                print("Après lancé du dè, vous pouvez vendre de l'or")
+                qtt = int(self.bateau.inventaire.getGold())
+                print("Vous pouvez vendre:",qtt,"or, combien voulez-vous en vendre ?")
+                choix=input()
+                while(choix<0 or choix>qtt):
+                    print("Erreur dans le nombre choisis")
+                    print("Vous pouvez vendre:",qtt,"or, combien voulez-vous en vendre ?")
+                    choix=input()
+            case 1:
+                print("Après lancé du dè, vous pouvez vendre du textile")
+                qtt = int(self.bateau.inventaire.getTextile())
+            case 2:
+                print("Après lancé du dè, vous pouvez vendre du bois")
+                qtt = int(self.bateau.inventaire.getBois())
+            case 3:
+                print("Après lancé du dè, vous pouvez vendre du pétrole")
+                qtt = int(self.bateau.inventaire.getPetrole())
+            case 4:
+                print("Après lancé du dè, vous pouvez vendre des céréales")
+                qtt = int(self.bateau.inventaire.getCereale())
+            case 5:
+                print("Après lancé du dè, vous pouvez vendre des machines à outils")
+                qtt = int(self.bateau.inventaire.getMachineOutils())
+            
+            
+            
+            
         
     def deplacementnormal(self):
         # A faire
+        return 0
 
 
     
