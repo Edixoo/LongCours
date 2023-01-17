@@ -40,7 +40,7 @@ class joueur:
         if(len(self.listecartes)==0):
             return False
         
-        while(choix>=len(self.listecartes) or choix<0):
+        while(int(choix)>=len(self.listecartes) or int(choix)<0):
             numcarte=1
             for i in self.listecartes:
                 
@@ -49,7 +49,7 @@ class joueur:
                 numcarte+=1
             print('Quelle carte souhaitez vous jouer ?')
             choix=input()
-        choix=choix-1
+        choix=int(choix)-1
         return choix
         
     def SelectEtRetraitCarte(self, choix):
