@@ -32,9 +32,6 @@ class Cartes:
             self.valeur=main_font.render(str(0), True, "black")
             self.textquantite=main_font.render(str(0),True,"black")
         else:
-            print(quantite)
-            print(self.marchandise.prix_achat)
-            print(int(quantite)*self.marchandise.prix_achat)
             self.valeur=main_font.render(str(self.marchandise.prix_achat*int(quantite)), True, "black")
             self.textquantite=main_font.render(str(quantite),True,"black")
     

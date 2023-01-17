@@ -8,7 +8,7 @@ import acheter, joueurs
 from cimetiereGraphique import CimetiereGraphique
 
 class Map:
-    def __init__(self) -> None:
+    def __init__(self,joueur) -> None:
         self.screen=pygame.display.set_mode((922,800))
         self.running = True
         self.clock=pygame.time.Clock()
@@ -20,6 +20,7 @@ class Map:
 
         self.carte=CartesGraphique.Cartes(marchandises.cereale(150), 150, self.screen.get_width()/2, self.screen.get_height()/2, self.screen)
         
+        self.joueur= joueur
         inv= inventaire.inventaire()
         march= marchandises.cereale(150)
         inv.ajouter(march)
@@ -41,8 +42,27 @@ class Map:
             if event.type==pygame.KEYDOWN:
                 if event.key== pygame.K_BACKSPACE:
                     self.text=self.text[:-1]
-                else:
-                    self.text+= event.unicode
+                if len(self.text)<4:
+                    if event.key== pygame.K_0 or event.key==pygame.K_KP0:
+                        self.text+="0"
+                    elif event.key== pygame.K_1 or event.key==pygame.K_KP1:
+                        self.text+="1"
+                    elif event.key== pygame.K_2 or event.key==pygame.K_KP2:
+                        self.text+="2"
+                    elif event.key== pygame.K_3 or event.key==pygame.K_KP3:
+                        self.text+="3"
+                    elif event.key== pygame.K_4 or event.key==pygame.K_KP4:
+                        self.text+="4"
+                    elif event.key== pygame.K_5 or event.key==pygame.K_KP5:
+                        self.text+="5"
+                    elif event.key== pygame.K_6 or event.key==pygame.K_KP6:
+                        self.text+="6"
+                    elif event.key== pygame.K_7 or event.key==pygame.K_KP7:
+                        self.text+="7"
+                    elif event.key== pygame.K_8 or event.key==pygame.K_KP8:
+                        self.text+="8"
+                    elif event.key== pygame.K_9 or event.key==pygame.K_KP9:
+                        self.text+="9"
 
 
 
@@ -62,7 +82,7 @@ class Map:
         if self.lecap.isclicked:
             self.lecap.afficher_interface()
             if self.lecap.clickachat:
-                self.lecap.acheter.display()
+                self.lecap.acheter.display(self.joueur)
             else:
                 self.text=""
         elif self.inventaire.isclickedinv:
@@ -89,7 +109,8 @@ class Map:
             self.clock.tick(60)
 
 pygame.init()
-game=Map()
+joueur= joueurs.joueur(1, "Salut", "yellow")
+game=Map(joueur)
 
 
 game.run()
