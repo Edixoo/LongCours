@@ -70,13 +70,13 @@ class joueur:
     
     def acheter(self):
         # A faire
-        
+        pass
     def vendre(self):
         # A faire
-        
+        pass
     def deplacementnormal(self):
         # A faire
-
+        pass
 
     
 

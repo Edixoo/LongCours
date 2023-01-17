@@ -2,8 +2,15 @@ import pygame
 import pygame_gui
 import sys
 
+pygame.init()
 
-text_input = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((350, 275), (900, 50)),
+WIDTH, HEIGHT = 1600, 900
+SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Text Input in PyGame | BaralTech")
+
+manager = pygame_gui.UIManager((500, 400))
+
+text_input = pygame_gui.elements.UITextEntryLine(relative_rect=pygame.Rect((350, 275), (900, 50)), manager=manager,
                                                object_id='#main_text_entry')
 
 clock = pygame.time.Clock()
