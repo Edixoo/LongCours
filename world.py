@@ -77,14 +77,15 @@ class world:
             case 0:
                 jou.deplacementnormal()
             case 1:
-                jou.vendre()
+                a=jou.vendre()
             case 2:
-                jou.acheter()
+                a=jou.acheter()
             case 3:
                 cartechoix=jou.choixcarte()
                 cartechoix=jou.SelectEtRetraitCarte(cartechoix)
                 if(cartechoix.type==0): #Carte deplacement instantannée choisie
                     a,b=cartechoix.use()
+                    jou.mouvement(a,b)
                 if(cartechoix.type==1): #Carte tempête choisie
                     indcible=-1
                     while(indcible>=len(self.listejoueur) or indcible<0):

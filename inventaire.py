@@ -3,12 +3,12 @@ class inventaire:
     
     def __init__(self) -> None:
         """Constructeur de l'inventaire"""
-        self.gold=[]
-        self.textile=[]
-        self.bois=[]
-        self.petrole=[]
-        self.cereale=[]
-        self.machine_outils=[]
+        self.gold=[marchandises.marchandises]
+        self.textile=[marchandises.marchandises]
+        self.bois=[marchandises.marchandises]
+        self.petrole=[marchandises.marchandises]
+        self.cereale=[marchandises.marchandises]
+        self.machine_outils=[marchandises.marchandises]
 
     def ajouter(self, march:marchandises.marchandises):
         """Fonction d'ajout d'une marchandise (utile lors de l'achat)"""
@@ -26,21 +26,89 @@ class inventaire:
             case "machine_outils":
                 self.machine_outils.append(march)
 
-    def retirer(self, march):
-        """Fonction de retrait d'une marchandise (utile lors de l'achat)"""
-        match march.nom:
-            case "or":
-                self.gold.remove(march)
-            case "textile":
-                self.textile.remove(march)
-            case "petrole":
-                self.petrole.remove(march)
-            case "bois":
-                self.bois.remove(march)
-            case "cereale":
-                self.cereale.remove(march)
-            case "machine_outils":
-                self.machine_outils.remove(march)
+    def retirer(self, qtt:int,typemarch:int):
+        """Fonction de retrait d'une marchandise (utile lors de la vente)"""
+        qttvendue=0
+        prixacq=0
+        match typemarch:
+            case 0:
+                while(qttvendue!=qtt):
+                    for i in range (len(self.gold)):
+                        if(self.gold[i].qttachete<(qtt-qttvendue)):
+                            qttvendue+=self.gold[i].qttachete
+                            prixacq+=(self.gold[i].prix_achat*self.gold[i].qttachete)
+                            self.gold.remove(i)
+                        else:
+                            dif=qtt-qttvendue
+                            self.gold[i].qttachete-=dif
+                            qttvendue+=dif
+                            prixacq+=(self.gold[i].prix_achat*dif)
+                return prixacq
+            case 1:
+                while(qttvendue!=qtt):
+                    for i in range (len(self.textile)):
+                        if(self.textile[i].qttachete<(qtt-qttvendue)):
+                            qttvendue+=self.textile[i].qttachete
+                            prixacq+=(self.textile[i].prix_achat*self.textile[i].qttachete)
+                            self.textile.remove(i)
+                        else:
+                            dif=qtt-qttvendue
+                            self.textile[i].qttachete-=dif
+                            qttvendue+=dif
+                            prixacq+=(self.textile[i].prix_achat*dif)
+                return prixacq
+            case 2:
+                while(qttvendue!=qtt):
+                    for i in range (len(self.bois)):
+                        if(self.bois[i].qttachete<(qtt-qttvendue)):
+                            qttvendue+=self.bois[i].qttachete
+                            prixacq+=(self.bois[i].prix_achat*self.bois[i].qttachete)
+                            self.bois.remove(i)
+                        else:
+                            dif=qtt-qttvendue
+                            self.bois[i].qttachete-=dif
+                            qttvendue+=dif
+                            prixacq+=(self.bois[i].prix_achat*dif)
+                return prixacq
+            case 3:
+                while(qttvendue!=qtt):
+                    for i in range (len(self.petrole)):
+                        if(self.petrole[i].qttachete<(qtt-qttvendue)):
+                            qttvendue+=self.petrole[i].qttachete
+                            prixacq+=(self.petrole[i].prix_achat*self.petrole[i].qttachete)
+                            self.petrole.remove(i)
+                        else:
+                            dif=qtt-qttvendue
+                            self.petrole[i].qttachete-=dif
+                            qttvendue+=dif
+                            prixacq+=(self.petrole[i].prix_achat*dif)
+                return prixacq
+            case 4:
+                while(qttvendue!=qtt):
+                    for i in range (len(self.cereale)):
+                        if(self.cereale[i].qttachete<(qtt-qttvendue)):
+                            qttvendue+=self.cereale[i].qttachete
+                            prixacq+=(self.cereale[i].prix_achat*self.cereale[i].qttachete)
+                            self.cereale.remove(i)
+                        else:
+                            dif=qtt-qttvendue
+                            self.cereale[i].qttachete-=dif
+                            qttvendue+=dif
+                            prixacq+=(self.cereale[i].prix_achat*dif)
+                return prixacq
+            case 5:
+                while(qttvendue!=qtt):
+                    for i in range (len(self.machine_outils)):
+                        if(self.machine_outils[i].qttachete<(qtt-qttvendue)):
+                            qttvendue+=self.machine_outils[i].qttachete
+                            prixacq+=(self.machine_outils[i].prix_achat*self.machine_outils[i].qttachete)
+                            self.machine_outils.remove(i)
+                        else:
+                            dif=qtt-qttvendue
+                            self.machine_outils[i].qttachete-=dif
+                            qttvendue+=dif
+                            prixacq+=(self.machine_outils[i].prix_achat*dif)
+                return prixacq
 
     def nettoyer(self):
         self.gold.clear()

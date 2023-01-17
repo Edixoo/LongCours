@@ -17,10 +17,10 @@ class carte_mouvdirect(carte):
         pass
     def use(self) -> int:
         a=-1;b=-1
-        while((a<0 or a>5) and (b<0 or b>4)):
+        while((a<0 or a>5) and (b<0 or b>3)):
             print('Où souhaitez vous aller ? (Zone: 0->5)')
             a=int(input())
-            print('Port: 0->4 [4 = cimetiere]')
+            print('Port: 0->3 [3 = cimetiere]')
             b=int(input())
         return a,b
 class carte_tempete(carte):
