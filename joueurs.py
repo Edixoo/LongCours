@@ -78,12 +78,17 @@ class joueur:
             case 0:
                 print("Après lancé du dè, vous pouvez vendre de l'or")
                 qtt = int(self.bateau.inventaire.getGold())
+                if(qtt=="vide"):
+                    print("Vous n'avez pas d'or à vendre")
+                    return 0
                 print("Vous pouvez vendre:",qtt,"or, combien voulez-vous en vendre ?")
                 choix=input()
                 while(choix<0 or choix>qtt):
                     print("Erreur dans le nombre choisis")
                     print("Vous pouvez vendre:",qtt,"or, combien voulez-vous en vendre ?")
                     choix=input()
+                print("Vous avez décidé d'en vendre:",choix)
+
             case 1:
                 print("Après lancé du dè, vous pouvez vendre du textile")
                 qtt = int(self.bateau.inventaire.getTextile())

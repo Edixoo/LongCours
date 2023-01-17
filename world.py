@@ -77,9 +77,9 @@ class world:
             case 0:
                 jou.deplacementnormal()
             case 1:
-                jou.vendre()
+                a=jou.vendre()
             case 2:
-                jou.acheter()
+                a=jou.acheter()
             case 3:
                 cartechoix=jou.choixcarte()
                 cartechoix=jou.SelectEtRetraitCarte(cartechoix)
