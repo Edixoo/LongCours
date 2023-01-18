@@ -21,7 +21,7 @@ class Portgraphique:
 
         self.acheter=Acheter(port.marchandise, self.screen)
         self.vendre=Vendre(self.screen)
-        self.port=pygame.Rect(posx,posy,50,50)
+        self.port=pygame.Rect(posx,posy,10,10)
         self.isclicked=False
         self.clickachat=False
         self.clickvente=False

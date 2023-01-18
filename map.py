@@ -7,9 +7,13 @@ import InventaireGraphique
 import joueurs
 from cimetiereGraphique import CimetiereGraphique
 import joueurGraphique
+import zone
+import cartedujeu, world
+
+position=[[(285,195),(216,267),(124,214),(222,131)],[(289,84),(506,124),(669,42),(435,184)],[(753,206),(719,332),(592,194),(682,243)],[(549,390),(647,462),(604,543),(524,446)],[(605,622),(528,756),(307,638),(455,588)],[(193,558),(102,526),(258,366),(249,594)]]
 
 class Map:
-    def __init__(self,joueur) -> None:
+    def __init__(self,listejoueurs: list[joueurs.joueur], listezones: list[zone.zonedejeu], position=position) -> None:
         self.screen=pygame.display.set_mode((922,800))
         self.running = True
         self.clock=pygame.time.Clock()
@@ -32,6 +36,18 @@ class Map:
         self.text=""
         self.joueuractuel=joueurGraphique.joueurGraphique(self.screen, self.joueur)
         
+        self.positionport=position
+        self.listejoueurs=listejoueurs
+        self.listezones=listezones
+        self.portgraphique=[]
+        
+        for i in range (len(self.listezones)-1):
+            print(len(self.listezones[i].listeport)-1)
+            for j in range(3):
+                self.portgraphique.append(portgraphique.Portgraphique(self.listezones[i].listeport[j],self.positionport[i][j][0],self.positionport[i][j][1],self.screen))
+                
+            self.portgraphique.append(CimetiereGraphique(self.positionport[i][3],self.listezones[i].cimetiere, self.screen))
+        
 
     def handling_events(self):
         for event in pygame.event.get():
@@ -41,7 +57,8 @@ class Map:
                 print(pygame.mouse.get_pos())
                 self.lecap.checkforInput(pygame.mouse.get_pos())
                 self.inventaire.checkforInput(pygame.mouse.get_pos())
-                self.cimetiere.checkForInput(pygame.mouse.get_pos())
+                self.cimetiere.checkforInput(pygame.mouse.get_pos())
+    
             if event.type==pygame.KEYDOWN:
                 if event.key== pygame.K_BACKSPACE:
                     self.text=self.text[:-1]
@@ -73,6 +90,11 @@ class Map:
         self.lecap.update(pygame.mouse.get_pos(), self.text)
         self.inventaire.update(pygame.mouse.get_pos())
         self.cimetiere.update(pygame.mouse.get_pos())
+        for i in self.portgraphique:
+            if type(i)==CimetiereGraphique:
+                i.update(pygame.mouse.get_pos())
+            else:
+                i.update(pygame.mouse.get_pos(), self.text)
 
     def display(self):
         image=pygame.image.load("./MapSAE/Test.png").convert()
@@ -83,19 +105,25 @@ class Map:
         self.cimetiere.display()
         self.inventaire.display()
         self.joueuractuel.display(self.lecap)
-        if self.lecap.isclicked:
-            self.lecap.afficher_interface()
-            if self.lecap.clickachat:
-                self.lecap.acheter.display(self.joueur)
-            elif self.lecap.clickvente:
-                self.lecap.vendre.display(self.joueur, self.marchandise)
+        for i in self.portgraphique:
+            i.display()
+            if type(i)==portgraphique.Portgraphique:
+                if i.isclicked:
+                    i.afficher_interface()
+                    if i.clickachat:
+                        i.acheter.display(self.joueur)
+                    elif i.clickvente:
+                        i.vendre.display(self.joueur, self.marchandise)
+                    else:
+                        self.text=""
             else:
-                self.text=""
+                if i.cimeclicked:
+                    i.afficher_interface()
+                    if i.invclick:
+                        i.inventaire.afficher_inv()
             
-        elif self.inventaire.isclickedinv:
+        if self.inventaire.isclickedinv:
             self.inventaire.afficher_inv()
-        elif self.lecap.isclicked:
-            self.lecap.afficher_interface()
         elif self.cimetiere.cimeclicked:
             self.cimetiere.afficher_interface()
             if self.cimetiere.invclick:
@@ -106,6 +134,8 @@ class Map:
             self.cimetiere.display()
             self.inventaire.display()
             self.joueuractuel.display(self.lecap)
+            for i in self.portgraphique:
+                i.display()
 
         pygame.display.flip()
 
@@ -116,10 +146,26 @@ class Map:
             self.display()
             self.clock.tick(60)
 
+
+listejoueur=world.world()
+listejoueur.definirjoueurs()
+listejoueur=listejoueur.listejoueur
+listezone=cartedujeu.cartejeu().zones
 pygame.init()
 joueur= joueurs.joueur(1, "Salut", "yellow")
-game=Map(joueur)
+game=Map(listejoueur, listezone)
 
 
 game.run()
 pygame.quit()
+
+
+"""
+Dans appel de Map:
+    - liste de joueurs (bouclé pour les mettre en joueurGraphique) 
+    - liste de zones (bouclé pour récupérer la liste de ports puis transformé les ports en portgraphique et le cimetiere en cimetiere graphique)
+    - Liste position Listepos[posZone][PosPort] = (Tuple possédant position de la case sur l'interface) --> 0,1,2 --> Port | 3 --> Cimetiere
+    fonction changementdetour
+    - change le joueur actuel
+    
+"""

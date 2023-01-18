@@ -8,7 +8,7 @@ class CimetiereGraphique:
     def __init__(self, position, cimetiere: cimetiere.cimetiere, screen) -> None:
         self.screen= screen
         self.cimetiere=cimetiere
-        self.rect=self.port=pygame.Rect(position[0],position[1],50,50)
+        self.rect=self.port=pygame.Rect(position[0],position[1],10,10)
         self.cimeclicked=False
         self.invclick=False
         self.inventaire= InventaireGraphique(self.screen, self.cimetiere.inventaire)
@@ -24,7 +24,7 @@ class CimetiereGraphique:
         self.cancel.update(position, "red")
 
 
-    def checkForInput(self, position):
+    def checkforInput(self, position):
         if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
             self.cimeclicked=True
         if self.bouton.checkForInput(position)==1:
