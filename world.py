@@ -43,7 +43,7 @@ class world:
             rd.shuffle(cartesbdf)
             rd.shuffle(cartesmouv)
             rd.shuffle(cartestemp)
-            if(nbcarte%nbjoueur!=0):
+            if(nbcarte%nbjoueur!=0): #Le jeu de carte contient 36 cartes, si 5 joueurs, retrait d'une carte
                 del cartesbdf[rd.randint(0,len(cartesbdf)-1)]
             paquet=cartesbdf+cartesmouv+cartestemp
             numjou=0
@@ -64,7 +64,12 @@ class world:
         for i in self.listejoueur:
             if(i.posidport==port and i.posidzone==zone):
                 a=i.echouer()
-                self.map.zones[zone].cimetiere.inventaire+=a
+                self.map.zones[zone].cimetiere.inventaire.bois+=a.bois
+                self.map.zones[zone].cimetiere.inventaire.gold+=a.gold
+                self.map.zones[zone].cimetiere.inventaire.cereale+=a.cereale
+                self.map.zones[zone].cimetiere.inventaire.machine_outils+=a.machine_outils
+                self.map.zones[zone].cimetiere.inventaire.petrole+=a.petrole
+                self.map.zones[zone].cimetiere.inventaire.textile+=a.textile
     
     def tourdejeu(self,jou:joueurs.joueur):
         """Fonction permettant au joueur de jouer son tour"""
@@ -93,7 +98,7 @@ class world:
                     listecible:list[joueurs.joueur]=[]
                     for j in self.listejoueur:
                         if(jou.posidport == j.posidport and jou.posidzone == j.posidzone and jou.id!=j.id):
-                            listecible.append(jou)
+                            listecible.append(j)
                     cible=-1
                     print("Qui est votre cible ?")
                     for i in listecible:
@@ -102,6 +107,8 @@ class world:
                     print("Début du BRAS DE FER !")
 
                     combat=0
+                    forceattaq=0
+                    forcedef=0
                     while(combat==0):
                         print("Joueur",jou.id+1)
                         forceattaq=cartechoix.use()
@@ -120,56 +127,96 @@ class world:
                             carteattaque=self.listejoueur[cible].choixcarte(2)
                             carteattaque=self.listejoueur[cible].SelectEtRetraitCarte(carteattaque)
                             forcedef=carteattaque.use()
-                            while(forcedef>forceattaq):
-                                print("Joueur",jou.id+1,"Voulez vous jouer une autre carte bras de fer ? (Oui: 0 | Non: 1)")
-                                choixattaquant=int(input())
-                                if(choixattaquant==1):
-                                    self.listejoueur[cible].bateau.inventaire.bois+=self.listejoueur[jou.id].bateau.inventaire.bois
-                                    self.listejoueur[cible].bateau.inventaire.gold+=self.listejoueur[jou.id].bateau.inventaire.gold
-                                    self.listejoueur[cible].bateau.inventaire.cereale+=self.listejoueur[jou.id].bateau.inventaire.cereale
-                                    self.listejoueur[cible].bateau.inventaire.machine_outils+=self.listejoueur[jou.id].bateau.inventaire.machine_outils
-                                    self.listejoueur[cible].bateau.inventaire.petrole+=self.listejoueur[jou.id].bateau.inventaire.petrole
-                                    self.listejoueur[cible].bateau.inventaire.textile+=self.listejoueur[jou.id].bateau.inventaire.textile
-                                    self.listejoueur[jou.id].bateau.inventaire.nettoyer()
-                                    combat=1
-                                else:
-                                    carteattaquant=self.listejoueur[jou.id].choixcarte(2)
-                                    if(carteattaquant!=False):
-                                        carteattaquant=self.listejoueur[jou.id].SelectEtRetraitCarte(carteattaquant)
-                                        if(carteattaquant.type!=2):
-                                            print("Vous n'avez pas sélectionné une carte bras de fer, vous perdez ce bras de fer et la carte sélectionnée")
-                                            self.listejoueur[cible].bateau.inventaire=self.listejoueur[cible].bateau.inventaire+self.listejoueur[jou.id].bateau.inventaire
-                                            self.listejoueur[jou.id].bateau.inventaire.nettoyer()
-                                            combat=1                                        
-                                        forceattaq=carteattaquant.use()
-                                    else:
-                                        print("Vous n'avez plus de carte à jouer, vous perdez")
-                                        self.listejoueur[cible].bateau.inventaire=self.listejoueur[cible].bateau.inventaire+self.listejoueur[jou.id].bateau.inventaire
+                            print("Joueur",cible+1)
+                            print("Votre puissance est de :",forcedef)
+                            print("Celle de votre adversaire:",forceattaq)
+                            while(1):
+                                while(forcedef>forceattaq):
+                                    print("Joueur",jou.id+1,"Voulez vous jouer une autre carte bras de fer ? (Oui: 0 | Non: 1)")
+                                    choixattaquant=input()
+                                    choixattaquant=int(choixattaquant)
+                                    if(choixattaquant==1):
+                                        self.listejoueur[cible].bateau.inventaire.bois+=self.listejoueur[jou.id].bateau.inventaire.bois
+                                        self.listejoueur[cible].bateau.inventaire.gold+=self.listejoueur[jou.id].bateau.inventaire.gold
+                                        self.listejoueur[cible].bateau.inventaire.cereale+=self.listejoueur[jou.id].bateau.inventaire.cereale
+                                        self.listejoueur[cible].bateau.inventaire.machine_outils+=self.listejoueur[jou.id].bateau.inventaire.machine_outils
+                                        self.listejoueur[cible].bateau.inventaire.petrole+=self.listejoueur[jou.id].bateau.inventaire.petrole
+                                        self.listejoueur[cible].bateau.inventaire.textile+=self.listejoueur[jou.id].bateau.inventaire.textile
                                         self.listejoueur[jou.id].bateau.inventaire.nettoyer()
                                         combat=1
-                            while(forceattaq>forcedef):
-                                print("Joueur",cible+1,"Voulez vous jouer une autre carte bras de fer ? (Oui: 0 | Non: 1)")
-                                choixattq=int(input())
-                                if(choixattq==1):
-                                    self.listejoueur[jou.id].bateau.inventaire=self.listejoueur[jou.id].bateau.inventaire+self.listejoueur[cible].bateau.inventaire
-                                    self.listejoueur[cible].bateau.inventaire.nettoyer()
-                                    combat=1
-                                else:
-                                    cartedef=self.listejoueur[jou.id].choixcarte(2)
-                                    if(cartedef!=False):
-                                        cartedef=self.listejoueur[jou.id].SelectEtRetraitCarte(cartedef)
-                                        if(cartedef.type!=2):
-                                            print("Vous n'avez pas sélectionné une carte bras de fer, vous perdez ce bras de fer et la carte sélectionnée")
-                                            self.listejoueur[jou.id].bateau.inventaire=self.listejoueur[jou.id].bateau.inventaire+self.listejoueur[cible].bateau.inventaire
-                                            self.listejoueur[cible].bateau.inventaire.nettoyer()
-                                            combat=1
-                                        forceattaq=cartedef.use()
                                     else:
-                                        print("Vous n'avez plus de carte à jouer, vous perdez")
-                                        self.listejoueur[jou.id].bateau.inventaire=self.listejoueur[jou.id].bateau.inventaire+self.listejoueur[cible].bateau.inventaire
+                                        carteattaquant=self.listejoueur[jou.id].choixcarte(2)
+                                        if(carteattaquant!=False):
+                                            carteattaquant=self.listejoueur[jou.id].SelectEtRetraitCarte(carteattaquant)
+                                            if(carteattaquant.type!=2):
+                                                print("Vous n'avez pas sélectionné une carte bras de fer, vous perdez ce bras de fer et la carte sélectionnée")
+                                                self.listejoueur[cible].bateau.inventaire.bois+=self.listejoueur[jou.id].bateau.inventaire.bois
+                                                self.listejoueur[cible].bateau.inventaire.gold+=self.listejoueur[jou.id].bateau.inventaire.gold
+                                                self.listejoueur[cible].bateau.inventaire.cereale+=self.listejoueur[jou.id].bateau.inventaire.cereale
+                                                self.listejoueur[cible].bateau.inventaire.machine_outils+=self.listejoueur[jou.id].bateau.inventaire.machine_outils
+                                                self.listejoueur[cible].bateau.inventaire.petrole+=self.listejoueur[jou.id].bateau.inventaire.petrole
+                                                self.listejoueur[cible].bateau.inventaire.textile+=self.listejoueur[jou.id].bateau.inventaire.textile
+                                                self.listejoueur[jou.id].bateau.inventaire.nettoyer()
+                                                combat=1                                        
+                                            forceattaq+=carteattaquant.use()
+                                            print("Joueur",jou.id+1)
+                                            print("Votre puissance est de :",forceattaq)
+                                            print("Celle de votre adversaire:",forcedef)
+                                        else:
+                                            print("Vous n'avez plus de carte baston à jouer, vous perdez le combat")
+                                            self.listejoueur[cible].bateau.inventaire.bois+=self.listejoueur[jou.id].bateau.inventaire.bois
+                                            self.listejoueur[cible].bateau.inventaire.gold+=self.listejoueur[jou.id].bateau.inventaire.gold
+                                            self.listejoueur[cible].bateau.inventaire.cereale+=self.listejoueur[jou.id].bateau.inventaire.cereale
+                                            self.listejoueur[cible].bateau.inventaire.machine_outils+=self.listejoueur[jou.id].bateau.inventaire.machine_outils
+                                            self.listejoueur[cible].bateau.inventaire.petrole+=self.listejoueur[jou.id].bateau.inventaire.petrole
+                                            self.listejoueur[cible].bateau.inventaire.textile+=self.listejoueur[jou.id].bateau.inventaire.textile
+                                            self.listejoueur[jou.id].bateau.inventaire.nettoyer()
+                                            combat=1
+                                while(forceattaq>forcedef):
+                                    print("Joueur",cible+1,"Voulez vous jouer une autre carte bras de fer ? (Oui: 0 | Non: 1)")
+                                    choixattq=int(input())
+                                    if(choixattq==1):
+                                        self.listejoueur[jou.id].bateau.inventaire.bois+=self.listejoueur[cible].bateau.inventaire.bois
+                                        self.listejoueur[jou.id].bateau.inventaire.gold+=self.listejoueur[cible].bateau.inventaire.gold
+                                        self.listejoueur[jou.id].bateau.inventaire.cereale+=self.listejoueur[cible].bateau.inventaire.cereale
+                                        self.listejoueur[jou.id].bateau.inventaire.machine_outils+=self.listejoueur[cible].bateau.inventaire.machine_outils
+                                        self.listejoueur[jou.id].bateau.inventaire.petrole+=self.listejoueur[cible].bateau.inventaire.petrole
+                                        self.listejoueur[jou.id].bateau.inventaire.textile+=self.listejoueur[cible].bateau.inventaire.textile
                                         self.listejoueur[cible].bateau.inventaire.nettoyer()
                                         combat=1
-                    print("Bras de fer terminé, Bravo !")
+                                    else:
+                                        cartedef=self.listejoueur[jou.id].choixcarte(2)
+                                        if(cartedef!=False):
+                                            cartedef=self.listejoueur[jou.id].SelectEtRetraitCarte(cartedef)
+                                            if(cartedef.type!=2):
+                                                print("Vous n'avez pas sélectionné une carte bras de fer, vous perdez ce bras de fer et la carte sélectionnée")
+                                                self.listejoueur[jou.id].bateau.inventaire.bois+=self.listejoueur[cible].bateau.inventaire.bois
+                                                self.listejoueur[jou.id].bateau.inventaire.gold+=self.listejoueur[cible].bateau.inventaire.gold
+                                                self.listejoueur[jou.id].bateau.inventaire.cereale+=self.listejoueur[cible].bateau.inventaire.cereale
+                                                self.listejoueur[jou.id].bateau.inventaire.machine_outils+=self.listejoueur[cible].bateau.inventaire.machine_outils
+                                                self.listejoueur[jou.id].bateau.inventaire.petrole+=self.listejoueur[cible].bateau.inventaire.petrole
+                                                self.listejoueur[jou.id].bateau.inventaire.textile+=self.listejoueur[cible].bateau.inventaire.textile
+                                                self.listejoueur[cible].bateau.inventaire.nettoyer()
+                                                combat=1
+                                            forcedef+=cartedef.use()
+                                            print("Joueur",cible+1)
+                                            print("Votre puissance est de :",forcedef)
+                                            print("Celle de votre adversaire:",forceattaq)
+                                        else:
+                                            print("Joueur",cible+1,"Vous n'avez plus de carte baston à jouer, vous perdez")
+                                            self.listejoueur[jou.id].bateau.inventaire.bois+=self.listejoueur[cible].bateau.inventaire.bois
+                                            self.listejoueur[jou.id].bateau.inventaire.gold+=self.listejoueur[cible].bateau.inventaire.gold
+                                            self.listejoueur[jou.id].bateau.inventaire.cereale+=self.listejoueur[cible].bateau.inventaire.cereale
+                                            self.listejoueur[jou.id].bateau.inventaire.machine_outils+=self.listejoueur[cible].bateau.inventaire.machine_outils
+                                            self.listejoueur[jou.id].bateau.inventaire.petrole+=self.listejoueur[cible].bateau.inventaire.petrole
+                                            self.listejoueur[jou.id].bateau.inventaire.textile+=self.listejoueur[cible].bateau.inventaire.textile
+                                            self.listejoueur[cible].bateau.inventaire.nettoyer()
+                                            combat=1
+                    if(forceattaq>forcedef):
+                        gagnant=jou.id+1
+                    else:
+                        gagnant=cible+1
+                    print("Bras de fer terminé, Bravo",gagnant,"! ")
     
     def jouerpartie(self):
         self.definirjoueurs()
