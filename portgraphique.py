@@ -1,7 +1,7 @@
 import pygame
 from buttons import Cancel, Button
 from acheter import Acheter
-
+from vendre import Vendre
 main_font = pygame.font.SysFont("cambria", 20)
 
 class Portgraphique:
@@ -17,11 +17,14 @@ class Portgraphique:
         self.cancel=Cancel(self.screen.get_width()/2-75, self.screen.get_height()/2+125,self.screen)
 
         self.achat=Button([518,522],[100,50], "Acheter", self.screen, 25)
+        self.vente=Button([668, 522], [100,50], "Vendre", self.screen, 25)
 
         self.acheter=Acheter(port.marchandise, self.screen)
+        self.vendre=Vendre(self.screen)
         self.port=pygame.Rect(posx,posy,50,50)
         self.isclicked=False
         self.clickachat=False
+        self.clickvente=False
     
     def display(self):
         pygame.draw.rect(self.screen, self.couleur, self.port)
@@ -29,10 +32,14 @@ class Portgraphique:
     def checkforInput(self,position):
         if position[0] in range(self.port.left, self.port.right) and position[1] in range(self.port.top, self.port.bottom):
             self.isclicked=True
-        if self.achat.checkForInput(position)==1:
+        if self.achat.checkForInput(position):
             self.clickachat=True
         elif self.clickachat==True and self.acheter.cancel.checkForInput(position):
             self.clickachat=False
+        if self.vente.checkForInput(position):
+            self.clickvente=True
+        elif self.clickvente==True and self.vendre.cancel.checkForInput(position):
+            self.clickvente=False
         if self.cancel.checkForInput(position)==1 and self.isclicked==True and self.clickachat==False:
             self.isclicked=False
     
@@ -40,6 +47,8 @@ class Portgraphique:
         self.cancel.update(position, "red")
         self.acheter.update(position, text)
         self.achat.update(position, "grey")
+        self.vente.update(position, "grey")
+        self.vendre.update(position, text)
 
     def afficher_interface(self):
             rectangle=pygame.image.load("./images/Rectangle.png").convert_alpha()
@@ -51,5 +60,6 @@ class Portgraphique:
             self.screen.blit(self.nom, self.rectnom)
             self.cancel.display()
             self.achat.display()
+            self.vente.display()
 
             
