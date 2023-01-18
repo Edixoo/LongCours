@@ -34,23 +34,73 @@ class joueur:
         else:
          self.monnaie -= n
 
-    def choixcarte(self):
+    def choixcarte(self,carte:int): #Carte = type de carte à appeler ici : 0 = toutes les cartes, 1 = déplacement direct , 2 = baston , 3 = tempête
         """Fonction permettant de définir quelle carte jouer"""
         choix=-1
         if(len(self.listecartes)==0):
             return False
         
-        while(int(choix)>=len(self.listecartes) or int(choix)<0):
-            numcarte=1
-            for i in self.listecartes:
-                
-                print('Carte N°',numcarte)
-                i.affichercarte()
-                numcarte+=1
-            print('Quelle carte souhaitez vous jouer ?')
-            choix=input()
-        choix=int(choix)-1
-        return choix
+        if(carte==0):
+            while(int(choix)>=len(self.listecartes) or int(choix)<0):
+                numcarte=1
+                for i in self.listecartes:
+                    
+                    print('Carte N°',numcarte)
+                    i.affichercarte()
+                    numcarte+=1
+                print('Quelle carte souhaitez vous jouer ?')
+                choix=input()
+            choix=int(choix)-1
+            return choix
+        if(carte==1):
+            listechoix:list[int]=[]
+            while(int(choix) not in listechoix):
+                numcarte=1
+                for i in self.listecartes:
+                    if(i.type==0):
+                        print('Carte N°',numcarte)
+                        i.affichercarte()
+                        listechoix.append(numcarte)
+                    numcarte+=1
+                    if(len(listechoix)==0):
+                        return False
+                print('Quelle carte souhaitez vous jouer ?')
+                choix=input()
+            choix=int(choix)-1
+            return choix
+        if(carte==2):
+            listechoix:list[int]=[]
+            while(int(choix) not in listechoix):
+                numcarte=1
+                for i in self.listecartes:
+                    if(i.type==2):
+                        print('Carte N°',numcarte)
+                        i.affichercarte()
+                        listechoix.append(numcarte)
+                    numcarte+=1
+                    if(len(listechoix)==0):
+                        return False
+                print('Quelle carte souhaitez vous jouer ?')
+                choix=input()
+            choix=int(choix)-1
+            return choix
+        if(carte==3):
+            listechoix:list[int]=[]
+            while(int(choix) not in listechoix):
+                numcarte=1
+                for i in self.listecartes:
+                    if(i.type==1):
+                        print('Carte N°',numcarte)
+                        i.affichercarte()
+                        listechoix.append(numcarte)
+                    numcarte+=1
+                    if(len(listechoix)==0):
+                        return False
+                print('Quelle carte souhaitez vous jouer ?')
+                choix=input()
+            choix=int(choix)-1
+            return choix
+
         
     def SelectEtRetraitCarte(self, choix):
         """Fonction permettant au joueur de jouer une carte"""

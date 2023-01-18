@@ -50,7 +50,6 @@ class carte_bdf(carte):
         print("Vous jouez la carte bras de fer de force",self.force)
         return self.force
     def affichercarte(self)->None:
-        print(self.type)
         print("Carte bras de fer de",self.typenom)
         
 
