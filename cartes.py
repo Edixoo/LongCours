@@ -32,7 +32,7 @@ class carte_tempete(carte):
     def use(self)-> None:
         indcible=-1
         print('Sur quel joueur souhaitez vous déclencher la tempête ?')
-        indcible=input()
+        indcible=int(input())
         indcible-=1
         return indcible
     def affichercarte(self)->None:

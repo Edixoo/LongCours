@@ -89,11 +89,12 @@ class joueur:
             while(int(choix) not in listechoix):
                 numcarte=1
                 for i in self.listecartes:
+                    numcarte+=1
                     if(i.type==1):
                         print('Carte N°',numcarte)
                         i.affichercarte()
                         listechoix.append(numcarte)
-                    numcarte+=1
+                    
                     if(len(listechoix)==0):
                         return False
                 print('Quelle carte souhaitez vous jouer ?')
