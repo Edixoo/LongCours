@@ -123,6 +123,11 @@ class joueur:
 
         return 0
 
+    def marchandisevendable(self):
+        roll=r.randint(0,5)
+        return roll
+
+    
     def deplacementnormal(self):
         print("Souhaitez vous vous déplacer au port le plus proche (port) ou changer de zone ? (zone)")
         choix = input()
@@ -133,50 +138,52 @@ class joueur:
         if(choix=="port"):
             choixport=[0,1,2,3]
             print("Dans quel port souhaitez vous aller ?")
-            for i in range (len(choixport)):
+            i=0
+            while(i<len(choixport)):
                 if(choixport[i]==self.posidport):
-                    choixport.remove(i)
+                    i=i
                 else:
                     if(i==3):
-                        print("Le cimetière ?(",i,")")
+                        print("Le cimetière ?(",i+1,")")
                     else:
-                        print("Le port ? (",i,")")
+                        print("Le port ? (",i+1,")")
+                i+=1
             choixportuser=input()
-            self.posidport=choixportuser
+            self.posidport=int(choixportuser)
         else:
             if(self.posidzone==0):
                 print("Zone disponibles : 1 / 5")
                 choixzoneuser=input()
-                while(choixzoneuser!=1 and choixzoneuser!=5):
+                while(int(choixzoneuser)!=1 and int(choixzoneuser)!=5):
                     print("Erreur de saisie")
                     print("Zone disponibles : 1 / 5")
                     choixzoneuser=input() 
                 print("Déplacement vers la zone",choixzoneuser,"(le port sera le 0)")
-                self.posidzone=choixzoneuser
+                self.posidzone=int(choixzoneuser)
                 self.posidport=0
             else:
                 if(self.posidzone==5):
                     print("Zone disponibles : 0 / 4")
                     choixzoneuser=input()
-                    while(choixzoneuser!=0 and choixzoneuser!=4):
+                    while(int(choixzoneuser)!=0 and int(choixzoneuser)!=4):
                         print("Erreur de saisie")
                         print("Zone disponibles : 0 / 4")
                         choixzoneuser=input() 
                     print("Déplacement vers la zone",choixzoneuser,"(le port sera le 0)")
-                    self.posidzone=choixzoneuser
+                    self.posidzone=int(choixzoneuser)
                     self.posidport=0
                 else:
                     print("Zones disponibles:",self.posidzone-1,"/",self.posidzone+1)
                     choixzoneuser=input()
-                    while(choixzoneuser!=self.posidzone-1 and choixzoneuser!=self.posidzone+1):
+                    while(int(choixzoneuser)!=self.posidzone-1 and int(choixzoneuser)!=self.posidzone+1):
                         print("Erreur de saisie")
                         print("Zones disponibles:",self.posidzone-1,"/",self.posidzone+1)
                         choixzoneuser=input() 
                     print("Déplacement vers la zone",choixzoneuser,"(le port sera le 0)")
-                    self.posidzone=choixzoneuser
+                    self.posidzone=int(choixzoneuser)
                     self.posidport=0
 
-    def vendre(self):
+    def vendre(self): #Si inventaire vide return false pour éviter crash
         typemarch = r.randint(0,5)
         match typemarch:
             case 0:
