@@ -4,8 +4,9 @@ import marchandises
 import cimetiere
 import inventaire
 import InventaireGraphique
-import acheter, joueurs
+import joueurs
 from cimetiereGraphique import CimetiereGraphique
+import joueurGraphique
 
 class Map:
     def __init__(self,joueur) -> None:
@@ -25,10 +26,12 @@ class Map:
         march= marchandises.cereale(150)
         inv.ajouter(march)
         self.inventaire=InventaireGraphique.InventaireGraphique(self.screen, inv)
-        cimet=cimetiere.cimetiere(inv)
+        cimet=cimetiere.cimetiere()
         self.cimetiere=CimetiereGraphique([150,150],cimet,self.screen)
-
+        self.marchandise= marchandises.cereale(150)
         self.text=""
+        self.joueuractuel=joueurGraphique.joueurGraphique(self.screen, self.joueur)
+        
 
     def handling_events(self):
         for event in pygame.event.get():
@@ -79,12 +82,16 @@ class Map:
         self.carte.display()
         self.cimetiere.display()
         self.inventaire.display()
+        self.joueuractuel.display(self.lecap)
         if self.lecap.isclicked:
             self.lecap.afficher_interface()
             if self.lecap.clickachat:
                 self.lecap.acheter.display(self.joueur)
+            elif self.lecap.clickvente:
+                self.lecap.vendre.display(self.joueur, self.marchandise)
             else:
                 self.text=""
+            
         elif self.inventaire.isclickedinv:
             self.inventaire.afficher_inv()
         elif self.lecap.isclicked:
@@ -98,6 +105,7 @@ class Map:
             self.lecap.display()
             self.cimetiere.display()
             self.inventaire.display()
+            self.joueuractuel.display(self.lecap)
 
         pygame.display.flip()
 

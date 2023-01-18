@@ -1,12 +1,12 @@
 import pygame
 from buttons import Cancel
 from CartesGraphique import Cartes
-from marchandises import marchandises
+import marchandises
 from joueurs import joueur
 class Vendre:
     def __init__(self, screen) -> None:
         self.screen=screen
-        self.marchandise: marchandises
+        self.marchandise: marchandises.marchandises = marchandises.cereale(1)
         self.joueur: joueur
         
         fond= pygame.image.load("./images/Rectangle.png").convert_alpha()
@@ -19,19 +19,17 @@ class Vendre:
         self.font=pygame.font.SysFont("Arial",25)
         self.quantite=""
         self.mess=self.font.render(self.quantite,True, "white")
-        self.carte: Cartes
-
-        self.dispo=""
+        self.carte=Cartes(self.marchandise, 1, 235, 400, self.screen)
 
 
     def display(self, joueur, marchandise):
         self.joueur=joueur
         self.dispo=self.font.render("Quantité disponible de " + marchandise.nom+ ":", True, "white")
-        self.
         self.screen.blit(self.fond, self.fondrect)
         pygame.draw.rect(self.screen, "white", self.textbox, 2)
         self.screen.blit(self.mess, self.textbox)
         self.screen.blit(self.dispo, (475,235))
+        self.carte=Cartes(marchandise, self.quantite, 235, 400, self.screen)
         self.carte.display()
         self.cancel.display()
         
@@ -40,6 +38,7 @@ class Vendre:
     def update(self, position, text):
         self.mess=self.font.render(text,True, "white")
         self.cancel.update(position, "red")
-        self.carte.update(text)
+        self.quantite=str(text)
+        self.textbox.w=max(100,self.mess.get_width()+10)
         
 

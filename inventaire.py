@@ -132,7 +132,7 @@ class inventaire:
         if len(self.textile)==0:
             return "Vide"
         for i in self.textile:
-            resultat+=i.qttachat
+            resultat+=i.qttachete
         return str(resultat)
     
     def getBois(self):
@@ -140,12 +140,12 @@ class inventaire:
         if len(self.bois)==0:
             return "Vide"
         for i in self.bois:
-            resultat+=i.qttachat
+            resultat+=i.qttachete
         return str(resultat)
 
     def getPetrole(self):
         resultat=0
-        if len(self.gold)==0:
+        if len(self.petrole)==0:
             return "Vide"
         for i in self.petrole:
             resultat+=i.qttachete
@@ -153,12 +153,16 @@ class inventaire:
 
     def getCereale(self):
         resultat=0
+        if len(self.cereale)==0:
+            return "Vide"
         for i in self.cereale:
             resultat+=i.qttachete
         return str(resultat)
 
     def getMachineOutils(self):
         resultat=0
+        if len(self.machine_outils)==0:
+            return "Vide"
         for i in self.machine_outils:
             resultat+=i.qttachete
         return str(resultat)
