@@ -14,6 +14,7 @@ class world:
         self.nbtour : int =0
         self.jeuon: bool = True
         self.listejoueur=[]
+    
     def inflation(self) -> None:
         """Fonction d'appel de l'inflation, permettant d'augmenter les prix des marchandises dans les ports de 5% """
         for i in self.map.zones:
@@ -263,8 +264,7 @@ class world:
                             print("_________________________")
                             print("Bras de fer terminé, Bravo joueur",cible+1,"! ") 
                             print("_________________________")
-                        
-    
+                           
     def jouerpartie(self):
         self.definirjoueurs()
         self.distribuercarte()
