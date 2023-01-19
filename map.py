@@ -1,8 +1,6 @@
 import pygame
-import port, portgraphique, CartesGraphique
+import portgraphique
 import marchandises
-import cimetiere
-import inventaire
 import InventaireGraphique
 import joueurs
 from cimetiereGraphique import CimetiereGraphique
@@ -13,7 +11,7 @@ import cartedujeu, world
 position=[[(285,195),(216,267),(124,214),(222,131)],[(289,84),(506,124),(669,42),(435,184)],[(753,206),(719,332),(592,194),(682,243)],[(549,390),(647,462),(604,543),(524,446)],[(605,622),(528,756),(307,638),(455,588)],[(193,558),(102,526),(258,366),(249,594)]]
 
 class Map:
-    def __init__(self,listejoueurs: list[joueurs.joueur], listezones: list[zone.zonedejeu], marchandise, position=position) -> None:
+    def __init__(self,listejoueurs: list[joueurs.joueur], listezones: list[zone.zonedejeu], position=position) -> None:
         self.screen=pygame.display.set_mode((922,800))
         self.running = True
         self.clock=pygame.time.Clock()
@@ -23,7 +21,7 @@ class Map:
         self.positionport=position
         self.listezones=listezones
         self.portgraphique=[]
-        self.marchandise=
+        self.marchandise: marchandises.marchandises
         for i in range (len(self.listezones)):
             for j in range(len(self.listezones[i].listeport)):
                     self.portgraphique.append(portgraphique.Portgraphique(self.listezones[i].listeport[j],self.positionport[i][j][0],self.positionport[i][j][1],self.screen))
@@ -35,6 +33,7 @@ class Map:
             self.listejoueurs.append(joueurGraphique.joueurGraphique(self.screen,i, self.portgraphique[0]))
         
         self.joueuractuel=listejoueurs[0]
+        self.nomjoueuractu=
         self.inventaire=InventaireGraphique.InventaireGraphique(self.screen, self.joueuractuel.bateau.inventaire)
         
 
@@ -90,15 +89,14 @@ class Map:
         self.inventaire.display()
         for i in self.portgraphique:
             i.display()
-        self.joueuractuel.display()
         for i in self.portgraphique:
             if type(i)==portgraphique.Portgraphique:
                 if i.isclicked:
                     i.afficher_interface()
                     if i.clickachat:
-                        i.acheter.display(self.joueur)
+                        i.acheter.display(self.joueuractuel)
                     elif i.clickvente:
-                        i.vendre.display(self.joueur, self.marchandise)
+                        i.vendre.display(self.joueuractuel, self.marchandise)
                     else:
                         self.text=""
             else:
@@ -121,7 +119,7 @@ class Map:
     
     def changementdetour(self, marchandise, joueur):
         self.joueuractuel=joueur
-        self.
+        self.marchandise=marchandise
 
 
 listejoueur=world.world()
@@ -129,7 +127,6 @@ listejoueur.definirjoueurs()
 listejoueur=listejoueur.listejoueur
 listezone=cartedujeu.cartejeu().zones
 pygame.init()
-joueur= joueurs.joueur(1, "Salut", "yellow")
 game=Map(listejoueur, listezone)
 
 
