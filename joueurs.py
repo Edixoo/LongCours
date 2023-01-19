@@ -160,7 +160,7 @@ class joueur:
                         print("Le port ? (",i+1,")")
                 i+=1
             choixportuser=input()
-            self.posidport=int(choixportuser)
+            self.posidport=(int(choixportuser)-1)
         else:
             if(self.posidzone==0):
                 print("Zone disponibles : 1 ou 5")
