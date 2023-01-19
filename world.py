@@ -204,7 +204,7 @@ class world:
         match choix:
             case 0:
                 jou.deplacementnormal()
-                print("Vous vous trouvez au port",jou.posidport+1,"de la zone",jou.posidzone)
+                print("Vous vous trouvez au port",jou.posidport,"de la zone",jou.posidzone)
             case 1:
                 a=jou.vendre(roll)
             case 2:
@@ -220,6 +220,7 @@ class world:
                     print("_________________________")
                     a,b=cartechoix.use()
                     jou.mouvement(a,b)
+                    print("Vous avez été déplacé dans la zone",a,"et dans le port",b)
                     print("_________________________")
                 if(cartechoix.type==1): #Carte tempête choisie
                     indcible=-1
@@ -252,7 +253,7 @@ class world:
                         firstturn=0
                         while(combat==0):
                             if(firstturn==0):
-                                forceattaq=cartechoix.force
+                                forceattaq+=cartechoix.force
                                 print("_________________________")
                                 print("La force de l'attaquant est :",forceattaq,"et celle du défenseur:",forcedef)
                                 print("Joueur",cible+1,"Souhaitez-vous vous défendre (Non: 0 | Oui:1)")
@@ -282,7 +283,7 @@ class world:
                                     print("Choix du défenseur ( Joueur",cible+1,")")
                                     cartedef=self.listejoueur[cible].choixcarte(2)
                                     cartedef=self.listejoueur[cible].SelectEtRetraitCarte(cartedef)
-                                    forcedef=cartedef.force
+                                    forcedef+=cartedef.force
                                     print("_________________________")
                             else:
                                 if(forceattaq>=forcedef):
