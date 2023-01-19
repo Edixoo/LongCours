@@ -39,13 +39,14 @@ class joueur:
         choix=-1
         if(len(self.listecartes)==0):
             return False
-        
+        """ listchoixcarte=[c.carte] """
         if(carte==0):
             while(int(choix)>=len(self.listecartes) or int(choix)<0):
                 numcarte=1
                 for i in self.listecartes:
                     
                     print('Carte N°',numcarte)
+                    """ listchoixcarte.append(i) """
                     i.affichercarte()
                     numcarte+=1
                 print('Quelle carte souhaitez vous jouer ?')
@@ -184,8 +185,7 @@ class joueur:
                     self.posidzone=int(choixzoneuser)
                     self.posidport=0
 
-    def vendre(self): #Si inventaire vide return false pour éviter crash
-        typemarch = r.randint(0,5)
+    def vendre(self,typemarch:int): #Si inventaire vide return false pour éviter crash
         match typemarch:
             case 0:
                 print("Après lancé du dè, vous pouvez vendre de l'or")
