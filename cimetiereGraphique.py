@@ -11,12 +11,13 @@ class CimetiereGraphique:
         self.rect=self.port=pygame.Rect(position[0],position[1],20,20)
         self.cimeclicked=False
         self.invclick=False
+        self.couleur="red"
         self.inventaire= InventaireGraphique(self.screen, self.cimetiere.inventaire)
         self.cancel=Cancel(self.screen.get_width()/2-75, self.screen.get_height()/2+125,self.screen)
         self.bouton=Button([503, 527], [100,50], "Montrer", self.screen, 20)
 
     def display(self):
-        pygame.draw.rect(self.screen, "red", self.rect)
+        pygame.draw.rect(self.screen, self.couleur, self.rect)
 
     def update(self,position):
         self.bouton.update(position, "grey")

@@ -133,7 +133,10 @@ class joueur:
         """
         roll=r.randint(0,5)
         return roll
- 
+    
+    def ventepossible(self, nombre, marchandise):
+        pass
+    
     def deplacementnormal(self):
         """Fonction permettant au joueur de se déplacer sur les cases adjacentes
         """
@@ -300,7 +303,7 @@ class joueur:
                 self.ajout_monnaie(prixacq)
                 print("Cette vente vous a rapporté",prixacq,"$")
             
-            
+    
             
             
         

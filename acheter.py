@@ -1,5 +1,5 @@
 import pygame
-from buttons import Cancel
+from buttons import Cancel, Button
 from CartesGraphique import Cartes
 from joueurs import joueur
 
@@ -7,13 +7,13 @@ class Acheter:
     def __init__(self, marchandise, screen) -> None:
         self.screen=screen
         self.marchandise= marchandise
-        self.joueur: joueur
+        self.joueur: joueur = joueur(81,"tempo","b")
         fond= pygame.image.load("./images/Rectangle.png").convert_alpha()
         self.fond=pygame.transform.scale(fond,[900,700])
         self.fondrect=self.fond.get_rect(center=(self.screen.get_width()/2, self.screen.get_height()/2))
 
-        self.cancel=Cancel(451,697, self.screen)
-
+        self.acheter=Button((self.screen.get_width()/2+65, 697),(100,50),"Acheter",self.screen, 20)
+        self.cancel=Cancel(self.screen.get_width()/2-65,697, self.screen)
         font=pygame.font.SysFont("Arial",25)
         self.quantite=""
         self.mess=font.render(self.quantite,True, "white")
@@ -23,6 +23,7 @@ class Acheter:
         self.deuxiemephrase=font.render("que vous voulez acheter", True, "white")
         self.textbox=pygame.Rect(530, self.screen.get_height()/2+5, 200, 35)
         
+        self.checkachat=False
 
     def display(self,joueur):
         self.screen.blit(self.fond, self.fondrect)
@@ -32,6 +33,9 @@ class Acheter:
         self.screen.blit(self.deuxiemephrase, (475, self.screen.get_height()/2-30))
         self.carte.display()
         self.cancel.display()
+        if self.checkachat:
+            self.acheter.display()
+        self.joueur=joueur
         
 
 
@@ -40,6 +44,13 @@ class Acheter:
         self.mess=font.render(text,True, "white")
         self.cancel.update(position, "red")
         self.carte.update(text)
+        self.acheter.update(position, "grey")
         self.textbox.w=max(100,self.mess.get_width()+10)
+        if text!='':
+            if 0<self.joueur.monnaie and self.joueur.monnaie<self.marchandise.prix_achat*int(text):
+                self.checkachat=False
+            else:
+                self.checkachat=True
+        
         
 

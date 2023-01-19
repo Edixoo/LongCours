@@ -7,35 +7,43 @@ from cimetiereGraphique import CimetiereGraphique
 import joueurGraphique
 import zone
 import cartedujeu, world
+from buttons import Button, Cancel
+import random as rd
 
 position=[[(285,195),(216,267),(124,214),(222,131)],[(289,84),(506,124),(669,42),(435,184)],[(753,206),(719,332),(592,194),(682,243)],[(549,390),(647,462),(604,543),(524,446)],[(605,622),(528,756),(307,638),(455,588)],[(193,558),(102,526),(258,366),(249,594)]]
-
+marchandise= [marchandises.cereale(1),marchandises.bois(1),marchandises.gold(1),marchandises.machine_outils(1), marchandises.petrole(1), marchandises.textile(1)]
 class Map:
-    def __init__(self,listejoueurs: list[joueurs.joueur], listezones: list[zone.zonedejeu], position=position) -> None:
+    def __init__(self,listejoueurs: list[joueurs.joueur], listezones: list[zone.zonedejeu], position=position, listemarchandises=marchandise) -> None:
         self.screen=pygame.display.set_mode((922,800))
         self.running = True
         self.clock=pygame.time.Clock()
         pygame.display.set_caption("Long Cours")
-        
+        self.mouvcheck=False
+        self.deplacement=True
         self.text=""
         self.positionport=position
         self.listezones=listezones
-        self.portgraphique=[]
+        self.listegraphiques=[]
+        self.listeportgraphiques=[]
         self.marchandise: marchandises.marchandises
         for i in range (len(self.listezones)):
             for j in range(len(self.listezones[i].listeport)):
-                    self.portgraphique.append(portgraphique.Portgraphique(self.listezones[i].listeport[j],self.positionport[i][j][0],self.positionport[i][j][1],self.screen))
+                    self.listeportgraphiques.append(portgraphique.Portgraphique(self.listezones[i].listeport[j],self.positionport[i][j][0],self.positionport[i][j][1],self.screen))
                 
-            self.portgraphique.append(CimetiereGraphique(self.positionport[i][3], self.listezones[i].cimetiere, self.screen))
-
-        self.listejoueurs=[]
+            self.listeportgraphiques.append(CimetiereGraphique(self.positionport[i][3], self.listezones[i].cimetiere, self.screen))
+            self.listegraphiques.append(self.listeportgraphiques)
+            self.listeportgraphiques=[]
+        self.listemarchandises=listemarchandises
+        self.listejoueursgraphiques=[]
         for i in listejoueurs:
-            self.listejoueurs.append(joueurGraphique.joueurGraphique(self.screen,i, self.portgraphique[0]))
-        
+            self.listejoueursgraphiques.append(joueurGraphique.joueurGraphique(self.screen,i, self.listegraphiques[0][0]))
+        self.font=pygame.font.SysFont("Arial", 20, True)
+        self.listejoueurs=listejoueurs
         self.joueuractuel=listejoueurs[0]
-        self.nomjoueuractu=
         self.inventaire=InventaireGraphique.InventaireGraphique(self.screen, self.joueuractuel.bateau.inventaire)
-        
+        self.sedeplacer=Button((self.screen.get_width()-60, self.screen.get_height()-30),[100,50],"Se déplacer",self.screen,20)
+        self.changertour=Button((self.screen.get_width()-60,30), [100,50],"Changer Tour", self.screen, 15)
+        self.canceldeplacer=Cancel(self.screen.get_width()-180, self.screen.get_height()-30, self.screen)
 
     def handling_events(self):
         for event in pygame.event.get():
@@ -44,9 +52,18 @@ class Map:
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 print(pygame.mouse.get_pos())
-                for i in self.portgraphique:
-                    i.checkforInput(pygame.mouse.get_pos())
-
+                for i in range(len(self.listegraphiques)):
+                    for j in range(len(self.listegraphiques[i])):
+                        if self.joueuractuel.posidport==j and self.joueuractuel.posidzone==i:
+                            self.listegraphiques[i][j].checkforInput(pygame.mouse.get_pos())
+                self.inventaire.checkforInput(pygame.mouse.get_pos())
+                if self.sedeplacer.checkForInput(pygame.mouse.get_pos()):
+                    self.mouvcheck=True
+                    i=self.mouvement()
+                elif self.mouvcheck==True and self.canceldeplacer.checkForInput(pygame.mouse.get_pos()):
+                    self.mouvcheck=False
+                if self.changertour.checkForInput(pygame.mouse.get_pos()):
+                    self.changementdetour()
             if event.type==pygame.KEYDOWN:
                 if event.key== pygame.K_BACKSPACE:
                     self.text=self.text[:-1]
@@ -76,38 +93,66 @@ class Map:
 
     def update(self):
         self.inventaire.update(pygame.mouse.get_pos())
-        for i in self.portgraphique:
-            if type(i)==portgraphique.Portgraphique:
-                i.update(pygame.mouse.get_pos(), self.text)
-            else:
-                i.update(pygame.mouse.get_pos())
+        for i in self.listegraphiques:
+            for j in i:
+                if type(j)==portgraphique.Portgraphique:
+                    j.update(pygame.mouse.get_pos(), self.text)
+                else:
+                    j.update(pygame.mouse.get_pos())
+        self.changertour.update(pygame.mouse.get_pos(),"grey")
+        self.canceldeplacer.update(pygame.mouse.get_pos(),"red")
+        self.sedeplacer.update(pygame.mouse.get_pos(), "grey")
 
     def display(self):
         image=pygame.image.load("./MapSAE/Test.png").convert()
         map= pygame.transform.scale(image, (922, 800))
         self.screen.blit(map,(0,0))
+        self.nomjoueuractu=self.font.render("Pseudo:" + self.joueuractuel.pseudo, True, "black")
+        self.nommarchandise=self.font.render("Marchandise: "+self.marchandise.nom, True, "black")
+        self.screen.blit(self.nomjoueuractu, (0,0))
+        self.screen.blit(self.nommarchandise, (100,0))
+        if self.deplacement:
+            self.sedeplacer.display()
+        self.changertour.display()
         self.inventaire.display()
-        for i in self.portgraphique:
+        for i in self.listejoueursgraphiques:
             i.display()
-        for i in self.portgraphique:
-            if type(i)==portgraphique.Portgraphique:
-                if i.isclicked:
-                    i.afficher_interface()
-                    if i.clickachat:
-                        i.acheter.display(self.joueuractuel)
-                    elif i.clickvente:
-                        i.vendre.display(self.joueuractuel, self.marchandise)
-                    else:
-                        self.text=""
-            else:
-                if i.cimeclicked:
-                    i.afficher_interface()
-                    if i.invclick:
-                        i.inventaire.afficher_inv()
+        for i in self.listegraphiques:
+            for j in i:
+                j.display()
+        for i in self.listegraphiques:
+            for j in i:
+                if type(j)==portgraphique.Portgraphique:
+                    if j.isclicked:
+                        j.afficher_interface()
+                        if j.clickachat:
+                            j.acheter.display(self.joueuractuel)
+                        elif j.clickvente:
+                            j.vendre.display(self.joueuractuel, self.marchandise)
+                        else:
+                            self.text=""
+                else:
+                    if j.cimeclicked:
+                        j.afficher_interface()
+                        if j.invclick:
+                            j.inventaire.afficher_inv()
 
         if self.inventaire.isclickedinv:
             self.inventaire.afficher_inv()
-
+        if self.mouvcheck:
+                liste=self.mouvement()
+                self.canceldeplacer.display()
+                for i in liste:
+                    if self.checkforInput(pygame.mouse.get_pos(),i[0])!=False:
+                        for j in self.listejoueursgraphiques:
+                            if j.joueur==self.joueuractuel:
+                                j.move(i[1])
+                                for k in range(len(self.listegraphiques)):
+                                    if i[1] in self.listegraphiques[k]:
+                                        self.joueuractuel.posidport=self.listegraphiques[k].index(i[1])
+                                        self.joueuractuel.posidzone=k
+                                self.mouvcheck=False
+                                self.deplacement=False
         pygame.display.flip()
 
     def run(self):
@@ -117,10 +162,43 @@ class Map:
             self.display()
             self.clock.tick(60)
     
-    def changementdetour(self, marchandise, joueur):
-        self.joueuractuel=joueur
-        self.marchandise=marchandise
+    def changementdetour(self):
+        index=self.listejoueurs.index(self.joueuractuel)
+        if index+1<len(self.listejoueurs):
+            self.joueuractuel=self.listejoueurs[index+1]
+        else:
+            self.joueuractuel=self.listejoueurs[0]
+        self.marchandise=rd.choice(self.listemarchandises)
+        self.deplacement=True
+    
+    def mouvement(self):
+        self.listemouvement=[]
+        rectlist=[]
+        liste=self.listegraphiques[self.joueuractuel.posidzone]
+        for i in self.listegraphiques[self.joueuractuel.posidzone]:
+            if liste.index(i)!=self.joueuractuel.posidport:
+                self.listemouvement.append(i)
+        if self.joueuractuel.posidzone>0 and self.joueuractuel.posidzone<5:
+            self.listemouvement.append(self.listegraphiques[self.joueuractuel.posidzone-1][0])
+            self.listemouvement.append(self.listegraphiques[self.joueuractuel.posidzone+1][0])
+        elif self.joueuractuel.posidzone==0:
+            self.listemouvement.append(self.listegraphiques[self.joueuractuel.posidzone+1][0])
+            self.listemouvement.append(self.listegraphiques[-1][0])
+        else:
+            self.listemouvement.append(self.listegraphiques[0][0])
+            self.listemouvement.append(self.listegraphiques[self.joueuractuel.posidzone-1][0])
 
+        for i in self.listemouvement:
+            rect=pygame.Rect(i.rect.x+10,i.rect.y+20, 10,10)
+            pygame.draw.rect(self.screen, "white", rect)
+            rectlist.append((rect,i))
+        return rectlist
+    
+    def checkforInput(self, position, rect):
+        if position[0] in range(rect.left, rect.right) and position[1] in range(rect.top, rect.bottom):
+            return True
+        else:
+            return False
 
 listejoueur=world.world()
 listejoueur.definirjoueurs()
@@ -128,8 +206,7 @@ listejoueur=listejoueur.listejoueur
 listezone=cartedujeu.cartejeu().zones
 pygame.init()
 game=Map(listejoueur, listezone)
-
-
+game.changementdetour()
 game.run()
 pygame.quit()
 

@@ -1,5 +1,5 @@
 import pygame
-from buttons import Cancel
+from buttons import Cancel,Button
 from CartesGraphique import Cartes
 import marchandises
 from joueurs import joueur
@@ -12,9 +12,10 @@ class Vendre:
         fond= pygame.image.load("./images/Rectangle.png").convert_alpha()
         self.fond=pygame.transform.scale(fond,[900,700])
         self.fondrect=self.fond.get_rect(center=(self.screen.get_width()/2, self.screen.get_height()/2))
-
+        self.ventecheck=False
+        self.vendre=Button((self.screen.get_width()/2+65, 697),(100,50),"Vendre",self.screen, 20)
         self.textbox=pygame.Rect(530, 425, 200, 35)
-        self.cancel=Cancel(451,697, self.screen)
+        self.cancel=Cancel(self.screen.get_width()/2-65,697, self.screen)
 
         self.font=pygame.font.SysFont("Arial",25)
         self.quantite=""
@@ -31,6 +32,8 @@ class Vendre:
         self.screen.blit(self.dispo, (475,235))
         self.carte=Cartes(marchandise, self.quantite, 235, 400, self.screen)
         self.carte.display()
+        if self.ventecheck:
+            self.vendre.display()
         self.cancel.display()
         
 

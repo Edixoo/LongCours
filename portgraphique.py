@@ -15,22 +15,22 @@ class Portgraphique:
         self.rectnom=self.nom.get_rect(center=(self.screen.get_width()/2, (self.screen.get_height()/2-150)))
         self.couleur=port.couleur
         self.cancel=Cancel(340, 522,self.screen)
-
+        self.portbase=port
         self.achat=Button([455,522],[100,50], "Acheter", self.screen, 25)
         self.vente=Button([570,522], [100,50], "Vendre", self.screen, 25)
 
         self.acheter=Acheter(port.marchandise, self.screen)
         self.vendre=Vendre(self.screen)
-        self.port=pygame.Rect(posx,posy,20,20)
+        self.rect=pygame.Rect(posx,posy,20,20)
         self.isclicked=False
         self.clickachat=False
         self.clickvente=False
     
     def display(self):
-        pygame.draw.rect(self.screen, self.couleur, self.port)
+        pygame.draw.rect(self.screen, self.couleur, self.rect)
 
     def checkforInput(self,position):
-        if position[0] in range(self.port.left, self.port.right) and position[1] in range(self.port.top, self.port.bottom):
+        if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
             self.isclicked=True
         if self.achat.checkForInput(position):
             self.clickachat=True
