@@ -1,6 +1,11 @@
 class carte:
     def __init__(self,type:int,nom:str) -> None:
-        
+        """Constructeur de base de la classe carte
+
+        Args:
+            type (int): permet de définir de quel carte il s'agit
+            nom (str): nom de la carte
+        """
         
         self.type : int | None = None #0: Mouvement | 1: Tempête | 2: Bras de fer
         self.nom : str 
@@ -14,10 +19,17 @@ class carte_mouvdirect(carte):
         self.nom="carte_mouvdirect"
     
     def use(self) -> int:
+        """Fonction permettant de donner les coordonnées pour le déplacement du joueur
+
+        Returns:
+            a,b (int): les coordonnées
+        """
         a=-1;b=-1
-        while((a<0 or a>5) and (b<0 or b>3)):
+        while((a<0 or a>5) or (b<0 or b>3)):
+            print('Erreur de saisie ! ')
             print('Où souhaitez vous aller ? (Zone: 0->5)')
             a=int(input())
+            
             print('Port: 0->3 [3 = cimetiere]')
             b=int(input())
         return a,b
@@ -33,6 +45,11 @@ class carte_tempete(carte):
         self.nom="carte_tempete"
     
     def use(self)-> None:
+        """Fonction permettant d'utiliser la carte
+
+        Returns:
+            int: indice de la cible
+        """
         indcible=-1
         print('Sur quel joueur souhaitez vous déclencher la tempête ?')
         indcible=int(input())
@@ -51,6 +68,11 @@ class carte_bdf(carte):
         self.force: int = force
         self.typenom: str = typenom
     def use(self)-> None:
+        """Fonction permettant d'obtenir la force de la carte
+
+        Returns:
+            int: force
+        """
         print("Vous jouez la carte bras de fer de force",self.force)
         return self.force
     

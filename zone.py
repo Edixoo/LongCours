@@ -5,6 +5,11 @@ import joueurs
 
 class zonedejeu:
     def __init__(self,id:int) -> None:
+        """Constructeur de la zone de jeu
+
+        Args:
+            id (int): indice
+        """
         self.idzone: int = id
         self.listeport: list[port.port] =[]
         self.cimetiere: cimetiere.cimetiere = cimetiere.cimetiere()

@@ -11,7 +11,11 @@ class inventaire:
         self.machine_outils: list[marchandises.marchandises] =[]
 
     def ajouter(self, march:marchandises.marchandises):
-        """Fonction d'ajout d'une marchandise (utile lors de l'achat)"""
+        """Fonction d'ajout d'une marchandise (utile lors de l'achat)
+
+        Args:
+            march (marchandises.marchandises): objet de type marchandise
+        """
         match march.nom:
             case "gold":
                 self.gold.append(march)
@@ -27,7 +31,15 @@ class inventaire:
                 self.machine_outils.append(march)
 
     def retirer(self, qtt:int,typemarch:int):
-        """Fonction de retrait d'une marchandise (utile lors de la vente)"""
+        """Fonction de retrait d'une marchandise (utile lors de la vente)
+
+        Args:
+            qtt (int): quantite à retirer
+            typemarch (int): le type de la marchandise à retirer
+
+        Returns:
+            int: retourne le prix
+        """
         qttvendue=0
         prixacq=0
         match typemarch:
@@ -111,6 +123,8 @@ class inventaire:
                 return prixacq
 
     def nettoyer(self):
+        """Fonction permettant de vider l'inventaire
+        """
         self.gold.clear()
         self.bois.clear()
         self.cereale.clear()
@@ -120,6 +134,11 @@ class inventaire:
 
     
     def getGold(self):
+        """Fonction permettant d'obtenir le nombre de d'or
+
+        Returns:
+            str: nombre de d'or
+        """
         resultat=0
         if len(self.gold)==0:
             return "Vide"
@@ -128,6 +147,11 @@ class inventaire:
         return str(resultat)
     
     def getTextile(self):
+        """Fonction permettant d'obtenir le nombre de textile
+
+        Returns:
+            str: nombre de textile
+        """
         resultat=0
         if len(self.textile)==0:
             return "Vide"
@@ -136,6 +160,11 @@ class inventaire:
         return str(resultat)
     
     def getBois(self):
+        """Fonction permettant d'obtenir le nombre de bois
+
+        Returns:
+            str: nombre de bois
+        """
         resultat=0
         if len(self.bois)==0:
             return "Vide"
@@ -144,6 +173,11 @@ class inventaire:
         return str(resultat)
 
     def getPetrole(self):
+        """Fonction permettant d'obtenir le nombre de pétrole
+
+        Returns:
+            str: nombre de pétrole
+        """
         resultat=0
         if len(self.petrole)==0:
             return "Vide"
@@ -152,6 +186,11 @@ class inventaire:
         return str(resultat)
 
     def getCereale(self):
+        """Fonction permettant d'obtenir le nombre de céréales
+
+        Returns:
+            str: nombre de céréales
+        """
         resultat=0
         if len(self.cereale)==0:
             return "Vide"
@@ -160,6 +199,11 @@ class inventaire:
         return str(resultat)
 
     def getMachineOutils(self):
+        """Fonction permettant d'obtenir le nombre de machine à outils
+
+        Returns:
+            str: nombre de machine à outils
+        """
         resultat=0
         if len(self.machine_outils)==0:
             return "Vide"
@@ -168,6 +212,11 @@ class inventaire:
         return str(resultat)
 
     def __str__(self) -> str:
+        """Redéfinition du print pour l'objet inventaire
+
+        Returns:
+            str: format d'affichage reformaté
+        """
         resultat=""
         if len(self.gold)==0:
             resultat+="- Or: Vide \n"

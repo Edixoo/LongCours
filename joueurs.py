@@ -115,16 +115,28 @@ class joueur:
         self.posidport=idport
 
     def echouer(self):
+        """Fonction permettant de faire échouer le joueur
+
+        Returns:
+            inventaire: inventaire du bateau du joueur ayant échoué
+        """
         a=self.bateau.echouer()
         self.posidport=0
         self.posidzone=0
         return a
 
     def marchandisevendable(self):
+        """Fonction permettant de lancer un dé allant de 0 à 5 pour déterminer la marchandise qui sera vendable
+
+        Returns:
+            int: indice du type de marchandise vendable
+        """
         roll=r.randint(0,5)
         return roll
  
     def deplacementnormal(self):
+        """Fonction permettant au joueur de se déplacer sur les cases adjacentes
+        """
         print("Souhaitez vous vous déplacer au port le plus proche (port) ou changer de zone ? (zone)")
         choix = input()
         while(choix!="port" and choix!="zone"):
@@ -148,38 +160,39 @@ class joueur:
             self.posidport=int(choixportuser)
         else:
             if(self.posidzone==0):
-                print("Zone disponibles : 1 / 5")
+                print("Zone disponibles : 1 ou 5")
                 choixzoneuser=input()
                 while(int(choixzoneuser)!=1 and int(choixzoneuser)!=5):
                     print("Erreur de saisie")
-                    print("Zone disponibles : 1 / 5")
+                    print("Zone disponibles : 1 ou 5")
                     choixzoneuser=input() 
                 print("Déplacement vers la zone",choixzoneuser,"(le port sera le 0)")
                 self.posidzone=int(choixzoneuser)
                 self.posidport=0
             else:
                 if(self.posidzone==5):
-                    print("Zone disponibles : 0 / 4")
+                    print("Zone disponibles : 0 ou 4")
                     choixzoneuser=input()
                     while(int(choixzoneuser)!=0 and int(choixzoneuser)!=4):
                         print("Erreur de saisie")
-                        print("Zone disponibles : 0 / 4")
+                        print("Zone disponibles : 0 ou 4")
                         choixzoneuser=input() 
                     print("Déplacement vers la zone",choixzoneuser,"(le port sera le 0)")
                     self.posidzone=int(choixzoneuser)
                     self.posidport=0
                 else:
-                    print("Zones disponibles:",self.posidzone-1,"/",self.posidzone+1)
+                    print("Zones disponibles:",self.posidzone-1,"ou",self.posidzone+1)
                     choixzoneuser=input()
                     while(int(choixzoneuser)!=self.posidzone-1 and int(choixzoneuser)!=self.posidzone+1):
                         print("Erreur de saisie")
-                        print("Zones disponibles:",self.posidzone-1,"/",self.posidzone+1)
+                        print("Zones disponibles:",self.posidzone-1,"ou",self.posidzone+1)
                         choixzoneuser=input() 
                     print("Déplacement vers la zone",choixzoneuser,"(le port sera le 0)")
                     self.posidzone=int(choixzoneuser)
                     self.posidport=0
 
-    def vendre(self,typemarch:int): #Si inventaire vide return false pour éviter crash
+    def vendre(self,typemarch:int):
+        """Fonction permettant au joueur de vendre une ressource sur le port où il se trouve"""
         match typemarch:
             case 0:
                 qtt = self.bateau.inventaire.getGold()

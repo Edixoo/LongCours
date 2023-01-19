@@ -1,9 +1,9 @@
 import inventaire
 
 class bateau:
-    """Constructeur de la classe bateau """
+    
     def __init__(self,couleur:str):
-   
+        """Constructeur de la classe bateau """
         self.couleur: str 
         self.inventaire: inventaire.inventaire = inventaire.inventaire()
         
@@ -17,6 +17,11 @@ class bateau:
         self.inventaire.retirer(marchandise)
 
     def echouer(self):
+        """Fonction permettant de nettoyer l'inventaire du bateau et de le renvoyer
+
+        Returns:
+            a inventaire: inventaire du bateau pour récupérer et mettre dans le cimetiere
+        """
         a = self.inventaire
         self.inventaire.nettoyer()
         return a

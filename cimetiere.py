@@ -3,7 +3,8 @@ import inventaire
 import joueurs
 
 class cimetiere:
-    def __init__(self,):
+    def __init__(self):
+        """Constructeur de la classe cimetière"""
         self.inventaire : inventaire.inventaire
         self.inventaire=inventaire.inventaire()
         #self.presence : list[joueurs.joueur] = []
