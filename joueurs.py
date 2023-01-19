@@ -160,32 +160,32 @@ class joueur:
             self.posidport=int(choixportuser)
         else:
             if(self.posidzone==0):
-                print("Zone disponibles : 1 / 5")
+                print("Zone disponibles : 1 ou 5")
                 choixzoneuser=input()
                 while(int(choixzoneuser)!=1 and int(choixzoneuser)!=5):
                     print("Erreur de saisie")
-                    print("Zone disponibles : 1 / 5")
+                    print("Zone disponibles : 1 ou 5")
                     choixzoneuser=input() 
                 print("Déplacement vers la zone",choixzoneuser,"(le port sera le 0)")
                 self.posidzone=int(choixzoneuser)
                 self.posidport=0
             else:
                 if(self.posidzone==5):
-                    print("Zone disponibles : 0 / 4")
+                    print("Zone disponibles : 0 ou 4")
                     choixzoneuser=input()
                     while(int(choixzoneuser)!=0 and int(choixzoneuser)!=4):
                         print("Erreur de saisie")
-                        print("Zone disponibles : 0 / 4")
+                        print("Zone disponibles : 0 ou 4")
                         choixzoneuser=input() 
                     print("Déplacement vers la zone",choixzoneuser,"(le port sera le 0)")
                     self.posidzone=int(choixzoneuser)
                     self.posidport=0
                 else:
-                    print("Zones disponibles:",self.posidzone-1,"/",self.posidzone+1)
+                    print("Zones disponibles:",self.posidzone-1,"ou",self.posidzone+1)
                     choixzoneuser=input()
                     while(int(choixzoneuser)!=self.posidzone-1 and int(choixzoneuser)!=self.posidzone+1):
                         print("Erreur de saisie")
-                        print("Zones disponibles:",self.posidzone-1,"/",self.posidzone+1)
+                        print("Zones disponibles:",self.posidzone-1,"ou",self.posidzone+1)
                         choixzoneuser=input() 
                     print("Déplacement vers la zone",choixzoneuser,"(le port sera le 0)")
                     self.posidzone=int(choixzoneuser)

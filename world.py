@@ -240,11 +240,17 @@ class world:
                     print("Qui est votre cible ?")
                     for i in listecible:
                         print("Le joueur", i.id+1,"?")
-                    cible+=int(input())
-                    if(cible<0 or cible>5):
+                    if(len(listecible)==0):
                         print("Pas de cible valide ! Bras de fer impossible. Fin de tour")
                         combat=1
+                           
                     else:
+                        cible+=int(input()) 
+                        if(cible not in listecible):
+                            print("Cible invalide")
+                            for i in listecible:
+                                print("Le joueur", i.id+1,"?")
+                                cible+=int(input()) 
                         print("_________________________")
                         print("Début du BRAS DE FER !")
                         combat=0
@@ -253,10 +259,10 @@ class world:
                         firstturn=0
                         while(combat==0):
                             if(firstturn==0):
-                                forceattaq+=cartechoix.force
+                                forceattaq=cartechoix.force
                                 print("_________________________")
                                 print("La force de l'attaquant est :",forceattaq,"et celle du défenseur:",forcedef)
-                                print("Joueur",cible+1,"Souhaitez-vous vous défendre (Non: 0 | Oui:1)")
+                                print("Defenseur joueur",cible+1,"Souhaitez-vous vous défendre (Non: 0 | Oui:1)")
                                 print("_________________________")
                                 choixdef=int(input())
                                 while(choixdef!=0 and choixdef!=1):
@@ -265,7 +271,7 @@ class world:
                                         print("La force de l'attaquant est :",forceattaq,"et celle du défenseur:",forcedef)
                                         print("Défenseur joueur",cible+1,"souhaitez vous jouer une nouvelle carte ?")
                                         print("_________________________")
-                                        choixdef=int(input)
+                                        choixdef=int(input())
                                 if(choixdef==0):
                                     self.listejoueur[jou.id].bateau.inventaire.bois+=self.listejoueur[cible].bateau.inventaire.bois
                                     self.listejoueur[jou.id].bateau.inventaire.gold+=self.listejoueur[cible].bateau.inventaire.gold
@@ -285,19 +291,20 @@ class world:
                                     cartedef=self.listejoueur[cible].choixcarte(2)
                                     cartedef=self.listejoueur[cible].SelectEtRetraitCarte(cartedef)
                                     forcedef+=cartedef.force
+                                    firstturn=1
                                     print("_________________________")
                             else:
                                 if(forceattaq>=forcedef):
                                     print("_________________________")
                                     print("La force de l'attaquant est :",forceattaq,"et celle du défenseur:",forcedef)
                                     print("Défenseur ( joueur",cible+1,")souhaitez vous jouer une nouvelle carte ?")
-                                    choixdef=int(input)
+                                    choixdef=int(input())
                                     while(choixdef!=0 and choixdef!=1):
                                         print("_________________________")
                                         print("Erreur de saisie")
                                         print("Défenseur joueur",cible+1,"souhaitez vous jouer une nouvelle carte ? (Non:0 | Oui:1)")
                                         print("_________________________")
-                                        choixdef=int(input)
+                                        choixdef=int(input())
                                     if(choixdef==0):
                                         self.listejoueur[jou.id].bateau.inventaire.bois+=self.listejoueur[cible].bateau.inventaire.bois
                                         self.listejoueur[jou.id].bateau.inventaire.gold+=self.listejoueur[cible].bateau.inventaire.gold
@@ -318,14 +325,14 @@ class world:
                                         forcedef+=cartedef.force
                                 else:
                                     print("_________________________")
-                                    print("Attaquant joueur",cible+1,"souhaitez vous jouer une nouvelle carte ? (Non:0 | Oui:1)")
-                                    choixattaquant=int(input)
+                                    print("Attaquant joueur",jou.id+1,"souhaitez vous jouer une nouvelle carte ? (Non:0 | Oui:1)")
+                                    choixattaquant=int(input())
                                     while(choixattaquant!=0 and choixattaquant!=1):
                                         print("_________________________")
                                         print("Erreur de saisie")
-                                        print("Attaquant joueur",cible+1,"souhaitez vous jouer une nouvelle carte ? (Non:0 | Oui:1)")
+                                        print("Attaquant joueur",jou.id+1,"souhaitez vous jouer une nouvelle carte ? (Non:0 | Oui:1)")
                                         print("_________________________")
-                                        choixattaquant=int(input)
+                                        choixattaquant=int(input())
                                     if(choixattaquant==0):
                                         self.listejoueur[cible].bateau.inventaire.bois+=self.listejoueur[jou.id].bateau.inventaire.bois
                                         self.listejoueur[cible].bateau.inventaire.gold+=self.listejoueur[jou.id].bateau.inventaire.gold

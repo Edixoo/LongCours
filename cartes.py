@@ -25,9 +25,11 @@ class carte_mouvdirect(carte):
             a,b (int): les coordonnées
         """
         a=-1;b=-1
-        while((a<0 or a>5) and (b<0 or b>3)):
+        while((a<0 or a>5) or (b<0 or b>3)):
+            print('Erreur de saisie ! ')
             print('Où souhaitez vous aller ? (Zone: 0->5)')
             a=int(input())
+            
             print('Port: 0->3 [3 = cimetiere]')
             b=int(input())
         return a,b
