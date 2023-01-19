@@ -14,14 +14,14 @@ class Portgraphique:
         self.nom=main_font.render(port.nom, True, "white")
         self.rectnom=self.nom.get_rect(center=(self.screen.get_width()/2, (self.screen.get_height()/2-150)))
         self.couleur=port.couleur
-        self.cancel=Cancel(self.screen.get_width()/2-75, self.screen.get_height()/2+125,self.screen)
+        self.cancel=Cancel(340, 522,self.screen)
 
-        self.achat=Button([518,522],[100,50], "Acheter", self.screen, 25)
-        self.vente=Button([668, 522], [100,50], "Vendre", self.screen, 25)
+        self.achat=Button([455,522],[100,50], "Acheter", self.screen, 25)
+        self.vente=Button([570,522], [100,50], "Vendre", self.screen, 25)
 
         self.acheter=Acheter(port.marchandise, self.screen)
         self.vendre=Vendre(self.screen)
-        self.port=pygame.Rect(posx,posy,10,10)
+        self.port=pygame.Rect(posx,posy,20,20)
         self.isclicked=False
         self.clickachat=False
         self.clickvente=False
@@ -54,7 +54,6 @@ class Portgraphique:
             rectangle=pygame.image.load("./images/Rectangle.png").convert_alpha()
             rect=rectangle.get_rect(center=(self.screen.get_width()/2, self.screen.get_height()/2))
             self.screen.blit(rectangle,rect)
-            
             self.screen.blit(self.marchandisenom, self.rectmarchnom)
             self.screen.blit(self.marchandiseprix, self.rectprix)
             self.screen.blit(self.nom, self.rectnom)

@@ -13,52 +13,41 @@ import cartedujeu, world
 position=[[(285,195),(216,267),(124,214),(222,131)],[(289,84),(506,124),(669,42),(435,184)],[(753,206),(719,332),(592,194),(682,243)],[(549,390),(647,462),(604,543),(524,446)],[(605,622),(528,756),(307,638),(455,588)],[(193,558),(102,526),(258,366),(249,594)]]
 
 class Map:
-    def __init__(self,listejoueurs: list[joueurs.joueur], listezones: list[zone.zonedejeu], position=position) -> None:
+    def __init__(self,listejoueurs: list[joueurs.joueur], listezones: list[zone.zonedejeu], marchandise, position=position) -> None:
         self.screen=pygame.display.set_mode((922,800))
         self.running = True
         self.clock=pygame.time.Clock()
-
         pygame.display.set_caption("Long Cours")
-
-        porte=port.port(1,"cereale","Le Cap")
-        self.lecap=portgraphique.Portgraphique(porte,100,100, self.screen)
-
-        self.carte=CartesGraphique.Cartes(marchandises.cereale(150), 150, self.screen.get_width()/2, self.screen.get_height()/2, self.screen)
         
-        self.joueur= joueur
-        inv= inventaire.inventaire()
-        march= marchandises.cereale(150)
-        inv.ajouter(march)
-        self.inventaire=InventaireGraphique.InventaireGraphique(self.screen, inv)
-        cimet=cimetiere.cimetiere()
-        self.cimetiere=CimetiereGraphique([150,150],cimet,self.screen)
-        self.marchandise= marchandises.cereale(150)
         self.text=""
-        self.joueuractuel=joueurGraphique.joueurGraphique(self.screen, self.joueur)
-        
         self.positionport=position
-        self.listejoueurs=listejoueurs
         self.listezones=listezones
         self.portgraphique=[]
-        
-        for i in range (len(self.listezones)-1):
-            print(len(self.listezones[i].listeport)-1)
-            for j in range(3):
-                self.portgraphique.append(portgraphique.Portgraphique(self.listezones[i].listeport[j],self.positionport[i][j][0],self.positionport[i][j][1],self.screen))
+        self.marchandise=
+        for i in range (len(self.listezones)):
+            for j in range(len(self.listezones[i].listeport)):
+                    self.portgraphique.append(portgraphique.Portgraphique(self.listezones[i].listeport[j],self.positionport[i][j][0],self.positionport[i][j][1],self.screen))
                 
-            self.portgraphique.append(CimetiereGraphique(self.positionport[i][3],self.listezones[i].cimetiere, self.screen))
+            self.portgraphique.append(CimetiereGraphique(self.positionport[i][3], self.listezones[i].cimetiere, self.screen))
+
+        self.listejoueurs=[]
+        for i in listejoueurs:
+            self.listejoueurs.append(joueurGraphique.joueurGraphique(self.screen,i, self.portgraphique[0]))
+        
+        self.joueuractuel=listejoueurs[0]
+        self.inventaire=InventaireGraphique.InventaireGraphique(self.screen, self.joueuractuel.bateau.inventaire)
         
 
     def handling_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running= False
+
             if event.type == pygame.MOUSEBUTTONDOWN:
                 print(pygame.mouse.get_pos())
-                self.lecap.checkforInput(pygame.mouse.get_pos())
-                self.inventaire.checkforInput(pygame.mouse.get_pos())
-                self.cimetiere.checkforInput(pygame.mouse.get_pos())
-    
+                for i in self.portgraphique:
+                    i.checkforInput(pygame.mouse.get_pos())
+
             if event.type==pygame.KEYDOWN:
                 if event.key== pygame.K_BACKSPACE:
                     self.text=self.text[:-1]
@@ -87,26 +76,22 @@ class Map:
 
 
     def update(self):
-        self.lecap.update(pygame.mouse.get_pos(), self.text)
         self.inventaire.update(pygame.mouse.get_pos())
-        self.cimetiere.update(pygame.mouse.get_pos())
         for i in self.portgraphique:
-            if type(i)==CimetiereGraphique:
-                i.update(pygame.mouse.get_pos())
-            else:
+            if type(i)==portgraphique.Portgraphique:
                 i.update(pygame.mouse.get_pos(), self.text)
+            else:
+                i.update(pygame.mouse.get_pos())
 
     def display(self):
         image=pygame.image.load("./MapSAE/Test.png").convert()
         map= pygame.transform.scale(image, (922, 800))
         self.screen.blit(map,(0,0))
-        self.lecap.display()
-        self.carte.display()
-        self.cimetiere.display()
         self.inventaire.display()
-        self.joueuractuel.display(self.lecap)
         for i in self.portgraphique:
             i.display()
+        self.joueuractuel.display()
+        for i in self.portgraphique:
             if type(i)==portgraphique.Portgraphique:
                 if i.isclicked:
                     i.afficher_interface()
@@ -121,21 +106,9 @@ class Map:
                     i.afficher_interface()
                     if i.invclick:
                         i.inventaire.afficher_inv()
-            
+
         if self.inventaire.isclickedinv:
             self.inventaire.afficher_inv()
-        elif self.cimetiere.cimeclicked:
-            self.cimetiere.afficher_interface()
-            if self.cimetiere.invclick:
-                self.cimetiere.inventaire.afficher_inv()
-        else:
-            self.screen.blit(map,(0,0))
-            self.lecap.display()
-            self.cimetiere.display()
-            self.inventaire.display()
-            self.joueuractuel.display(self.lecap)
-            for i in self.portgraphique:
-                i.display()
 
         pygame.display.flip()
 
@@ -145,6 +118,10 @@ class Map:
             self.update()
             self.display()
             self.clock.tick(60)
+    
+    def changementdetour(self, marchandise, joueur):
+        self.joueuractuel=joueur
+        self.
 
 
 listejoueur=world.world()

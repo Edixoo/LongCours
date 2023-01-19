@@ -8,7 +8,7 @@ class CimetiereGraphique:
     def __init__(self, position, cimetiere: cimetiere.cimetiere, screen) -> None:
         self.screen= screen
         self.cimetiere=cimetiere
-        self.rect=self.port=pygame.Rect(position[0],position[1],10,10)
+        self.rect=self.port=pygame.Rect(position[0],position[1],20,20)
         self.cimeclicked=False
         self.invclick=False
         self.inventaire= InventaireGraphique(self.screen, self.cimetiere.inventaire)
