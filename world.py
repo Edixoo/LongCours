@@ -236,21 +236,22 @@ class world:
                     for j in self.listejoueur:
                         if(jou.posidport == j.posidport and jou.posidzone == j.posidzone and jou.id!=j.id):
                             listecible.append(j)
-                    cible=-1
+                    
                     print("Qui est votre cible ?")
+                    listecibleindex=[int]
                     for i in listecible:
                         print("Le joueur", i.id+1,"?")
+                        listecibleindex.append(i.id)
                     if(len(listecible)==0):
                         print("Pas de cible valide ! Bras de fer impossible. Fin de tour")
-                        combat=1
-                           
+                        combat=1     
                     else:
-                        cible+=int(input()) 
-                        if(cible not in listecible):
+                        cible=int(input())-1  
+                        while(cible not in listecibleindex):
                             print("Cible invalide")
                             for i in listecible:
                                 print("Le joueur", i.id+1,"?")
-                                cible+=int(input()) 
+                            cible+=int(input()) 
                         print("_________________________")
                         print("Début du BRAS DE FER !")
                         combat=0
