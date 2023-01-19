@@ -102,8 +102,7 @@ class joueur:
                 choix=input()
             choix=int(choix)-1
             return choix
-
-        
+      
     def SelectEtRetraitCarte(self, choix):
         """Fonction permettant au joueur de jouer une carte"""
         cartejoue=self.listecartes[choix]
@@ -120,16 +119,11 @@ class joueur:
         self.posidport=0
         self.posidzone=0
         return a
-    
-    def acheter(self):
-
-        return 0
 
     def marchandisevendable(self):
         roll=r.randint(0,5)
         return roll
-
-    
+ 
     def deplacementnormal(self):
         print("Souhaitez vous vous déplacer au port le plus proche (port) ou changer de zone ? (zone)")
         choix = input()
@@ -188,11 +182,7 @@ class joueur:
     def vendre(self,typemarch:int): #Si inventaire vide return false pour éviter crash
         match typemarch:
             case 0:
-                print("Après lancé du dè, vous pouvez vendre de l'or")
                 qtt = self.bateau.inventaire.getGold()
-                if(qtt=="vide"):
-                    print("Vous n'avez pas d'or à vendre")
-                    return 0
                 qtt=int(qtt)
                 print("Vous pouvez vendre:",qtt,"or, combien voulez-vous en vendre ?")
                 choix=input()
@@ -269,7 +259,7 @@ class joueur:
                 qtt=int(qtt)
                 print("Vous pouvez vendre:",qtt,"céréales, combien voulez-vous en vendre ?")
                 choix=input()
-                while(choix<0 or choix>qtt):
+                while(int(choix)<0 or int(choix)>qtt):
                     print("Erreur dans le nombre choisis")
                     print("Vous pouvez vendre:",qtt,"céréales, combien voulez-vous en vendre ?")
                     choix=input()

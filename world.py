@@ -57,6 +57,37 @@ class world:
                 if (numjou==nbjoueur):
                     numjou=0
     
+    def acheter(self,jou:joueurs.joueur):
+        if(jou.posidport==3):
+            print("Achat impossible, vous êtes sur un port")
+        else:
+            marchandise=self.map.zones[jou.posidzone].listeport[jou.posidport].marchandise
+            print("Type de marchandise:",marchandise.nom)
+            print("Prix unitaire de la marchandise",marchandise.prix_achat)
+            print("Combien de marchandise souhaitez vous acheter ?")
+            qtt=int(input())
+            while(jou.monnaie<(qtt*marchandise.prix_achat)):
+                print("Vous n'avez pas les moyens d'en acheter autant ! ")
+                print("Combien de marchandise souhaitez vous acheter ?")
+                qtt=int(input())
+            marchandise.qttachete=qtt
+            if(qtt!=0):
+                jou.retirer_monnaie(qtt*marchandise.prix_achat)
+                match marchandise.nom:
+                    case "cereale":
+                        jou.bateau.inventaire.cereale.append(marchandise)
+                    case "gold":
+                        jou.bateau.inventaire.gold.append(marchandise)
+                    case "machine_outils":
+                        jou.bateau.inventaire.machine_outils.append(marchandise)
+                    case "textile":
+                        jou.bateau.inventaire.textile.append(marchandise)
+                    case "petrole":
+                        jou.bateau.inventaire.petrole.append(marchandise)
+                    case "bois":
+                        jou.bateau.inventaire.bois.append(marchandise)
+            return qtt
+
     def obtind(self,ind):
         port=self.listejoueur[ind].posidport
         zone=self.listejoueur[ind].posidzone
@@ -73,10 +104,27 @@ class world:
                 self.map.zones[zone].cimetiere.inventaire.petrole+=a.petrole
                 self.map.zones[zone].cimetiere.inventaire.textile+=a.textile
     
+    def afficherinv(self,jou:joueurs.joueur):
+        print("_________________________")
+        print("Pseudo:",jou.pseudo)
+        print("Couleur:",jou.couleur)
+        print("Argent:",jou.monnaie,"$")
+        print("Zone:",jou.posidzone)
+        if(jou.posidport==3):
+            print("Cimetière:",jou.posidport)
+        else:
+            print("Port:",jou.posidport)
+        print(jou.bateau.inventaire)
+
     def tourdejeu(self,jou:joueurs.joueur):
         """Fonction permettant au joueur de jouer son tour"""
         print("_________________________")
-        roll=roll=r.randint(0,5)
+        print("Souhaitez vous voir vos informations ? (Non:0 | Oui:1)")
+        qinv=int(input())
+        if(qinv==1):
+            self.afficherinv(jou)
+        print("_________________________")
+        roll=r.randint(0,5)
         match roll:
             case 0:
                 print("La marchandise vendable ce tour est : l'or")
@@ -124,9 +172,13 @@ class world:
                 jou.deplacementnormal()
                 print("Vous vous trouver au port",jou.posidport+1,"de la zone",jou.posidzone)
             case 1:
-                a=jou.vendre()
+                a=jou.vendre(roll)
             case 2:
-                a=jou.acheter()
+                a=self.acheter(jou)
+                if(a==0):
+                    print("Vous n'avez rien acheté, votre tour est terminé")
+                else:
+                    print("Tour terminé, votre achat a été effectué !")
             case 3:
                 cartechoix=jou.choixcarte(0)
                 cartechoix=jou.SelectEtRetraitCarte(cartechoix)

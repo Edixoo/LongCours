@@ -174,36 +174,42 @@ class inventaire:
         else: 
             resultat+="- Or: \n"
             for i in self.gold:
-                resultat+="     - "+ str(i)
+                resultat+="     - "+ str(i.qttachete)
                 
         if(len(self.textile)==0):
             resultat+="- Textile: Vide\n"
         else: 
-            resultat+="- Textile: \n"
+            resultat+="- Textile: "
             for i in self.textile:
-                resultat+="     - "+ str(i)
+                resultat+=str(i.qttachete)+"\n"
                 
         if(len(self.cereale)==0):
             resultat+="- Cereale: Vide\n"
         else:
-            resultat+="- Cereale: \n"
+            resultat+="- Cereale: "
             for i in self.cereale:
-                resultat+="     - "+ str(i)
+                resultat+=str(i.qttachete)+"\n"
                 
         if(len(self.bois)==0):
             resultat+="- Bois: Vide\n"
         else:
-            resultat+="- Bois: \n"
+            resultat+="- Bois: "
             for i in self.bois:
-                resultat+="     - "+ str(i)
+                resultat+=str(i.qttachete)+"\n"
             
         if(len(self.machine_outils)==0):
             resultat+="- Machine_outils : Vide\n"
         else:
-            resultat+="- Machine_outils \n"
+            resultat+="- Machine_outils "
             for i in self.machine_outils:
-                resultat+="     - "+ str(i)
- 
+                resultat+=str(i.qttachete)+"\n"
+
+        if(len(self.petrole)==0):
+            resultat+="- Petrole: Vide\n"
+        else:
+            resultat+="- Petrole:"
+            for i in self.petrole:
+                resultat+=str(i.qttachete)+"\n"
  
         return resultat
     
