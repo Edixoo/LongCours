@@ -13,7 +13,7 @@ class Player(QWidget):
         self.name_edit = QLineEdit() ; self.mainLayout.addWidget(self.name_edit)
         self.name_edit.setPlaceholderText("Entrez le pseudo du joueur ")
         self.name_edit.setStyleSheet("QLineEdit{\n"
-"color: rgb(255, 255, 255);\n"
+# "color: rgb(255, 255, 255);\n"
 "}")
 
        
