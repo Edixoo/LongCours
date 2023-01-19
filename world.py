@@ -6,8 +6,8 @@ import marchandises as march
 import random as r
 
 class world:
-    """Constructeur de base du monde"""
     def __init__(self) -> None:
+        """Constructeur de base du monde"""
         self.map: cartedujeu.cartejeu = cartedujeu.cartejeu()
         self.jeudecarte: paquetcarte.paquetdecarte = paquetcarte.paquetdecarte() 
         self.listejoueur: list[joueurs.joueur] 
@@ -58,6 +58,14 @@ class world:
                     numjou=0
     
     def acheter(self,jou:joueurs.joueur):
+        """Fonction permettan au joueur d'acheter des ressources dans la case où il se trouve
+
+        Args:
+            jou (joueurs.joueur)
+
+        Returns:
+            qtt (int) quantite achetée
+        """
         if(jou.posidport==3):
             print("Achat impossible, vous êtes sur un port")
         else:
@@ -89,11 +97,27 @@ class world:
             return qtt
 
     def obtind(self,ind):
+        """Fonction permettant d'obtenir les indices des port et zone
+        Cette fonction est utile lors de l'utilisation d'une carte tempête.
+
+        Args:
+            ind (int): Indice du joueur
+
+        Returns:
+            zone (int): Indice de la zone
+            port (int): Indice du port
+        """
         port=self.listejoueur[ind].posidport
         zone=self.listejoueur[ind].posidzone
         return zone,port
     
     def echouer(self,zone,port):
+        """Fonction faisant échouer tous les bateaux se trouvant dans une zone & case précise
+
+        Args:
+            zone (int): indice de la zone
+            port (int): indice du port
+        """
         for i in self.listejoueur:
             if(i.posidport==port and i.posidzone==zone):
                 a=i.echouer()
@@ -105,6 +129,11 @@ class world:
                 self.map.zones[zone].cimetiere.inventaire.textile+=a.textile
     
     def afficherinv(self,jou:joueurs.joueur):
+        """Fonction permettant l'affichage des informations d'un joueurs
+
+        Args:
+            jou (joueurs.joueur): composant joueur
+        """
         print("_________________________")
         print("Pseudo:",jou.pseudo)
         print("Couleur:",jou.couleur)
@@ -117,7 +146,12 @@ class world:
         print(jou.bateau.inventaire)
 
     def tourdejeu(self,jou:joueurs.joueur):
-        """Fonction permettant au joueur de jouer son tour"""
+        """Fonction permettant au joueur de jouer son tour
+
+        Args:
+            jou (joueurs.joueur): Il s'agit du joueur, cet argument possède 
+            toutes les composantes de la classe joueur
+        """
         print("_________________________")
         print("Souhaitez vous voir vos informations ? (Non:0 | Oui:1)")
         qinv=int(input())
@@ -170,7 +204,7 @@ class world:
         match choix:
             case 0:
                 jou.deplacementnormal()
-                print("Vous vous trouver au port",jou.posidport+1,"de la zone",jou.posidzone)
+                print("Vous vous trouvez au port",jou.posidport+1,"de la zone",jou.posidzone)
             case 1:
                 a=jou.vendre(roll)
             case 2:
@@ -318,6 +352,9 @@ class world:
                             print("_________________________")
                            
     def jouerpartie(self):
+        """Fonction permettant au monde de s'actualiser et d'appeler 
+        les fonctions dont il a besoin
+        """
         self.definirjoueurs()
         self.distribuercarte()
         while(self.jeuon==True):

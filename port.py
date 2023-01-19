@@ -3,7 +3,13 @@ import marchandises
 
 class port:
     def __init__(self,id:int,type: str,nom: str) -> None:
-        
+        """Constructeur de la classe port
+
+        Args:
+            id (int): indice du port
+            type (str): le type de port
+            nom (str): son nom
+        """
         self.id:int =id
         self.marchandise : marchandises.marchandises
         self.couleur: str

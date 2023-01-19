@@ -2,6 +2,8 @@ import cartes
 
 class paquetdecarte():
     def __init__(self) -> None:
+        """Constructeur de la classe paquet de carte
+        """
         self.listecartemouv: list[cartes.carte_mouvdirect]
         self.listecartebdf: list[cartes.carte_bdf]
         self.listecartetemp: list[cartes.carte_tempete]

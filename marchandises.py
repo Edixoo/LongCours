@@ -1,5 +1,12 @@
 class marchandises:
     def __init__(self,qttach:int,type:str,couleur:str):
+        """Constructeur de la classe marchandise
+
+        Args:
+            qttach (int): Nombre de marchandise contenus dans l'objet
+            type (str): le nom de la marchandise
+            couleur (str): couleur de la marchandise (utile pour l'aspect interface)
+        """
         self.qttachete:int =qttach
         self.nom:str = type
         self.couleur: str = couleur
