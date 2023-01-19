@@ -89,8 +89,6 @@ class Map:
                     elif event.key== pygame.K_9 or event.key==pygame.K_KP9:
                         self.text+="9"
 
-
-
     def update(self):
         self.inventaire.update(pygame.mouse.get_pos())
         for i in self.listegraphiques:
@@ -119,16 +117,20 @@ class Map:
             i.display()
         for i in self.listegraphiques:
             for j in i:
-                j.display()
+                j.display(self.joueuractuel)
         for i in self.listegraphiques:
             for j in i:
                 if type(j)==portgraphique.Portgraphique:
                     if j.isclicked:
-                        j.afficher_interface()
+                        j.afficher_interface(self.joueuractuel)
                         if j.clickachat:
                             j.acheter.display(self.joueuractuel)
+                            self.joueuractuel=j.joueur
+                            self.inventaire=InventaireGraphique.InventaireGraphique(self.screen, self.joueuractuel.bateau.inventaire)
                         elif j.clickvente:
                             j.vendre.display(self.joueuractuel, self.marchandise)
+                            self.joueuractuel=j.joueur
+                            self.inventaire=InventaireGraphique.InventaireGraphique(self.screen, self.joueuractuel.bateau.inventaire)
                         else:
                             self.text=""
                 else:

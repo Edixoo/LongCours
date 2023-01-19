@@ -2,6 +2,7 @@ import pygame
 from buttons import Cancel, Button
 from CartesGraphique import Cartes
 from joueurs import joueur
+import copy
 
 class Acheter:
     def __init__(self, marchandise, screen) -> None:
@@ -12,7 +13,7 @@ class Acheter:
         self.fond=pygame.transform.scale(fond,[900,700])
         self.fondrect=self.fond.get_rect(center=(self.screen.get_width()/2, self.screen.get_height()/2))
 
-        self.acheter=Button((self.screen.get_width()/2+65, 697),(100,50),"Acheter",self.screen, 20)
+        self.acheter=Button((self.screen.get_width()/2+165, 697),(100,50),"Acheter",self.screen, 20)
         self.cancel=Cancel(self.screen.get_width()/2-65,697, self.screen)
         font=pygame.font.SysFont("Arial",25)
         self.quantite=""
@@ -33,10 +34,22 @@ class Acheter:
         self.screen.blit(self.deuxiemephrase, (475, self.screen.get_height()/2-30))
         self.carte.display()
         self.cancel.display()
+        self.joueur=joueur
         if self.checkachat:
             self.acheter.display()
-        self.joueur=joueur
         
+    def checkforInput(self, position):
+        if self.cancel.checkForInput(position):
+            return (1,self.joueur)
+        elif self.acheter.checkForInput(position):
+            march= copy.copy(self.marchandise)
+            march.qttachete=int(self.quantite)
+            self.joueur.retirer_monnaie(march.qttachete*march.prix_achat)
+            self.joueur.bateau.inventaire.ajouter(march)
+            
+            return (1, self.joueur)
+        else:
+            return (0, self.joueur)
 
 
     def update(self, position, text):
@@ -44,6 +57,7 @@ class Acheter:
         self.mess=font.render(text,True, "white")
         self.cancel.update(position, "red")
         self.carte.update(text)
+        self.quantite=text
         self.acheter.update(position, "grey")
         self.textbox.w=max(100,self.mess.get_width()+10)
         if text!='':

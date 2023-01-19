@@ -2,6 +2,7 @@ import pygame
 import cimetiere
 from InventaireGraphique import InventaireGraphique
 from buttons import Cancel, Button
+import joueurs
 
 class CimetiereGraphique:
 
@@ -12,12 +13,14 @@ class CimetiereGraphique:
         self.cimeclicked=False
         self.invclick=False
         self.couleur="red"
+        self.joueur: joueurs.joueur
         self.inventaire= InventaireGraphique(self.screen, self.cimetiere.inventaire)
         self.cancel=Cancel(self.screen.get_width()/2-75, self.screen.get_height()/2+125,self.screen)
         self.bouton=Button([503, 527], [100,50], "Montrer", self.screen, 20)
 
-    def display(self):
+    def display(self, joueur):
         pygame.draw.rect(self.screen, self.couleur, self.rect)
+        self.joueur=joueur
 
     def update(self,position):
         self.bouton.update(position, "grey")

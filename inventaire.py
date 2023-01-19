@@ -29,6 +29,26 @@ class inventaire:
                 self.cereale.append(march)
             case "machine_outils":
                 self.machine_outils.append(march)
+    
+    def retirergraph(self, march:marchandises.marchandises):
+        """Fonction d'ajout d'une marchandise (utile lors de l'achat)
+
+        Args:
+            march (marchandises.marchandises): objet de type marchandise
+        """
+        match march.nom:
+            case "gold":
+                self.gold.remove(march)
+            case "textile":
+                self.textile.remove(march)
+            case "petrole":
+                self.petrole.remove(march)
+            case "bois":
+                self.bois.remove(march)
+            case "cereale":
+                self.cereale.remove(march)
+            case "machine_outils":
+                self.machine_outils.remove(march)
 
     def retirer(self, qtt:int,typemarch:int):
         """Fonction de retrait d'une marchandise (utile lors de la vente)
@@ -211,6 +231,21 @@ class inventaire:
             resultat+=i.qttachete
         return str(resultat)
 
+    def getMarchandiseByName(self, marchandise: marchandises.marchandises):
+        match marchandise.nom:
+            case "cereale":
+                return self.getCereale()
+            case "bois":
+                return self.getBois()
+            case "petrole":
+                return self.getPetrole()
+            case "machine_outils":
+                return self.getMachineOutils()
+            case "gold":
+                return self.getGold()
+            case "textile":
+                return self.getTextile()
+        
     def __str__(self) -> str:
         """Redéfinition du print pour l'objet inventaire
 

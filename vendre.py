@@ -3,11 +3,12 @@ from buttons import Cancel,Button
 from CartesGraphique import Cartes
 import marchandises
 from joueurs import joueur
+import copy
 class Vendre:
     def __init__(self, screen) -> None:
         self.screen=screen
         self.marchandise: marchandises.marchandises = marchandises.cereale(1)
-        self.joueur: joueur
+        self.joueur: joueur = joueur(81,"tempo","b")
         
         fond= pygame.image.load("./images/Rectangle.png").convert_alpha()
         self.fond=pygame.transform.scale(fond,[900,700])
@@ -25,6 +26,7 @@ class Vendre:
 
     def display(self, joueur, marchandise):
         self.joueur=joueur
+        self.marchandise=marchandise
         self.dispo=self.font.render("Quantité disponible de " + marchandise.nom+ ":", True, "white")
         self.screen.blit(self.fond, self.fondrect)
         pygame.draw.rect(self.screen, "white", self.textbox, 2)
@@ -36,6 +38,17 @@ class Vendre:
             self.vendre.display()
         self.cancel.display()
         
+    def checkforInput(self, position):
+        if self.cancel.checkForInput(position):
+            return (1,self.joueur)
+        elif self.vendre.checkForInput(position):
+            march= copy.copy(self.marchandise)
+            march.qttachete=int(self.quantite)
+            self.joueur.ajout_monnaie(march.qttachete*march.prix_achat)
+            self.joueur.bateau.inventaire.retirergraph(march)
+            return (1, self.joueur)
+        else:
+            return (0, self.joueur)
 
 
     def update(self, position, text):
@@ -43,5 +56,10 @@ class Vendre:
         self.cancel.update(position, "red")
         self.quantite=str(text)
         self.textbox.w=max(100,self.mess.get_width()+10)
+        if text!='':
+            if self.joueur.bateau.inventaire.getMarchandiseByName(self.marchandise)!="Vide" and int(self.joueur.bateau.inventaire.getMarchandiseByName(self.marchandise))<(self.marchandise.prix_achat*int(text)):
+                self.ventecheck=True
+            else:
+                self.ventecheck=False
         
 
