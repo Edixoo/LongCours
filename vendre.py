@@ -27,7 +27,7 @@ class Vendre:
     def display(self, joueur, marchandise):
         self.joueur=joueur
         self.marchandise=marchandise
-        self.dispo=self.font.render("Quantité disponible de " + marchandise.nom+ ":", True, "white")
+        self.dispo=self.font.render("Quantité disponible de " + marchandise.nom+ ": "+str(self.joueur.bateau.inventaire.getMarchandiseByName(marchandise)), True, "white")
         self.screen.blit(self.fond, self.fondrect)
         pygame.draw.rect(self.screen, "white", self.textbox, 2)
         self.screen.blit(self.mess, self.textbox)
@@ -44,8 +44,9 @@ class Vendre:
         elif self.vendre.checkForInput(position):
             march= copy.copy(self.marchandise)
             march.qttachete=int(self.quantite)
+            print (march.qttachete)
             self.joueur.ajout_monnaie(march.qttachete*march.prix_achat)
-            self.joueur.bateau.inventaire.retirergraph(march)
+            self.joueur.bateau.inventaire.retirergraph(march.qttachete, march)
             return (1, self.joueur)
         else:
             return (0, self.joueur)
@@ -57,8 +58,11 @@ class Vendre:
         self.quantite=str(text)
         self.textbox.w=max(100,self.mess.get_width()+10)
         if text!='':
-            if self.joueur.bateau.inventaire.getMarchandiseByName(self.marchandise)!="Vide" and int(self.joueur.bateau.inventaire.getMarchandiseByName(self.marchandise))<(self.marchandise.prix_achat*int(text)):
-                self.ventecheck=True
+            if self.joueur.bateau.inventaire.getMarchandiseByName(self.marchandise)!="Vide":
+                if int(self.joueur.bateau.inventaire.getMarchandiseByName(self.marchandise))<(self.marchandise.prix_achat*int(text)):
+                    self.ventecheck=True
+                else:
+                    self.ventecheck=False
             else:
                 self.ventecheck=False
         

@@ -30,25 +30,100 @@ class inventaire:
             case "machine_outils":
                 self.machine_outils.append(march)
     
-    def retirergraph(self, march:marchandises.marchandises):
-        """Fonction d'ajout d'une marchandise (utile lors de l'achat)
+    def retirergraph(self, qtt:int,march: marchandises.marchandises):
+        """Fonction de retrait d'une marchandise (utile lors de la vente)
 
         Args:
-            march (marchandises.marchandises): objet de type marchandise
+            qtt (int): quantite à retirer
+            typemarch (int): le type de la marchandise à retirer
+
+        Returns:
+            int: retourne le prix
         """
+        qttvendue=0
+        prixacq=0
         match march.nom:
             case "gold":
-                self.gold.remove(march)
+                while(qttvendue!=qtt):
+                    i=0
+                    if(self.gold[i].qttachete<(qtt-qttvendue)):
+                        qttvendue+=self.gold[i].qttachete
+                        prixacq+=(self.gold[i].prix_achat*self.gold[i].qttachete)
+                        self.gold.remove(self.gold[i])
+                    else:
+                        dif=qtt-qttvendue
+                        self.gold[i].qttachete-=dif
+                        qttvendue+=dif
+                        prixacq+=(self.gold[i].prix_achat*dif)
+                return prixacq
             case "textile":
-                self.textile.remove(march)
-            case "petrole":
-                self.petrole.remove(march)
+                while(qttvendue!=qtt):
+                    i=0
+                    if(self.textile[i].qttachete<(qtt-qttvendue)):
+                        qttvendue+=self.textile[i].qttachete
+                        print(qttvendue)
+                        prixacq+=(self.textile[i].prix_achat*self.textile[i].qttachete)
+                        self.textile.remove(self.textile[i])
+                    else:
+                        dif=qtt-qttvendue
+                        self.textile[i].qttachete-=dif
+                        qttvendue+=dif
+                        prixacq+=(self.textile[i].prix_achat*dif)
+                return prixacq
             case "bois":
-                self.bois.remove(march)
+                while(qttvendue!=qtt):
+                    i=0
+                    if(self.bois[i].qttachete<(qtt-qttvendue)):
+                        qttvendue+=self.bois[i].qttachete
+                        prixacq+=(self.bois[i].prix_achat*self.bois[i].qttachete)
+                        self.bois.remove(self.bois[i])
+                    else:
+                        dif=qtt-qttvendue
+                        self.bois[i].qttachete-=dif
+                        qttvendue+=dif
+                        prixacq+=(self.bois[i].prix_achat*dif)
+                return prixacq
+            case "petrole":
+                while(qttvendue!=qtt):
+                    i=0
+                    if(self.petrole[i].qttachete<(qtt-qttvendue)):
+                        qttvendue+=self.petrole[i].qttachete
+                        print(qttvendue)
+                        prixacq+=(self.petrole[i].prix_achat*self.petrole[i].qttachete)
+                        self.petrole.remove(self.petrole[i])
+                    else:
+                        dif=qtt-qttvendue
+                        self.petrole[i].qttachete-=dif
+                        qttvendue+=dif
+                        prixacq+=(self.petrole[i].prix_achat*dif)
+                return prixacq
             case "cereale":
-                self.cereale.remove(march)
+                while(qttvendue!=qtt):
+                    i=0
+                    if(self.cereale[i].qttachete<(qtt-qttvendue)):
+                        qttvendue+=self.cereale[i].qttachete
+                        print(qttvendue)
+                        prixacq+=(self.cereale[i].prix_achat*self.cereale[i].qttachete)
+                        self.cereale.remove(self.cereale[i])
+                    else:
+                        dif=qtt-qttvendue
+                        self.cereale[i].qttachete-=dif
+                        qttvendue+=dif
+                        prixacq+=(self.cereale[i].prix_achat*dif)
+                return prixacq
             case "machine_outils":
-                self.machine_outils.remove(march)
+                while(qttvendue!=qtt):
+                    i=0
+                    if(self.machine_outils[i].qttachete<(qtt-qttvendue)):
+                        qttvendue+=self.machine_outils[i].qttachete
+                        prixacq+=(self.machine_outils[i].prix_achat*self.machine_outils[i].qttachete)
+                        self.machine_outils.remove(self.machine_outils[i])
+                    else:
+                        dif=qtt-qttvendue
+                        self.machine_outils[i].qttachete-=dif
+                        qttvendue+=dif
+                        prixacq+=(self.machine_outils[i].prix_achat*dif)
+                return prixacq
 
     def retirer(self, qtt:int,typemarch:int):
         """Fonction de retrait d'une marchandise (utile lors de la vente)
@@ -245,6 +320,7 @@ class inventaire:
                 return self.getGold()
             case "textile":
                 return self.getTextile()
+        return 0
         
     def __str__(self) -> str:
         """Redéfinition du print pour l'objet inventaire
