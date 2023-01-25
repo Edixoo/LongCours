@@ -36,25 +36,30 @@ class Portgraphique:
         self.joueur=joueur
 
     def checkforInput(self,position):
-        checkvente=self.vendre.checkforInput(position)
-        checkachat=self.acheter.checkforInput(position)
 
         if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
             self.isclicked=True
+
         if self.achat.checkForInput(position):
             self.clickachat=True
-        if self.clickachat==True and checkachat[0]:
-            self.joueur=checkachat[1]
-            self.updatejoueur=True
-            self.clickachat=False
-            checkachat=(False,self.joueur)
+        if self.clickachat==True:
+            checkachat= self.acheter.checkforInput(position)
+            if checkachat[0]:
+                self.joueur=checkachat[1]
+                self.updatejoueur=True
+                self.clickachat=False
+                checkachat=(False,self.joueur)
+
         if self.vente.checkForInput(position):
             self.clickvente=True
-        if self.clickvente==True and checkvente[0]:
-            self.joueur=checkvente[1]
-            self.updatejoueur=True
-            self.clickvente=False
-            checkvente=(False, self.joueur)
+        if self.clickvente==True:
+            checkvente=self.vendre.checkforInput(position, self.portbase.marchandise)
+            if checkvente[0]:
+                self.joueur=checkvente[1]
+                self.updatejoueur=True
+                self.clickvente=False
+                checkvente=(False, self.joueur)
+
         if self.cancel.checkForInput(position)==1 and self.isclicked==True and self.clickachat==False:
             self.isclicked=False
             self.updatejoueur=False

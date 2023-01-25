@@ -13,7 +13,7 @@ class Acheter:
         self.fond=pygame.transform.scale(fond,[900,700])
         self.fondrect=self.fond.get_rect(center=(self.screen.get_width()/2, self.screen.get_height()/2))
 
-        self.acheter=Button((self.screen.get_width()/2+65, 697),(100,50),"Acheter",self.screen, 20)
+        self.acheter=Button((self.screen.get_width()/2+165, 697),(100,50),"Acheter",self.screen, 20)
         self.cancel=Cancel(self.screen.get_width()/2-65,697, self.screen)
         font=pygame.font.SysFont("Arial",25)
         self.quantite=""
@@ -41,7 +41,8 @@ class Acheter:
     def checkforInput(self, position):
         if self.cancel.checkForInput(position):
             return (1,self.joueur)
-        elif self.acheter.checkForInput(position):
+
+        elif self.quantite!='' and self.acheter.checkForInput(position):
             march= copy.copy(self.marchandise)
             march.qttachete=int(self.quantite)
             self.joueur.retirer_monnaie(march.qttachete*march.prix_achat)
@@ -65,6 +66,8 @@ class Acheter:
                 self.checkachat=False
             else:
                 self.checkachat=True
+        else:
+            self.checkachat=False
         
         
 

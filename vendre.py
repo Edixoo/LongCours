@@ -38,15 +38,17 @@ class Vendre:
             self.vendre.display()
         self.cancel.display()
         
-    def checkforInput(self, position):
+    def checkforInput(self, position, march):
         if self.cancel.checkForInput(position):
             return (1,self.joueur)
-        elif self.vendre.checkForInput(position):
+
+        elif self.quantite!='' and self.vendre.checkForInput(position) and self.marchandise.nom==march.nom:
             march= copy.copy(self.marchandise)
             march.qttachete=int(self.quantite)
             print (march.qttachete)
             self.joueur.ajout_monnaie(march.qttachete*march.prix_achat)
             self.joueur.bateau.inventaire.retirergraph(march.qttachete, march)
+            self.ventecheck=False
             return (1, self.joueur)
         else:
             return (0, self.joueur)
@@ -56,14 +58,17 @@ class Vendre:
         self.mess=self.font.render(text,True, "white")
         self.cancel.update(position, "red")
         self.quantite=str(text)
-        self.textbox.w=max(100,self.mess.get_width()+10)
+        self.vendre.update(position, "grey")
         if text!='':
             if self.joueur.bateau.inventaire.getMarchandiseByName(self.marchandise)!="Vide":
-                if int(self.joueur.bateau.inventaire.getMarchandiseByName(self.marchandise))<(self.marchandise.prix_achat*int(text)):
+                print(int(self.joueur.bateau.inventaire.getMarchandiseByName(self.marchandise)))
+                if int(self.joueur.bateau.inventaire.getMarchandiseByName(self.marchandise))<int(text):
                     self.ventecheck=True
                 else:
                     self.ventecheck=False
             else:
                 self.ventecheck=False
+        else:
+            self.ventecheck=False
         
 
