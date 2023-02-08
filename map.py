@@ -54,6 +54,7 @@ class Map:
                 self.running= False
 
             if event.type == pygame.MOUSEBUTTONDOWN:
+                self.paquetjoueur.checkforInput(pygame.mouse.get_pos())
                 print(pygame.mouse.get_pos())
                 for i in range(len(self.listegraphiques)):
                     for j in range(len(self.listegraphiques[i])):
@@ -103,6 +104,7 @@ class Map:
         self.changertour.update(pygame.mouse.get_pos(),"grey")
         self.canceldeplacer.update(pygame.mouse.get_pos(),"red")
         self.sedeplacer.update(pygame.mouse.get_pos(), "grey")
+        self.paquetjoueur.update(pygame.mouse.get_pos())
 
     def display(self):
         image=pygame.image.load("./MapSAE/Test.png").convert()
