@@ -3,12 +3,13 @@ import inventaire
 from buttons import Button, Cancel
 
 class InventaireGraphique:
-    def __init__(self, screen, inventaire: inventaire.inventaire) -> None:
+    def __init__(self, screen, inventaire: inventaire.inventaire, monnaie) -> None:
         self.screen=screen
-        self.bouton=Button([165, 753], [150, 75], "Inventaire", self.screen, 30)
+        self.bouton=Button([165, self.screen.get_height()-40], [100, 50], "Inventaire", self.screen, 20)
         self.inventaire=inventaire
         self.isclickedinv=False
         self.cancel=Cancel(451,697, self.screen)
+        self.monnaie=monnaie
         
     
     def display(self):
@@ -35,6 +36,9 @@ class InventaireGraphique:
 
         self.titre=self.fonttitre.render("Inventaire", True, "white")
         self.screen.blit(self.titre, [382, 80])
+
+        self.argent=self.font.render("Argent :     " + str(self.monnaie), True, "white")
+        self.screen.blit(self.argent, [382, 200])
 
         self.contenu=self.font.render("Or :     " + self.inventaire.getGold(), True, "white")
         self.screen.blit(self.contenu, [145, 251])

@@ -67,6 +67,7 @@ class carte_bdf(carte):
         self.nom="carte_bdf"
         self.force: int = force
         self.typenom: str = typenom
+        
     def use(self)-> None:
         """Fonction permettant d'obtenir la force de la carte
 

@@ -33,6 +33,56 @@ class joueur:
             print("Le montant doit etre strictement supérieur à 0, reesayez")
         else:
          self.monnaie -= n
+    
+    def getTempete(self):
+        listcartetemp=[]
+        for i in self.listecartes:
+            if i.type==1:
+                listcartetemp.append(i)
+        return listcartetemp
+
+    def getMouvement(self):
+        listcartemouv=[]
+        for i in self.listecartes:
+            if i.type==0:
+                listcartemouv.append(i)
+        return listcartemouv
+    
+    def getBaston(self):
+        listcartebaston=[]
+        for i in self.listecartes:
+            if i.type==2:
+                listcartebaston.append(i)
+        return listcartebaston
+    
+    def getForceUn(self):
+        listbastonun=[]
+        for i in self.getBaston():
+            if i.force==0:
+                listbastonun.append(i)
+        return listbastonun
+    
+    def getForceDeux(self):
+        listebastonDeux=[]
+        for i in self.getBaston():
+            if i.force==1:
+                listebastonDeux.append(i)
+        return listebastonDeux
+
+    def getForceTrois(self):
+        listebastonTrois=[]
+        for i in self.getBaston():
+            if i.force==2:
+                listebastonTrois.append(i)
+        return listebastonTrois
+    
+    def getForceQuatre(self):
+        listebastonQuatre=[]
+        for i in self.getBaston():
+            if i.force==3:
+                listebastonQuatre.append(i)
+        return listebastonQuatre
+        
 
     def choixcarte(self,carte:int): #Carte = type de carte à appeler ici : 0 = toutes les cartes, 1 = déplacement direct , 2 = baston , 3 = tempête
         """Fonction permettant de définir quelle carte jouer"""

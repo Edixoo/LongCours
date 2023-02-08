@@ -46,7 +46,7 @@ class Vendre:
             march= copy.copy(self.marchandise)
             march.qttachete=int(self.quantite)
             print (march.qttachete)
-            self.joueur.ajout_monnaie(march.qttachete*march.prix_achat)
+            self.joueur.ajout_monnaie(march.qttachete*(march.prix_achat*3))
             self.joueur.bateau.inventaire.retirergraph(march.qttachete, march)
             self.ventecheck=False
             return (1, self.joueur)
@@ -60,9 +60,8 @@ class Vendre:
         self.quantite=str(text)
         self.vendre.update(position, "grey")
         if text!='':
-            if self.joueur.bateau.inventaire.getMarchandiseByName(self.marchandise)!="Vide":
-                print(int(self.joueur.bateau.inventaire.getMarchandiseByName(self.marchandise)))
-                if int(self.joueur.bateau.inventaire.getMarchandiseByName(self.marchandise))<int(text):
+            if self.joueur.bateau.inventaire.getMarchandiseByName(self.marchandise)!="Vide" and self.joueur.bateau.inventaire.getMarchandiseByName(self.marchandise)!=0:
+                if int(self.joueur.bateau.inventaire.getMarchandiseByName(self.marchandise))>=int(text):
                     self.ventecheck=True
                 else:
                     self.ventecheck=False

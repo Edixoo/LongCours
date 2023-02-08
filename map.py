@@ -9,6 +9,7 @@ import zone
 import cartedujeu, world
 from buttons import Button, Cancel
 import random as rd
+import paquetcartegraphique
 
 position=[[(285,195),(216,267),(124,214),(222,131)],[(289,84),(506,124),(669,42),(435,184)],[(753,206),(719,332),(592,194),(682,243)],[(549,390),(647,462),(604,543),(524,446)],[(605,622),(528,756),(307,638),(455,588)],[(193,558),(102,526),(258,366),(249,594)]]
 marchandise= [marchandises.cereale(1),marchandises.bois(1),marchandises.gold(1),marchandises.machine_outils(1), marchandises.petrole(1), marchandises.textile(1)]
@@ -40,10 +41,12 @@ class Map:
         self.font=pygame.font.SysFont("Arial", 20, True)
         self.listejoueurs=listejoueurs
         self.joueuractuel=listejoueurs[0]
-        self.inventaire=InventaireGraphique.InventaireGraphique(self.screen, self.joueuractuel.bateau.inventaire)
+        self.inventaire=InventaireGraphique.InventaireGraphique(self.screen, self.joueuractuel.bateau.inventaire, self.joueuractuel.monnaie)
         self.sedeplacer=Button((self.screen.get_width()-60, self.screen.get_height()-30),[100,50],"Se déplacer",self.screen,20)
         self.changertour=Button((self.screen.get_width()-60,30), [100,50],"Changer Tour", self.screen, 15)
         self.canceldeplacer=Cancel(self.screen.get_width()-180, self.screen.get_height()-30, self.screen)
+        
+        self.paquetjoueur=paquetcartegraphique.PaquetdeCartes(self.screen, self.joueuractuel)
 
     def handling_events(self):
         for event in pygame.event.get():
@@ -105,7 +108,7 @@ class Map:
         image=pygame.image.load("./MapSAE/Test.png").convert()
         map= pygame.transform.scale(image, (922, 800))
         self.screen.blit(map,(0,0))
-        self.nomjoueuractu=self.font.render("Pseudo:" + self.joueuractuel.pseudo, True, "black")
+        self.nomjoueuractu=self.font.render("Tour de:" + self.joueuractuel.pseudo, True, "black")
         self.nommarchandise=self.font.render("Marchandise: "+self.marchandise.nom, True, "black")
         self.screen.blit(self.nomjoueuractu, (0,0))
         self.screen.blit(self.nommarchandise, (100,0))
@@ -126,11 +129,11 @@ class Map:
                         if j.clickachat:
                             j.acheter.display(self.joueuractuel)
                             self.joueuractuel=j.joueur
-                            self.inventaire=InventaireGraphique.InventaireGraphique(self.screen, self.joueuractuel.bateau.inventaire)
+                            self.inventaire=InventaireGraphique.InventaireGraphique(self.screen, self.joueuractuel.bateau.inventaire, self.joueuractuel.monnaie)
                         elif j.clickvente:
                             j.vendre.display(self.joueuractuel, self.marchandise)
                             self.joueuractuel=j.joueur
-                            self.inventaire=InventaireGraphique.InventaireGraphique(self.screen, self.joueuractuel.bateau.inventaire)
+                            self.inventaire=InventaireGraphique.InventaireGraphique(self.screen, self.joueuractuel.bateau.inventaire, self.joueuractuel.monnaie)
                         else:
                             self.text=""
                 else:
@@ -138,7 +141,7 @@ class Map:
                         j.afficher_interface()
                         if j.invclick:
                             j.inventaire.afficher_inv()
-
+        self.paquetjoueur.display()
         if self.inventaire.isclickedinv:
             self.inventaire.afficher_inv()
         if self.mouvcheck:
@@ -171,6 +174,7 @@ class Map:
         else:
             self.joueuractuel=self.listejoueurs[0]
         self.marchandise=rd.choice(self.listemarchandises)
+        self.paquetjoueur=paquetcartegraphique.PaquetdeCartes(self.screen, self.joueuractuel)
         self.deplacement=True
     
     def mouvement(self):
