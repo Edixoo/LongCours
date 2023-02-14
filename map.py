@@ -42,9 +42,9 @@ class Map:
         self.listejoueurs=listejoueurs
         self.joueuractuel=listejoueurs[0]
         self.inventaire=InventaireGraphique.InventaireGraphique(self.screen, self.joueuractuel.bateau.inventaire, self.joueuractuel.monnaie)
-        self.sedeplacer=Button((self.screen.get_width()-60, self.screen.get_height()-30),[100,50],"Se déplacer",self.screen,20)
+        self.sedeplacer=Button((self.screen.get_width()-60, self.screen.get_height()-40),[100,50],"Se déplacer",self.screen,20)
         self.changertour=Button((self.screen.get_width()-60,30), [100,50],"Changer Tour", self.screen, 15)
-        self.canceldeplacer=Cancel(self.screen.get_width()-180, self.screen.get_height()-30, self.screen)
+        self.canceldeplacer=Cancel(self.screen.get_width()-180, self.screen.get_height()-40, self.screen)
         
         self.paquetjoueur=paquetcartegraphique.PaquetdeCartes(self.screen, self.joueuractuel)
 

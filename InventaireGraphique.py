@@ -5,7 +5,7 @@ from buttons import Button, Cancel
 class InventaireGraphique:
     def __init__(self, screen, inventaire: inventaire.inventaire, monnaie) -> None:
         self.screen=screen
-        self.bouton=Button([165, self.screen.get_height()-40], [100, 50], "Inventaire", self.screen, 20)
+        self.bouton=Button([185, self.screen.get_height()-40], [100, 50], "Inventaire", self.screen, 20)
         self.inventaire=inventaire
         self.isclickedinv=False
         self.cancel=Cancel(451,697, self.screen)
