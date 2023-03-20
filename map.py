@@ -46,7 +46,7 @@ class Map:
         self.changertour=Button((self.screen.get_width()-60,30), [100,50],"Changer Tour", self.screen, 15)
         self.canceldeplacer=Cancel(self.screen.get_width()-180, self.screen.get_height()-40, self.screen)
         
-        self.paquetjoueur=paquetcartegraphique.PaquetdeCartes(self.screen, self.joueuractuel)
+        self.paquetjoueur=paquetcartegraphique.PaquetdeCartes(self.screen, self.joueuractuel, self.listejoueurs)
 
     def handling_events(self):
         for event in pygame.event.get():
@@ -54,7 +54,13 @@ class Map:
                 self.running= False
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                self.paquetjoueur.checkforInput(pygame.mouse.get_pos())
+                if self.paquetjoueur.checkforInput(pygame.mouse.get_pos())!=0:
+                    j1, j2= self.paquetjoueur.checkforInput(pygame.mouse.get_pos())
+                    self.joueuractuel=j1
+                    for i in self.listejoueurs:
+                        if i.id==j2.id:
+                            self.listejoueurs[self.listejoueurs.index(i)]=j2
+                    
                 print(pygame.mouse.get_pos())
                 for i in range(len(self.listegraphiques)):
                     for j in range(len(self.listegraphiques[i])):
@@ -176,7 +182,7 @@ class Map:
         else:
             self.joueuractuel=self.listejoueurs[0]
         self.marchandise=rd.choice(self.listemarchandises)
-        self.paquetjoueur=paquetcartegraphique.PaquetdeCartes(self.screen, self.joueuractuel)
+        self.paquetjoueur=paquetcartegraphique.PaquetdeCartes(self.screen, self.joueuractuel, self.listejoueurs)
         self.deplacement=True
     
     def mouvement(self):
@@ -210,6 +216,7 @@ class Map:
 
 listejoueur=world.world()
 listejoueur.definirjoueurs()
+listejoueur.distribuercarte()
 listejoueur=listejoueur.listejoueur
 listezone=cartedujeu.cartejeu().zones
 pygame.init()
@@ -218,13 +225,3 @@ game.changementdetour()
 game.run()
 pygame.quit()
 
-
-"""
-Dans appel de Map:
-    - liste de joueurs (bouclé pour les mettre en joueurGraphique) 
-    - liste de zones (bouclé pour récupérer la liste de ports puis transformé les ports en portgraphique et le cimetiere en cimetiere graphique)
-    - Liste position Listepos[posZone][PosPort] = (Tuple possédant position de la case sur l'interface) --> 0,1,2 --> Port | 3 --> Cimetiere
-    fonction changementdetour
-    - change le joueur actuel
-    
-"""

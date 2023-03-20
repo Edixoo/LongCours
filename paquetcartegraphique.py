@@ -1,16 +1,16 @@
 import pygame
 from buttons import Button, Cancel
-
+from bataille import Bataille
 
 class PaquetdeCartes:
-    def __init__(self, screen, joueur) -> None:
+    def __init__(self, screen, joueur, listej) -> None:
         self.screen=screen
         fond= pygame.image.load("./images/Rectangle.png").convert_alpha()
         self.fond=pygame.transform.scale(fond,[900,700])
 
         self.fondrect=self.fond.get_rect(center=(self.screen.get_width()/2, self.screen.get_height()/2))
         self.joueur=joueur
-
+        self.listejoueur= listej
         self.bouton=Button([65, self.screen.get_height()-40], [100, 50], "Cartes", self.screen, 20)
         self.isclicked=False
         fonttitre=pygame.font.SysFont("Arial", 40, True)
@@ -41,6 +41,7 @@ class PaquetdeCartes:
         self.forcetrois=self.font.render("Force III:     " + str(len(self.joueur.getForceTrois())), True, "White")
         self.forcequatre=self.font.render("Force IV:     " + str(len(self.joueur.getForceQuatre())), True, "White")
         self.bastonclicked=False
+        self.bataille=Bataille(self.screen, self.joueur, self.listejoueur)
 
         self.cancel=Cancel(450,700, self.screen)
 
@@ -68,9 +69,14 @@ class PaquetdeCartes:
             self.screen.blit(self.forcequatre, [self.screen.get_width()/2-245, 660])
             self.cancel.display()
         
+        if self.bastonclicked:
+            self.bataille.display()
+        
     def update(self, position):
         self.cancel.update(position, "red")
         self.bouton.update(position, "grey")
+        if self.bastonclicked:
+            self.bataille.update(position)
         if position[0] in range(self.recttempete.left, self.recttempete.right) and position[1] in range(self.recttempete.top, self.recttempete.bottom):
             self.cartetempete=pygame.image.load("./images/carte_tempete.png").convert_alpha()
             self.cartetempete=pygame.transform.scale(self.cartetempete, [220,320])
@@ -99,7 +105,6 @@ class PaquetdeCartes:
     def checkforInput(self, position):
         if self.bouton.checkForInput(position):
             self.isclicked=True
-            print("hello")
         if self.isclicked:
             if self.cancel.checkForInput(position):
                 self.isclicked=False
@@ -111,8 +116,13 @@ class PaquetdeCartes:
                 #Placer le déplacement direct ici
             elif position[0] in range(self.rectbaston.left, self.rectbaston.right) and position[1] in range(self.rectbaston.top, self.rectbaston.bottom) and (len(self.joueur.getForceUn())>0 or len(self.joueur.getForceDeux())>0 or len(self.joueur.getForceTrois())>0 or len(self.joueur.getForceQuatre())>0):
                 self.isclicked=False
-                #placer le lancement de la baston ici
-
+                self.bastonclicked=True
+        if self.bastonclicked:
+            if self.bataille.checkforInput(position)!=0:
+                j1,j2= self.bataille.checkforInput(position)
+                self.combat=False
+                return j1,j2
+        return 0
 
 
         

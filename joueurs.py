@@ -83,7 +83,21 @@ class joueur:
                 listebastonQuatre.append(i)
         return listebastonQuatre
         
-
+    def retraitCarteBaston(self, force):
+        for i in self.listecartes:
+            if i.type==2:
+                if i.force==(force-1):
+                    self.listecartes.remove(i)
+                    return i
+        return False
+    
+    def testcartebaston(self, carte1, carte2):
+        if carte1.force>carte2.force:
+            return "AWin"
+        elif carte2.force>carte1.force:
+            return "BWin"
+        else:
+            return "Equal"
     def choixcarte(self,carte:int): #Carte = type de carte à appeler ici : 0 = toutes les cartes, 1 = déplacement direct , 2 = baston , 3 = tempête
         """Fonction permettant de définir quelle carte jouer"""
         choix=-1
@@ -183,9 +197,6 @@ class joueur:
         """
         roll=r.randint(0,5)
         return roll
-    
-    def ventepossible(self, nombre, marchandise):
-        pass
     
     def deplacementnormal(self):
         """Fonction permettant au joueur de se déplacer sur les cases adjacentes
