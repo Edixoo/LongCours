@@ -145,224 +145,617 @@ class world:
             print("Port:",jou.posidport)
         print(jou.bateau.inventaire)
 
-    def tourdejeu(self,jou:joueurs.joueur):
-        """Fonction permettant au joueur de jouer son tour
+    def deplacementnormalIA(self,jou:joueurs.joueur):
+        a=r.randint(0,1) #0 changement de zone, 1 changement de port.
+        positionzone=0
+        if(a==0):
+            b=r.randint(0,1)#Zone précédent ou Zone suivante
+            if(b==0):#Zone précédente
+                positionzone=(jou.posidzone-1)%6
+            else:
+                positionzone=(jou.posidzone+1)%6
+            jou.mouvement(positionzone,0)
+            return jou
+        else:
+            deplacementpossible=[0,1,2,3]
+            del deplacementpossible[jou.posidport]
+            b=r.randint(0,len(deplacementpossible)-1)
+            jou.mouvement(jou.posidzone,b)
+            return jou
 
-        Args:
+    def depinstpossIA(jou:joueurs.joueur):
+        isinstantpossible = False
+        cartejouable = 0
+        for i in jou.listecartes:
+            if(i.type==0):
+                cartejouable=i
+                isinstantpossible=True
+        return cartejouable,isinstantpossible
+
+    def venteposs(self,jou:joueurs.joueur,marchvendable:int):
+        ventepossible=False
+        if(jou.posidport==3):
+            return ventepossible
+        qttpos=0
+        match marchvendable:
+                            case 0:
+                                if(world.map.zones[jou.posidzone].listeport[jou.posidport].marchandise.nom=='gold'):
+                                    ventepossible=True
+                                    qttpos=int(jou.bateau.inventaire.getGold)
+                                    if(qttpos==0):
+                                        ventepossible=False
+                            case 1:
+                                if(world.map.zones[jou.posidzone].listeport[jou.posidport].marchandise.nom=='textile'):
+                                    ventepossible=True
+                                    qttpos=int(jou.bateau.inventaire.getTextile)
+                                    if(qttpos==0):
+                                        ventepossible=False
+                            case 2:
+                                if(world.map.zones[jou.posidzone].listeport[jou.posidport].marchandise.nom=='bois'):
+                                    ventepossible=True
+                                    qttpos=int(jou.bateau.inventaire.getBois)
+                                    if(qttpos==0):
+                                        ventepossible=False
+                            case 3:
+                                if(world.map.zones[jou.posidzone].listeport[jou.posidport].marchandise.nom=='petrole'):
+                                    ventepossible=True
+                                    qttpos=int(jou.bateau.inventaire.getPetrole)
+                                    if(qttpos==0):
+                                        ventepossible=False
+                            case 4:
+                                if(world.map.zones[jou.posidzone].listeport[jou.posidport].marchandise.nom=='cereale'):
+                                    ventepossible=True
+                                    qttpos=int(jou.bateau.inventaire.getCereale)
+                                    if(qttpos==0):
+                                        ventepossible=False
+                            case 5:
+                                if(world.map.zones[jou.posidzone].listeport[jou.posidport].marchandise.nom=='machine_outils'):
+                                    ventepossible=True
+                                    qttpos=int(jou.bateau.inventaire.getMachineOutils)
+                                    if(qttpos==0):
+                                        ventepossible=False
+        return ventepossible,qttpos,marchvendable
+
+    def acheterIA(self,jou:joueurs.joueur):
+        marchandise=self.map.zones[jou.posidzone].listeport[jou.posidport].marchandise
+        qtt=jou.monnaie%marchandise.prix_achat
+        if(qtt!=0):
+            marchandise.qttachete=qtt
+            jou.retirer_monnaie(qtt*marchandise.prix_achat)
+            match marchandise.nom:
+                case "cereale":
+                    jou.bateau.inventaire.cereale.append(marchandise)
+                case "gold":
+                    jou.bateau.inventaire.gold.append(marchandise)
+                case "machine_outils":
+                    jou.bateau.inventaire.machine_outils.append(marchandise)
+                case "textile":
+                    jou.bateau.inventaire.textile.append(marchandise)
+                case "petrole":
+                    jou.bateau.inventaire.petrole.append(marchandise)
+                case "bois":
+                    jou.bateau.inventaire.bois.append(marchandise)
+        return jou
+
+    def getprixdevente(self,jou:joueurs.joueur):
+        prixdevente = self.map.zones[jou.posidzone].listeport[jou.posidport].marchandise.prix_achat
+        return prixdevente
+    
+    def vendreIA(self,jou:joueurs.joueur,marchvendable:int):
+        ventepossible,qttpos,marchvendable=self.venteposs(self,jou)
+        if(ventepossible):
+            pv=self.getprixdevente(self,jou)
+            pv=pv*qttpos
+            jou.ajout_monnaie(pv)
+            match marchvendable:
+                case 0:
+                    jou.bateau.inventaire.gold=[]
+                case 1:
+                    jou.bateau.inventaire.textile=[]
+                case 2:
+                    jou.bateau.inventaire.bois=[]
+                case 3:
+                    jou.bateau.inventaire.petrole=[]
+                case 4:
+                    jou.bateau.inventaire.cereale=[]
+                case 5:
+                    jou.bateau.inventaire.machine_outils=[]
+        return jou
+
+    def tourdejeu(self,jou:joueurs.joueur):
+        """Fonction permettant au joueur de jouer son tour s'il s'agit d'un bot, l'effectue automatiquement
+
+            Args:
             jou (joueurs.joueur): Il s'agit du joueur, cet argument possède 
             toutes les composantes de la classe joueur
         """
-        print("_________________________")
-        print("Souhaitez vous voir vos informations ? (Non:0 | Oui:1)")
-        qinv=int(input())
-        if(qinv==1):
-            self.afficherinv(jou)
-        print("_________________________")
-        roll=r.randint(0,5)
-        match roll:
-            case 0:
-                print("La marchandise vendable ce tour est : l'or")
-            case 1:
-                print("La marchandise vendable ce tour est : le textile ")
-            case 2:
-                print("La marchandise vendable ce tour est : le bois ")
-            case 3:
-                print("La marchandise vendable ce tour est : le pétrole ")
-            case 4:
-                print("La marchandise vendable ce tour est : les céréales")
-            case 5:
-                print("La marchandise vendable ce tour est : les machines à outils ")
-        print('Que souhaitez vous faire ? Joueur',jou.id+1,'\n Vous déplacer (mouvement normal) ? [0] \n Vendre ? [1] \n Acheter ? [2] \n Jouer une carte ? [3]\n')
-        choix=int(input())
-        print("_________________________")
-        if(choix==1):
-            qttpos=0
+
+        if "BOT" not in jou.pseudo:
+            
+            premierchoix=True
+            jouercarte=True
+            print("_________________________")
+            print(f'{jou.id+1}souhaitez vous voir vos informations ? (Non:0 | Oui:1)')
+            qinv=int(input())
+            if(qinv==1):
+                self.afficherinv(jou)
+            print("_________________________")
+            roll=r.randint(0,5)
             match roll:
                 case 0:
-                    for ressource in jou.bateau.inventaire.gold:
-                        qttpos+=ressource.qttachete
+                    print("La marchandise vendable ce tour est : l'or")
                 case 1:
-                    for ressource in jou.bateau.inventaire.textile:
-                        qttpos+=ressource.qttachete
+                    print("La marchandise vendable ce tour est : le textile ")
                 case 2:
-                    for ressource in jou.bateau.inventaire.bois:
-                        qttpos+=ressource.qttachete
+                    print("La marchandise vendable ce tour est : le bois ")
                 case 3:
-                    for ressource in jou.bateau.inventaire.petrole:
-                        qttpos+=ressource.qttachete
+                    print("La marchandise vendable ce tour est : le pétrole ")
                 case 4:
-                    for ressource in jou.bateau.inventaire.cereale:
-                        qttpos+=ressource.qttachete
+                    print("La marchandise vendable ce tour est : les céréales")
                 case 5:
-                    for ressource in jou.bateau.inventaire.machine_outils:
-                        qttpos+=ressource.qttachete
-            if(qttpos==0):
-                print("Vous ne pouvez vendre cette ressource ! ")
-                while(choix!=0 and choix!=2 and choix!=3):
-                    print('Que souhaitez vous faire ? Joueur',jou.id+1,'\n Vous déplacer (mouvement normal) ? [0] \n Acheter ? [2] \n Jouer une carte ? [3]\n')
-                    choix=int(input())            
-        match choix:
-            case 0:
-                jou.deplacementnormal()
-                print("Vous vous trouvez au port",jou.posidport,"de la zone",jou.posidzone)
-            case 1:
-                a=jou.vendre(roll)
-            case 2:
-                a=self.acheter(jou)
-                if(a==0):
-                    print("Vous n'avez rien acheté, votre tour est terminé")
-                else:
-                    print("Tour terminé, votre achat a été effectué !")
-            case 3:
-                cartechoix=jou.choixcarte(0)
-                cartechoix=jou.SelectEtRetraitCarte(cartechoix)
-                if(cartechoix.type==0): #Carte deplacement instantannée choisie
-                    print("_________________________")
-                    a,b=cartechoix.use()
-                    jou.mouvement(a,b)
-                    print("Vous avez été déplacé dans la zone",a,"et dans le port",b)
-                    print("_________________________")
-                if(cartechoix.type==1): #Carte tempête choisie
-                    indcible=-1
-                    while(indcible>=len(self.listejoueur) or indcible<0):
-                        indcible=cartechoix.use()
-                    zone,port=self.obtind(indcible)
-                    self.echouer(zone,port)
-                    print("_________________________")
-                    print("Tous les bateau dans la zone",zone+1,"port",port+1,"se sont échoués")
-                    print("_________________________")
-                if(cartechoix.type==2): #Carte bras de fer
-                    listecible:list[joueurs.joueur]=[]
-                    for j in self.listejoueur:
-                        if(jou.posidport == j.posidport and jou.posidzone == j.posidzone and jou.id!=j.id):
-                            listecible.append(j)
-                    
-                    print("Qui est votre cible ?")
-                    listecibleindex=[int]
-                    for i in listecible:
-                        print("Le joueur", i.id+1,"?")
-                        listecibleindex.append(i.id)
-                    if(len(listecible)==0):
-                        print("Pas de cible valide ! Bras de fer impossible. Fin de tour")
-                        combat=1     
-                    else:
-                        cible=int(input())-1  
-                        while(cible not in listecibleindex):
-                            print("Cible invalide")
-                            for i in listecible:
-                                print("Le joueur", i.id+1,"?")
-                            cible+=int(input()) 
+                    print("La marchandise vendable ce tour est : les machines à outils ")
+            print('Que souhaitez vous faire ? Joueur',jou.id+1,'\n Vous déplacer (mouvement normal) ? [0] \n Vendre ? [1] \n Acheter ? [2] \n Jouer une carte ? [3]\n Passer votre tour ? [4]')
+            choix=int(input())
+            print("_________________________")
+            possibilite=["vendre","acheter","deplacnorm","carte","passtour"]
+            choixpos=[0,1,2,3,4]
+            while choix!=4:
+                if premierchoix!=True:
+                    while choix not in choixpos:
                         print("_________________________")
-                        print("Début du BRAS DE FER !")
-                        combat=0
-                        forceattaq=0
-                        forcedef=0
-                        firstturn=0
-                        while(combat==0):
-                            if(firstturn==0):
-                                forceattaq=cartechoix.force
-                                print("_________________________")
-                                print("La force de l'attaquant est :",forceattaq,"et celle du défenseur:",forcedef)
-                                print("Defenseur joueur",cible+1,"Souhaitez-vous vous défendre (Non: 0 | Oui:1)")
-                                print("_________________________")
-                                choixdef=int(input())
-                                while(choixdef!=0 and choixdef!=1):
-                                        print("_________________________")
-                                        print("Erreur de saisie")
-                                        print("La force de l'attaquant est :",forceattaq,"et celle du défenseur:",forcedef)
-                                        print("Défenseur joueur",cible+1,"souhaitez vous jouer une nouvelle carte ?")
-                                        print("_________________________")
-                                        choixdef=int(input())
-                                if(choixdef==0):
-                                    self.listejoueur[jou.id].bateau.inventaire.bois+=self.listejoueur[cible].bateau.inventaire.bois
-                                    self.listejoueur[jou.id].bateau.inventaire.gold+=self.listejoueur[cible].bateau.inventaire.gold
-                                    self.listejoueur[jou.id].bateau.inventaire.cereale+=self.listejoueur[cible].bateau.inventaire.cereale
-                                    self.listejoueur[jou.id].bateau.inventaire.machine_outils+=self.listejoueur[cible].bateau.inventaire.machine_outils
-                                    self.listejoueur[jou.id].bateau.inventaire.petrole+=self.listejoueur[cible].bateau.inventaire.petrole
-                                    self.listejoueur[jou.id].bateau.inventaire.textile+=self.listejoueur[cible].bateau.inventaire.textile
-                                    self.listejoueur[cible].bateau.inventaire.nettoyer()
-                                    print("Comme vous avez refusé de vous défendre, le joueur",jou.id+1,"reparts avec votre inventaire !")
-                                    print("_________________________")
-                                    gagnant=1
-                                    combat=1
-                                else:
-                                    print("_________________________")
-                                    print("La force de l'attaquant est :",forceattaq,"et celle du défenseur:",forcedef)
-                                    print("Choix du défenseur ( Joueur",cible+1,")")
-                                    cartedef=self.listejoueur[cible].choixcarte(2)
-                                    cartedef=self.listejoueur[cible].SelectEtRetraitCarte(cartedef)
-                                    forcedef+=cartedef.force
-                                    firstturn=1
-                                    print("_________________________")
-                            else:
-                                if(forceattaq>=forcedef):
-                                    print("_________________________")
-                                    print("La force de l'attaquant est :",forceattaq,"et celle du défenseur:",forcedef)
-                                    print("Défenseur ( joueur",cible+1,")souhaitez vous jouer une nouvelle carte ?")
-                                    choixdef=int(input())
-                                    while(choixdef!=0 and choixdef!=1):
-                                        print("_________________________")
-                                        print("Erreur de saisie")
-                                        print("Défenseur joueur",cible+1,"souhaitez vous jouer une nouvelle carte ? (Non:0 | Oui:1)")
-                                        print("_________________________")
-                                        choixdef=int(input())
-                                    if(choixdef==0):
-                                        self.listejoueur[jou.id].bateau.inventaire.bois+=self.listejoueur[cible].bateau.inventaire.bois
-                                        self.listejoueur[jou.id].bateau.inventaire.gold+=self.listejoueur[cible].bateau.inventaire.gold
-                                        self.listejoueur[jou.id].bateau.inventaire.cereale+=self.listejoueur[cible].bateau.inventaire.cereale
-                                        self.listejoueur[jou.id].bateau.inventaire.machine_outils+=self.listejoueur[cible].bateau.inventaire.machine_outils
-                                        self.listejoueur[jou.id].bateau.inventaire.petrole+=self.listejoueur[cible].bateau.inventaire.petrole
-                                        self.listejoueur[jou.id].bateau.inventaire.textile+=self.listejoueur[cible].bateau.inventaire.textile
-                                        self.listejoueur[cible].bateau.inventaire.nettoyer()
-                                        print("Comme vous avez refusé de vous défendre, le joueur",jou.id+1,"reparts avec votre inventaire !")
-                                        print("_________________________")
-                                        gagnant=1
-                                        combat=1
-                                    else:
-                                        print("La force de l'attaquant est :",forceattaq,"et celle du défenseur:",forcedef)
-                                        print("Choix du défenseur ( Joueur",cible+1,")")
-                                        cartedef=self.listejoueur[cible].choixcarte(2)
-                                        cartedef=self.listejoueur[cible].SelectEtRetraitCarte(cartedef)
-                                        forcedef+=cartedef.force
-                                else:
-                                    print("_________________________")
-                                    print("Attaquant joueur",jou.id+1,"souhaitez vous jouer une nouvelle carte ? (Non:0 | Oui:1)")
-                                    choixattaquant=int(input())
-                                    while(choixattaquant!=0 and choixattaquant!=1):
-                                        print("_________________________")
-                                        print("Erreur de saisie")
-                                        print("Attaquant joueur",jou.id+1,"souhaitez vous jouer une nouvelle carte ? (Non:0 | Oui:1)")
-                                        print("_________________________")
-                                        choixattaquant=int(input())
-                                    if(choixattaquant==0):
-                                        self.listejoueur[cible].bateau.inventaire.bois+=self.listejoueur[jou.id].bateau.inventaire.bois
-                                        self.listejoueur[cible].bateau.inventaire.gold+=self.listejoueur[jou.id].bateau.inventaire.gold
-                                        self.listejoueur[cible].bateau.inventaire.cereale+=self.listejoueur[jou.id].bateau.inventaire.cereale
-                                        self.listejoueur[cible].bateau.inventaire.machine_outils+=self.listejoueur[jou.id].bateau.inventaire.machine_outils
-                                        self.listejoueur[cible].bateau.inventaire.petrole+=self.listejoueur[jou.id].bateau.inventaire.petrole
-                                        self.listejoueur[cible].bateau.inventaire.textile+=self.listejoueur[jou.id].bateau.inventaire.textile
-                                        self.listejoueur[jou.id].bateau.inventaire.nettoyer()
-                                        print("Comme vous avez refusé de vous défendre, le joueur",cible+1,"reparts avec votre inventaire !")
-                                        print("_________________________")
-                                        gagnant=2
-                                        combat=1
-                                    else:
-                                        print("_________________________")
-                                        print("La force de l'attaquant est :",forceattaq,"et celle du défenseur:",forcedef)
-                                        print("Choix de l'attaquant ( Joueur",jou.id+1,")")
-                                        carteattaquant=self.listejoueur[jou.id].choixcarte(2)
-                                        carteattaquant=self.listejoueur[jou.id].SelectEtRetraitCarte(carteattaquant)
-                                        forceattaq+=carteattaquant.force
-                                        print("_________________________")
-                        if(gagnant==1):
-                            print("_________________________")
-                            print("Bras de fer terminé, Bravo joueur",jou.id+1,"! ") 
-                            print("_________________________") 
+                        print('Que souhaitez vous faire ? Joueur',jou.id+1,'\n Vous déplacer (mouvement normal) ? [0] \n Vendre ? [1] \n Acheter ? [2] \n Jouer une carte ? [3]\n Passer votre tour ? [4]')
+                        choix=int(input())
+                        print("_________________________")
+                match choix:
+                    case 0:
+                        if "deplacnorm" in possibilite:
+                            jou.deplacementnormal()
+                            print("Vous vous trouvez au port",jou.posidport,"de la zone",jou.posidzone)
+                            premierchoix=False
+                            del possibilite[possibilite.index("deplacnorm")]
                         else:
-                            print("_________________________")
-                            print("Bras de fer terminé, Bravo joueur",cible+1,"! ") 
-                            print("_________________________")
-                           
+                            print("Vous ne pouvez plus utiliser le déplacement normal")
+                    case 1:
+                        qttpos=0
+                        match roll:
+                            case 0:
+                                for ressource in jou.bateau.inventaire.gold:
+                                    qttpos+=ressource.qttachete
+                            case 1:
+                                for ressource in jou.bateau.inventaire.textile:
+                                    qttpos+=ressource.qttachete
+                            case 2:
+                                for ressource in jou.bateau.inventaire.bois:
+                                    qttpos+=ressource.qttachete
+                            case 3:
+                                for ressource in jou.bateau.inventaire.petrole:
+                                    qttpos+=ressource.qttachete
+                            case 4:
+                                for ressource in jou.bateau.inventaire.cereale:
+                                    qttpos+=ressource.qttachete
+                            case 5:
+                                for ressource in jou.bateau.inventaire.machine_outils:
+                                    qttpos+=ressource.qttachete
+                        if(qttpos==0):
+                            print("Vous ne possédez pas la ressource ! ") 
+                            del possibilite[possibilite.index("vendre")] 
+                        else:
+                            if "vendre" in possibilite:
+                                a=jou.vendre(roll)
+                                print("Ressource vendue !")
+                                del possibilite[possibilite.index("vendre")] 
+                            else:
+                                print("Vous ne pouvez plus vendre ce tour-ci")  
+                        premierchoix=False
+                    case 2:
+                        if "acheter" in possibilite:
+                            a=self.acheter(jou)
+                            if(a==0):
+                                print("Vous n'avez rien acheté")
+                            else:
+                                print("Achat effectué !")
+                            del possibilite[possibilite.index("acheter")] 
+                        else:
+                            print("Vous ne pouvez plus acheter ce tour-ci !")
+                    case 3:
+                        while jouercarte == True:
+                            cartechoix=jou.choixcarte(0)
+                            cartechoix=jou.SelectEtRetraitCarte(cartechoix)
+                            if(cartechoix.type==0): #Carte deplacement instantannée choisie
+                                print("_________________________")
+                                a,b=cartechoix.use()
+                                jou.mouvement(a,b)
+                                print("Vous avez été déplacé dans la zone",a,"et dans le port",b)
+                                print("_________________________")
+                                print("Souhaitez vous jouer une autre carte ? [0]: NON | [1]: OUI")
+                                othercard = int(input())
+                                while othercard not in [0,1]:
+                                    print("Erreur de saisie : Souhaitez vous jouer une autre carte ? [0]: NON | [1]: OUI")
+                                    othercard = int(input())
+                                if othercard == 0:
+                                    jouercarte=False
+                            if(cartechoix.type==1): #Carte tempête choisie
+                                indcible=-1
+                                while(indcible>=len(self.listejoueur) or indcible<0):
+                                    indcible=cartechoix.use()
+                                zone,port=self.obtind(indcible)
+                                self.echouer(zone,port)
+                                print("_________________________")
+                                print("Tous les bateau dans la zone",zone+1,"port",port+1,"se sont échoués")
+                                print("_________________________")
+                                print("Souhaitez vous jouer une autre carte ? [0]: NON | [1]: OUI")
+                                othercard = int(input())
+                                while othercard not in [0,1]:
+                                    print("Erreur de saisie : Souhaitez vous jouer une autre carte ? [0]: NON | [1]: OUI")
+                                    othercard = int(input())
+                                if othercard == 0:
+                                    jouercarte=False
+                            if(cartechoix.type==2): #Carte bras de fer
+                                listecible:list[joueurs.joueur]=[]
+                                for j in self.listejoueur:
+                                    if(jou.posidport == j.posidport and jou.posidzone == j.posidzone and jou.id!=j.id):
+                                        listecible.append(j)
+                                print("Qui est votre cible ?")
+                                listecibleindex=[int]
+                                for i in listecible:
+                                    print("Le joueur", i.id+1,"?")
+                                    listecibleindex.append(i.id)
+                                if(len(listecible)==0):
+                                    print("Pas de cible valide ! Bras de fer impossible. Fin de tour")
+                                    combat=1     
+                                else:
+                                    cible=int(input())-1  
+                                    while(cible not in listecibleindex):
+                                        print("Cible invalide")
+                                        for i in listecible:
+                                            print("Le joueur", i.id+1,"?")
+                                        cible+=int(input()) 
+                                    print("_________________________")
+                                    print("Début du BRAS DE FER !")
+                                    combat=0
+                                    forceattaq=0
+                                    forcedef=0
+                                    firstturn=0
+                                    while(combat==0):
+                                        if(firstturn==0):
+                                            forceattaq=cartechoix.force
+                                            print("_________________________")
+                                            print("La force de l'attaquant est :",forceattaq,"et celle du défenseur:",forcedef)
+                                            print("Defenseur joueur",cible+1,"Souhaitez-vous vous défendre (Non: 0 | Oui:1)")
+                                            print("_________________________")
+                                            choixdef=int(input())
+                                            while(choixdef!=0 and choixdef!=1):
+                                                    print("_________________________")
+                                                    print("Erreur de saisie")
+                                                    print("La force de l'attaquant est :",forceattaq,"et celle du défenseur:",forcedef)
+                                                    print("Défenseur joueur",cible+1,"souhaitez vous jouer une nouvelle carte ?")
+                                                    print("_________________________")
+                                                    choixdef=int(input())
+                                            if(choixdef==0):
+                                                self.listejoueur[jou.id].bateau.inventaire.bois+=self.listejoueur[cible].bateau.inventaire.bois
+                                                self.listejoueur[jou.id].bateau.inventaire.gold+=self.listejoueur[cible].bateau.inventaire.gold
+                                                self.listejoueur[jou.id].bateau.inventaire.cereale+=self.listejoueur[cible].bateau.inventaire.cereale
+                                                self.listejoueur[jou.id].bateau.inventaire.machine_outils+=self.listejoueur[cible].bateau.inventaire.machine_outils
+                                                self.listejoueur[jou.id].bateau.inventaire.petrole+=self.listejoueur[cible].bateau.inventaire.petrole
+                                                self.listejoueur[jou.id].bateau.inventaire.textile+=self.listejoueur[cible].bateau.inventaire.textile
+                                                self.listejoueur[cible].bateau.inventaire.nettoyer()
+                                                print("Comme vous avez refusé de vous défendre, le joueur",jou.id+1,"reparts avec votre inventaire !")
+                                                print("_________________________")
+                                                gagnant=1
+                                                combat=1
+                                            else:
+                                                print("_________________________")
+                                                print("La force de l'attaquant est :",forceattaq,"et celle du défenseur:",forcedef)
+                                                print("Choix du défenseur ( Joueur",cible+1,")")
+                                                cartedef=self.listejoueur[cible].choixcarte(2)
+                                                cartedef=self.listejoueur[cible].SelectEtRetraitCarte(cartedef)
+                                                forcedef+=cartedef.force
+                                                firstturn=1
+                                                print("_________________________")
+                                        else:
+                                            if(forceattaq>=forcedef):
+                                                print("_________________________")
+                                                print("La force de l'attaquant est :",forceattaq,"et celle du défenseur:",forcedef)
+                                                print("Défenseur ( joueur",cible+1,")souhaitez vous jouer une nouvelle carte ?")
+                                                choixdef=int(input())
+                                                while(choixdef!=0 and choixdef!=1):
+                                                    print("_________________________")
+                                                    print("Erreur de saisie")
+                                                    print("Défenseur joueur",cible+1,"souhaitez vous jouer une nouvelle carte ? (Non:0 | Oui:1)")
+                                                    print("_________________________")
+                                                    choixdef=int(input())
+                                                if(choixdef==0):
+                                                    self.listejoueur[jou.id].bateau.inventaire.bois+=self.listejoueur[cible].bateau.inventaire.bois
+                                                    self.listejoueur[jou.id].bateau.inventaire.gold+=self.listejoueur[cible].bateau.inventaire.gold
+                                                    self.listejoueur[jou.id].bateau.inventaire.cereale+=self.listejoueur[cible].bateau.inventaire.cereale
+                                                    self.listejoueur[jou.id].bateau.inventaire.machine_outils+=self.listejoueur[cible].bateau.inventaire.machine_outils
+                                                    self.listejoueur[jou.id].bateau.inventaire.petrole+=self.listejoueur[cible].bateau.inventaire.petrole
+                                                    self.listejoueur[jou.id].bateau.inventaire.textile+=self.listejoueur[cible].bateau.inventaire.textile
+                                                    self.listejoueur[cible].bateau.inventaire.nettoyer()
+                                                    print("Comme vous avez refusé de vous défendre, le joueur",jou.id+1,"reparts avec votre inventaire !")
+                                                    print("_________________________")
+                                                    gagnant=1
+                                                    combat=1
+                                                else:
+                                                    print("La force de l'attaquant est :",forceattaq,"et celle du défenseur:",forcedef)
+                                                    print("Choix du défenseur ( Joueur",cible+1,")")
+                                                    cartedef=self.listejoueur[cible].choixcarte(2)
+                                                    cartedef=self.listejoueur[cible].SelectEtRetraitCarte(cartedef)
+                                                    forcedef+=cartedef.force
+                                            else:
+                                                print("_________________________")
+                                                print("Attaquant joueur",jou.id+1,"souhaitez vous jouer une nouvelle carte ? (Non:0 | Oui:1)")
+                                                choixattaquant=int(input())
+                                                while(choixattaquant!=0 and choixattaquant!=1):
+                                                    print("_________________________")
+                                                    print("Erreur de saisie")
+                                                    print("Attaquant joueur",jou.id+1,"souhaitez vous jouer une nouvelle carte ? (Non:0 | Oui:1)")
+                                                    print("_________________________")
+                                                    choixattaquant=int(input())
+                                                if(choixattaquant==0):
+                                                    self.listejoueur[cible].bateau.inventaire.bois+=self.listejoueur[jou.id].bateau.inventaire.bois
+                                                    self.listejoueur[cible].bateau.inventaire.gold+=self.listejoueur[jou.id].bateau.inventaire.gold
+                                                    self.listejoueur[cible].bateau.inventaire.cereale+=self.listejoueur[jou.id].bateau.inventaire.cereale
+                                                    self.listejoueur[cible].bateau.inventaire.machine_outils+=self.listejoueur[jou.id].bateau.inventaire.machine_outils
+                                                    self.listejoueur[cible].bateau.inventaire.petrole+=self.listejoueur[jou.id].bateau.inventaire.petrole
+                                                    self.listejoueur[cible].bateau.inventaire.textile+=self.listejoueur[jou.id].bateau.inventaire.textile
+                                                    self.listejoueur[jou.id].bateau.inventaire.nettoyer()
+                                                    print("Comme vous avez refusé de vous défendre, le joueur",cible+1,"reparts avec votre inventaire !")
+                                                    print("_________________________")
+                                                    gagnant=2
+                                                    combat=1
+                                                else:
+                                                    print("_________________________")
+                                                    print("La force de l'attaquant est :",forceattaq,"et celle du défenseur:",forcedef)
+                                                    print("Choix de l'attaquant ( Joueur",jou.id+1,")")
+                                                    carteattaquant=self.listejoueur[jou.id].choixcarte(2)
+                                                    carteattaquant=self.listejoueur[jou.id].SelectEtRetraitCarte(carteattaquant)
+                                                    forceattaq+=carteattaquant.force
+                                                    print("_________________________")
+                                    if(gagnant==1):
+                                        print("_________________________")
+                                        print("Bras de fer terminé, Bravo joueur",jou.id+1,"! ") 
+                                        print("_________________________") 
+                                    else:
+                                        print("_________________________")
+                                        print("Bras de fer terminé, Bravo joueur",cible+1,"! ") 
+                                        print("_________________________")
+                                    print("Souhaitez vous jouer une autre carte ? [0]: NON | [1]: OUI")
+                                    othercard = int(input())
+                                    while othercard not in [0,1]:
+                                        print("Erreur de saisie : Souhaitez vous jouer une autre carte ? [0]: NON | [1]: OUI")
+                                        othercard = int(input())
+                                    if othercard == 0:
+                                        jouercarte=False
+        else: #S'il s'agit d'un bot
+            jouercarte=True
+            print("_________________________")
+            self.afficherinv(jou)
+            print("_________________________")
+            roll=r.randint(0,5)
+            choixpos=[0,1,2,3,4]
+            choix=r.choice(choixpos)
+            while choix!=4:
+                match choix:
+                    case 0:
+                        if "deplacnorm" in possibilite:
+                            #ici
+                            self.deplacementnormalIA(jou)
+                            print("Le bot s'est déplacé au port",jou.posidport,"de la zone",jou.posidzone)
+                            premierchoix=False
+                            del choixpos[0]
+                    case 1:
+                        qttpos=0
+                        match roll:
+                            case 0:
+                                for ressource in jou.bateau.inventaire.gold:
+                                    qttpos+=ressource.qttachete
+                            case 1:
+                                for ressource in jou.bateau.inventaire.textile:
+                                    qttpos+=ressource.qttachete
+                            case 2:
+                                for ressource in jou.bateau.inventaire.bois:
+                                    qttpos+=ressource.qttachete
+                            case 3:
+                                for ressource in jou.bateau.inventaire.petrole:
+                                    qttpos+=ressource.qttachete
+                            case 4:
+                                for ressource in jou.bateau.inventaire.cereale:
+                                    qttpos+=ressource.qttachete
+                            case 5:
+                                for ressource in jou.bateau.inventaire.machine_outils:
+                                    qttpos+=ressource.qttachete
+                        if(qttpos==0):
+                            print("Vous ne possédez pas la ressource ! ") 
+                            del possibilite[possibilite.index("vendre")] 
+                        else:
+                            if "vendre" in possibilite:
+                                a=jou.vendre(roll)
+                                print("Ressource vendue !")
+                                del possibilite[possibilite.index("vendre")] 
+                            else:
+                                print("Vous ne pouvez plus vendre ce tour-ci")  
+                        premierchoix=False
+                    case 2:
+                        if "acheter" in possibilite:
+                            a=self.acheter(jou)
+                            if(a==0):
+                                print("Vous n'avez rien acheté")
+                            else:
+                                print("Achat effectué !")
+                            del possibilite[possibilite.index("acheter")] 
+                        else:
+                            print("Vous ne pouvez plus acheter ce tour-ci !")
+                    case 3:
+                        while jouercarte == True:
+                            cartechoix=jou.choixcarte(0)
+                            cartechoix=jou.SelectEtRetraitCarte(cartechoix)
+                            if(cartechoix.type==0): #Carte deplacement instantannée choisie
+                                print("_________________________")
+                                a,b=cartechoix.use()
+                                jou.mouvement(a,b)
+                                print("Vous avez été déplacé dans la zone",a,"et dans le port",b)
+                                print("_________________________")
+                                print("Souhaitez vous jouer une autre carte ? [0]: NON | [1]: OUI")
+                                othercard = int(input())
+                                while othercard not in [0,1]:
+                                    print("Erreur de saisie : Souhaitez vous jouer une autre carte ? [0]: NON | [1]: OUI")
+                                    othercard = int(input())
+                                if othercard == 0:
+                                    jouercarte=False
+                            if(cartechoix.type==1): #Carte tempête choisie
+                                indcible=-1
+                                while(indcible>=len(self.listejoueur) or indcible<0):
+                                    indcible=cartechoix.use()
+                                zone,port=self.obtind(indcible)
+                                self.echouer(zone,port)
+                                print("_________________________")
+                                print("Tous les bateau dans la zone",zone+1,"port",port+1,"se sont échoués")
+                                print("_________________________")
+                                print("Souhaitez vous jouer une autre carte ? [0]: NON | [1]: OUI")
+                                othercard = int(input())
+                                while othercard not in [0,1]:
+                                    print("Erreur de saisie : Souhaitez vous jouer une autre carte ? [0]: NON | [1]: OUI")
+                                    othercard = int(input())
+                                if othercard == 0:
+                                    jouercarte=False
+                            if(cartechoix.type==2): #Carte bras de fer
+                                listecible:list[joueurs.joueur]=[]
+                                for j in self.listejoueur:
+                                    if(jou.posidport == j.posidport and jou.posidzone == j.posidzone and jou.id!=j.id):
+                                        listecible.append(j)
+                                print("Qui est votre cible ?")
+                                listecibleindex=[int]
+                                for i in listecible:
+                                    print("Le joueur", i.id+1,"?")
+                                    listecibleindex.append(i.id)
+                                if(len(listecible)==0):
+                                    print("Pas de cible valide ! Bras de fer impossible. Fin de tour")
+                                    combat=1     
+                                else:
+                                    cible=int(input())-1  
+                                    while(cible not in listecibleindex):
+                                        print("Cible invalide")
+                                        for i in listecible:
+                                            print("Le joueur", i.id+1,"?")
+                                        cible+=int(input()) 
+                                    print("_________________________")
+                                    print("Début du BRAS DE FER !")
+                                    combat=0
+                                    forceattaq=0
+                                    forcedef=0
+                                    firstturn=0
+                                    while(combat==0):
+                                        if(firstturn==0):
+                                            forceattaq=cartechoix.force
+                                            print("_________________________")
+                                            print("La force de l'attaquant est :",forceattaq,"et celle du défenseur:",forcedef)
+                                            print("Defenseur joueur",cible+1,"Souhaitez-vous vous défendre (Non: 0 | Oui:1)")
+                                            print("_________________________")
+                                            choixdef=int(input())
+                                            while(choixdef!=0 and choixdef!=1):
+                                                    print("_________________________")
+                                                    print("Erreur de saisie")
+                                                    print("La force de l'attaquant est :",forceattaq,"et celle du défenseur:",forcedef)
+                                                    print("Défenseur joueur",cible+1,"souhaitez vous jouer une nouvelle carte ?")
+                                                    print("_________________________")
+                                                    choixdef=int(input())
+                                            if(choixdef==0):
+                                                self.listejoueur[jou.id].bateau.inventaire.bois+=self.listejoueur[cible].bateau.inventaire.bois
+                                                self.listejoueur[jou.id].bateau.inventaire.gold+=self.listejoueur[cible].bateau.inventaire.gold
+                                                self.listejoueur[jou.id].bateau.inventaire.cereale+=self.listejoueur[cible].bateau.inventaire.cereale
+                                                self.listejoueur[jou.id].bateau.inventaire.machine_outils+=self.listejoueur[cible].bateau.inventaire.machine_outils
+                                                self.listejoueur[jou.id].bateau.inventaire.petrole+=self.listejoueur[cible].bateau.inventaire.petrole
+                                                self.listejoueur[jou.id].bateau.inventaire.textile+=self.listejoueur[cible].bateau.inventaire.textile
+                                                self.listejoueur[cible].bateau.inventaire.nettoyer()
+                                                print("Comme vous avez refusé de vous défendre, le joueur",jou.id+1,"reparts avec votre inventaire !")
+                                                print("_________________________")
+                                                gagnant=1
+                                                combat=1
+                                            else:
+                                                print("_________________________")
+                                                print("La force de l'attaquant est :",forceattaq,"et celle du défenseur:",forcedef)
+                                                print("Choix du défenseur ( Joueur",cible+1,")")
+                                                cartedef=self.listejoueur[cible].choixcarte(2)
+                                                cartedef=self.listejoueur[cible].SelectEtRetraitCarte(cartedef)
+                                                forcedef+=cartedef.force
+                                                firstturn=1
+                                                print("_________________________")
+                                        else:
+                                            if(forceattaq>=forcedef):
+                                                print("_________________________")
+                                                print("La force de l'attaquant est :",forceattaq,"et celle du défenseur:",forcedef)
+                                                print("Défenseur ( joueur",cible+1,")souhaitez vous jouer une nouvelle carte ?")
+                                                choixdef=int(input())
+                                                while(choixdef!=0 and choixdef!=1):
+                                                    print("_________________________")
+                                                    print("Erreur de saisie")
+                                                    print("Défenseur joueur",cible+1,"souhaitez vous jouer une nouvelle carte ? (Non:0 | Oui:1)")
+                                                    print("_________________________")
+                                                    choixdef=int(input())
+                                                if(choixdef==0):
+                                                    self.listejoueur[jou.id].bateau.inventaire.bois+=self.listejoueur[cible].bateau.inventaire.bois
+                                                    self.listejoueur[jou.id].bateau.inventaire.gold+=self.listejoueur[cible].bateau.inventaire.gold
+                                                    self.listejoueur[jou.id].bateau.inventaire.cereale+=self.listejoueur[cible].bateau.inventaire.cereale
+                                                    self.listejoueur[jou.id].bateau.inventaire.machine_outils+=self.listejoueur[cible].bateau.inventaire.machine_outils
+                                                    self.listejoueur[jou.id].bateau.inventaire.petrole+=self.listejoueur[cible].bateau.inventaire.petrole
+                                                    self.listejoueur[jou.id].bateau.inventaire.textile+=self.listejoueur[cible].bateau.inventaire.textile
+                                                    self.listejoueur[cible].bateau.inventaire.nettoyer()
+                                                    print("Comme vous avez refusé de vous défendre, le joueur",jou.id+1,"reparts avec votre inventaire !")
+                                                    print("_________________________")
+                                                    gagnant=1
+                                                    combat=1
+                                                else:
+                                                    print("La force de l'attaquant est :",forceattaq,"et celle du défenseur:",forcedef)
+                                                    print("Choix du défenseur ( Joueur",cible+1,")")
+                                                    cartedef=self.listejoueur[cible].choixcarte(2)
+                                                    cartedef=self.listejoueur[cible].SelectEtRetraitCarte(cartedef)
+                                                    forcedef+=cartedef.force
+                                            else:
+                                                print("_________________________")
+                                                print("Attaquant joueur",jou.id+1,"souhaitez vous jouer une nouvelle carte ? (Non:0 | Oui:1)")
+                                                choixattaquant=int(input())
+                                                while(choixattaquant!=0 and choixattaquant!=1):
+                                                    print("_________________________")
+                                                    print("Erreur de saisie")
+                                                    print("Attaquant joueur",jou.id+1,"souhaitez vous jouer une nouvelle carte ? (Non:0 | Oui:1)")
+                                                    print("_________________________")
+                                                    choixattaquant=int(input())
+                                                if(choixattaquant==0):
+                                                    self.listejoueur[cible].bateau.inventaire.bois+=self.listejoueur[jou.id].bateau.inventaire.bois
+                                                    self.listejoueur[cible].bateau.inventaire.gold+=self.listejoueur[jou.id].bateau.inventaire.gold
+                                                    self.listejoueur[cible].bateau.inventaire.cereale+=self.listejoueur[jou.id].bateau.inventaire.cereale
+                                                    self.listejoueur[cible].bateau.inventaire.machine_outils+=self.listejoueur[jou.id].bateau.inventaire.machine_outils
+                                                    self.listejoueur[cible].bateau.inventaire.petrole+=self.listejoueur[jou.id].bateau.inventaire.petrole
+                                                    self.listejoueur[cible].bateau.inventaire.textile+=self.listejoueur[jou.id].bateau.inventaire.textile
+                                                    self.listejoueur[jou.id].bateau.inventaire.nettoyer()
+                                                    print("Comme vous avez refusé de vous défendre, le joueur",cible+1,"reparts avec votre inventaire !")
+                                                    print("_________________________")
+                                                    gagnant=2
+                                                    combat=1
+                                                else:
+                                                    print("_________________________")
+                                                    print("La force de l'attaquant est :",forceattaq,"et celle du défenseur:",forcedef)
+                                                    print("Choix de l'attaquant ( Joueur",jou.id+1,")")
+                                                    carteattaquant=self.listejoueur[jou.id].choixcarte(2)
+                                                    carteattaquant=self.listejoueur[jou.id].SelectEtRetraitCarte(carteattaquant)
+                                                    forceattaq+=carteattaquant.force
+                                                    print("_________________________")
+                                    if(gagnant==1):
+                                        print("_________________________")
+                                        print("Bras de fer terminé, Bravo joueur",jou.id+1,"! ") 
+                                        print("_________________________") 
+                                    else:
+                                        print("_________________________")
+                                        print("Bras de fer terminé, Bravo joueur",cible+1,"! ") 
+                                        print("_________________________")
+                                    print("Souhaitez vous jouer une autre carte ? [0]: NON | [1]: OUI")
+                                    othercard = int(input())
+                                    while othercard not in [0,1]:
+                                        print("Erreur de saisie : Souhaitez vous jouer une autre carte ? [0]: NON | [1]: OUI")
+                                        othercard = int(input())
+                                    if othercard == 0:
+                                        jouercarte=False
     def jouerpartie(self):
         """Fonction permettant au monde de s'actualiser et d'appeler 
         les fonctions dont il a besoin

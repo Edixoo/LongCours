@@ -1,4 +1,4 @@
-import IntelArti
+import world
 
-longcours=IntelArti.world.world()
+longcours=world.world()
 longcours.jouerpartie()
