@@ -312,10 +312,12 @@ class world:
                             jou.deplacementnormal()
                             print("Vous vous trouvez au port",jou.posidport,"de la zone",jou.posidzone)
                             premierchoix = False
+                            choix=20
                             possibilite.remove("deplacnorm")
                         else:
                             print("Vous ne pouvez plus utiliser le déplacement normal")
                             premierchoix = False
+                            choix=20
                     case 1:
                         qttpos=0
                         match roll:
@@ -342,31 +344,35 @@ class world:
                             try:
                                 del possibilite[possibilite.index("vendre")]
                                 premierchoix=False
-                                
+                                choix=20
+
                             except:
                                 premierchoix=False
+                                choix=20
                             
                         else:
                             if "vendre" in possibilite:
                                 a=jou.vendre(roll)
                                 print("Ressource vendue !")
                                 del possibilite[possibilite.index("vendre")] 
-                                premierchoix=False
+                                choix=20
                             else:
                                 print("Vous ne pouvez plus vendre ce tour-ci")  
                         premierchoix=False
                     case 2:
                         if "acheter" in possibilite:
-                            achat = jou.acheter(roll)
+                            achat = self.acheter(jou)
                             if achat == 0:
                                 print("Vous n'avez rien acheté")
                             else:
                                 print("Achat effectué !")
                             del possibilite[possibilite.index("acheter")]
                             premierchoix = False 
+                            choix=20
                         else:
                             print("Vous ne pouvez plus acheter ce tour-ci !")
                             premierchoix = False
+                            choix=20
                     case 3:
                         jouercarte = True
                         while jouercarte:
@@ -374,7 +380,7 @@ class world:
                             cartechoix = jou.SelectEtRetraitCarte(cartechoix)
                             if cartechoix.type == 0: #Carte deplacement instantanée choisie
                                 print("_________________________")
-                                a, b = cartechoix.use(False)
+                                a, b = cartechoix.use(False) #Probleme ici a corriger
                                 jou.mouvement(a, b)
                                 print("Vous avez été déplacé dans la zone", a+1, "et dans le port", b+1)
                                 print("_________________________")
@@ -562,6 +568,7 @@ class world:
                                         jouercarte = False
                                     del possibilite[possibilite.index("carte")]
                                     premierchoix=False
+                            choix=20
         else: #S'il s'agit d'un bot
             possibilite=["deplacnorm","vendre","acheter","carte","passtour"]
             jouercarte=True
