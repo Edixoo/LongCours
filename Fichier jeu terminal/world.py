@@ -445,6 +445,10 @@ class world:
                                             print("Cible invalide. Entrez un nombre entier correspondant à un joueur cible.")
                                     print("_________________________")
                                     print("Début du BRAS DE FER !")
+                                    if "BOT" in self.listejoueur[cible].pseudo:
+                                        bot=True
+                                    else:
+                                        bot=False
                                     combat = 0
                                     forceattaq = 0
                                     forcedef = 0
@@ -458,7 +462,10 @@ class world:
                                             print("Défenseur joueur", cible+1, "Souhaitez-vous vous défendre (Non: 0 | Oui:1)")
                                             print("_________________________")
                                             
-                                            choixdef = int(input())
+                                            if(bot):
+                                                choixdef=0
+                                            else:
+                                                choixdef = int(input())
                                             
                                             while choixdef != 0 and choixdef != 1:
                                                 print("_________________________")
@@ -467,7 +474,10 @@ class world:
                                                 print("Défenseur joueur", cible+1, "souhaitez vous vous défendre ? (Non: 0 | Oui:1)")
                                                 print("_________________________")
                                                 
-                                                choixdef = int(input())
+                                                if(bot):
+                                                    choixdef=0
+                                                else:
+                                                    choixdef = int(input())
                                             
                                             if choixdef == 0:
                                                 self.listejoueur[jou.id].bateau.inventaire.bois += self.listejoueur[cible].bateau.inventaire.bois
@@ -680,6 +690,10 @@ class world:
                                 cible = r.choice(listecibleindex)
                                 print("_________________________")
                                 print("Début du BRAS DE FER !")
+                                if("BOT" in self.listejoueur[cible].pseudo):
+                                    bot=True
+                                else:
+                                    bot=False
                                 combat=0
                                 forceattaq=0
                                 forcedef=0
@@ -692,14 +706,20 @@ class world:
                                         print("La force de l'attaquant est :", forceattaq, "et celle du défenseur:", forcedef)
                                         print("Défenseur joueur", cible+1, "Souhaitez-vous vous défendre (Non: 0 | Oui:1)")
                                         print("_________________________")
-                                        choixdef = int(input())
+                                        if(bot):
+                                            choixdef=0
+                                        else:
+                                            choixdef = int(input())
                                         while choixdef != 0 and choixdef != 1:
                                             print("_________________________")
                                             print("Erreur de saisie")
                                             print("La force de l'attaquant est :", forceattaq, "et celle du défenseur:", forcedef)
                                             print("Défenseur joueur", cible+1, "souhaitez vous jouer une nouvelle carte ?")
                                             print("_________________________")
-                                            choixdef = int(input())
+                                            if(bot):
+                                                choixdef=0
+                                            else:
+                                                choixdef = int(input())
                                         if choixdef == 0:
                                             self.listejoueur[jou.id].bateau.inventaire.bois += self.listejoueur[cible].bateau.inventaire.bois
                                             self.listejoueur[jou.id].bateau.inventaire.gold += self.listejoueur[cible].bateau.inventaire.gold
