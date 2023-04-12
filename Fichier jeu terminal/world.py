@@ -4,6 +4,7 @@ import cartedujeu
 import random as rd
 import marchandises as march
 import random as r
+import psycopg2
 
 class world:
     def __init__(self) -> None:
@@ -34,6 +35,48 @@ class world:
             print('Quelle couleur désirez vous ?')
             couleur=input()
             self.listejoueur.append(joueurs.joueur(i,pseudo,couleur))
+
+    def actuclass(self,pseudo:str):
+        try:
+            connection = psycopg2.connect(
+                host="postgresql-saejv.alwaysdata.net",
+                database="saejv_longcours",
+                user="saejv",
+                password="jeuvideo123.."
+            )
+
+            cursor = connection.cursor()
+            insert_query = f"SELECT classementjou('{pseudo}')"
+            cursor.execute(insert_query)
+            connection.commit()
+            print("Victoires enregistrées au classement !")
+        except (Exception, psycopg2.Error) as error:
+            print("Erreur insertion dans la table des scores :", error)
+        finally:
+            if(connection):
+                cursor.close()
+                connection.close()
+
+    def afficher_table_classement(self):
+        try:
+            connection = psycopg2.connect(
+                host="postgresql-saejv.alwaysdata.net",
+                database="saejv_longcours",
+                user="saejv",
+                password="jeuvideo123.."
+            )
+            cursor = connection.cursor()
+            query = "SELECT * FROM public.classement"
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            for row in rows:
+                print(row)
+        except (Exception, psycopg2.Error) as error:
+            print("Erreur lors de la connexion à la base de données :", error)
+        finally:
+            if(connection):
+                cursor.close()
+                connection.close()
 
     def distribuercarte(self) -> None:
             """Fonction de distribution des cartes (utile au début de la partie)"""
@@ -172,69 +215,65 @@ class world:
                 isinstantpossible=True
         return cartejouable,isinstantpossible
 
-    def venteposs(self,jou:joueurs.joueur,marchvendable:int):
-        ventepossible=False
-        if(jou.posidport==3):
+    def venteposs(self, jou: joueurs.joueur, marchvendable: int):
+        ventepossible = False
+        if jou.posidport == 3:
             return ventepossible
-        qttpos=0
-        match marchvendable:
-                            case 0:
-                                if(world.map.zones[jou.posidzone].listeport[jou.posidport].marchandise.nom=='gold'):
-                                    ventepossible=True
-                                    qttpos=int(jou.bateau.inventaire.getGold)
-                                    if(qttpos==0):
-                                        ventepossible=False
-                            case 1:
-                                if(world.map.zones[jou.posidzone].listeport[jou.posidport].marchandise.nom=='textile'):
-                                    ventepossible=True
-                                    qttpos=int(jou.bateau.inventaire.getTextile)
-                                    if(qttpos==0):
-                                        ventepossible=False
-                            case 2:
-                                if(world.map.zones[jou.posidzone].listeport[jou.posidport].marchandise.nom=='bois'):
-                                    ventepossible=True
-                                    qttpos=int(jou.bateau.inventaire.getBois)
-                                    if(qttpos==0):
-                                        ventepossible=False
-                            case 3:
-                                if(world.map.zones[jou.posidzone].listeport[jou.posidport].marchandise.nom=='petrole'):
-                                    ventepossible=True
-                                    qttpos=int(jou.bateau.inventaire.getPetrole)
-                                    if(qttpos==0):
-                                        ventepossible=False
-                            case 4:
-                                if(world.map.zones[jou.posidzone].listeport[jou.posidport].marchandise.nom=='cereale'):
-                                    ventepossible=True
-                                    qttpos=int(jou.bateau.inventaire.getCereale)
-                                    if(qttpos==0):
-                                        ventepossible=False
-                            case 5:
-                                if(world.map.zones[jou.posidzone].listeport[jou.posidport].marchandise.nom=='machine_outils'):
-                                    ventepossible=True
-                                    qttpos=int(jou.bateau.inventaire.getMachineOutils)
-                                    if(qttpos==0):
-                                        ventepossible=False
-        return ventepossible,qttpos,marchvendable
+        qttpos = 0
+        marchandise = self.map.zones[jou.posidzone].listeport[jou.posidport].marchandise
+        if marchvendable == 0 and marchandise.nom == 'gold':
+            ventepossible = True
+            qttpos = jou.bateau.inventaire.getGold()
+            if qttpos == 0:
+                ventepossible = False
+        elif marchvendable == 1 and marchandise.nom == 'textile':
+            ventepossible = True
+            qttpos = jou.bateau.inventaire.getTextile()
+            if qttpos == 0:
+                ventepossible = False
+        elif marchvendable == 2 and marchandise.nom == 'bois':
+            ventepossible = True
+            qttpos = jou.bateau.inventaire.getBois()
+            if qttpos == 0:
+                ventepossible = False
+        elif marchvendable == 3 and marchandise.nom == 'petrole':
+            ventepossible = True
+            qttpos = jou.bateau.inventaire.getPetrole()
+            if qttpos == 0:
+                ventepossible = False
+        elif marchvendable == 4 and marchandise.nom == 'cereale':
+            ventepossible = True
+            qttpos = jou.bateau.inventaire.getCereale()
+            if qttpos == 0:
+                ventepossible = False
+        elif marchvendable == 5 and marchandise.nom == 'machine_outils':
+            ventepossible = True
+            qttpos = jou.bateau.inventaire.getMachineOutils()
+            if qttpos == 0:
+                ventepossible = False
+        return ventepossible, qttpos, marchvendable
 
-    def acheterIA(self,jou:joueurs.joueur):
-        marchandise=self.map.zones[jou.posidzone].listeport[jou.posidport].marchandise
-        qtt=jou.monnaie%marchandise.prix_achat
-        if(qtt!=0):
-            marchandise.qttachete=qtt
-            jou.retirer_monnaie(qtt*marchandise.prix_achat)
-            match marchandise.nom:
-                case "cereale":
-                    jou.bateau.inventaire.cereale.append(marchandise)
-                case "gold":
-                    jou.bateau.inventaire.gold.append(marchandise)
-                case "machine_outils":
-                    jou.bateau.inventaire.machine_outils.append(marchandise)
-                case "textile":
-                    jou.bateau.inventaire.textile.append(marchandise)
-                case "petrole":
-                    jou.bateau.inventaire.petrole.append(marchandise)
-                case "bois":
-                    jou.bateau.inventaire.bois.append(marchandise)
+
+    def acheterIA(self, jou: joueurs.joueur):
+        if jou.posidport==3:
+            return jou
+        marchandise = self.map.zones[jou.posidzone].listeport[jou.posidport].marchandise
+        qtt = jou.monnaie // marchandise.prix_achat  
+        if qtt != 0:  
+            marchandise.qttachete = qtt
+            jou.retirer_monnaie(qtt * marchandise.prix_achat)
+            if marchandise.nom == "cereale":
+                jou.bateau.inventaire.cereale.append(marchandise)
+            elif marchandise.nom == "gold":
+                jou.bateau.inventaire.gold.append(marchandise)
+            elif marchandise.nom == "machine_outils":
+                jou.bateau.inventaire.machine_outils.append(marchandise)
+            elif marchandise.nom == "textile":
+                jou.bateau.inventaire.textile.append(marchandise)
+            elif marchandise.nom == "petrole":
+                jou.bateau.inventaire.petrole.append(marchandise)
+            elif marchandise.nom == "bois":
+                jou.bateau.inventaire.bois.append(marchandise)
         return jou
 
     def getprixdevente(self,jou:joueurs.joueur):
@@ -242,9 +281,9 @@ class world:
         return prixdevente
     
     def vendreIA(self,jou:joueurs.joueur,marchvendable:int):
-        ventepossible,qttpos,marchvendable=self.venteposs(self,jou)
+        ventepossible,qttpos,marchvendable = self.venteposs(jou,marchvendable)
         if(ventepossible):
-            pv=self.getprixdevente(self,jou)
+            pv=self.getprixdevente(jou)
             pv=pv*qttpos
             jou.ajout_monnaie(pv)
             match marchvendable:
@@ -648,7 +687,7 @@ class world:
                         if cartechoix.type == 0: # Carte deplacement instantannée choisie
                             print("_________________________")
                             a=r.randint(0,5)
-                            b=r.randint(0,5)
+                            b=r.randint(0,3)
                             jou.mouvement(a,b)
                             print("Le bot a été déplacé dans la zone",a+1,"et dans le port",b+1) # Correction here
                             print("_________________________")
@@ -825,7 +864,10 @@ class world:
                                         othercard = r.randint(0,1)
                                     if othercard == 0:
                                         jouercarte=False
-                    del possibilite[possibilite.index("carte")]
+                    try:
+                        del possibilite[possibilite.index("carte")]
+                    except:
+                        pass
                     premierchoix=False                
                     choix=r.choice(choixpos)
     def jouerpartie(self):
@@ -842,7 +884,9 @@ class world:
                     del self.listejoueur[jou.id]
             if(len(self.listejoueur)==1):
                 print("Joueur",self.listejoueur[0].id+1,"BRAVO ! Vous avez gagné avec",self.listejoueur[0].monnaie,"$")
+                self.actuclass(self.listejoueur[0].pseudo)
                 self.jeuon=False
+                self.afficher_table_classement()
             self.inflation
 
                             
