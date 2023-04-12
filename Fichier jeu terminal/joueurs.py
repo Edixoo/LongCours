@@ -42,16 +42,8 @@ class joueur:
         """ listchoixcarte=[c.carte] """
         if(carte==0):
             while(int(choix)>=len(self.listecartes) or int(choix)<0):
-                numcarte=1
-                for i in self.listecartes:
-                    
-                    print('Carte N°',numcarte)
-                    """ listchoixcarte.append(i) """
-                    i.affichercarte()
-                    numcarte+=1
-                print('Quelle carte souhaitez vous jouer ?')
-                choix=input()
-            choix=int(choix)-1
+                choix=r.randint(0,len(self.listecartes))
+            choix-=1
             return choix
         if(carte==1):
             listechoix:list[int]=[]

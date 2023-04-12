@@ -1,3 +1,4 @@
+import random as r
 class carte:
     def __init__(self,type:int,nom:str) -> None:
         """Constructeur de base de la classe carte
@@ -18,21 +19,26 @@ class carte_mouvdirect(carte):
         self.type=0
         self.nom="carte_mouvdirect"
     
-    def use(self) -> int:
+    def use(self,bot:bool) -> int:
         """Fonction permettant de donner les coordonnées pour le déplacement du joueur
 
         Returns:
             a,b (int): les coordonnées
         """
-        a=-1;b=-1
-        while((a<0 or a>5) or (b<0 or b>3)):
-            print('Erreur de saisie ! ')
-            print('Où souhaitez vous aller ? (Zone: 0->5)')
-            a=int(input())
-            
-            print('Port: 0->3 [3 = cimetiere]')
-            b=int(input())
-        return a,b
+        if(bot==True):
+            a=r.randint(0,5)
+            b=r.randint(0,5)
+            return a,b
+        else:
+            a=-1;b=-1
+            while((a<0 or a>5) or (b<0 or b>3)):
+                print('Erreur de saisie ! ')
+                print('Où souhaitez vous aller ? (Zone: 0->5)')
+                a=int(input())
+                
+                print('Port: 0->3 [3 = cimetiere]')
+                b=int(input())
+            return a,b
     
     def affichercarte(self)->None:
         print(self.nom)
@@ -50,6 +56,7 @@ class carte_tempete(carte):
         Returns:
             int: indice de la cible
         """
+
         indcible=-1
         print('Sur quel joueur souhaitez vous déclencher la tempête ?')
         indcible=int(input())
