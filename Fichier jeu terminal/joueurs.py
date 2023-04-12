@@ -92,6 +92,19 @@ class joueur:
                         return False
                 print('Quelle carte souhaitez vous jouer ?')
                 choix=input()
+        if(carte==4):
+            listechoix:list[int]=[]
+            while(int(choix) not in listechoix):
+                numcarte=1
+                for i in self.listecartes:
+                    numcarte+=1
+                    print('Carte N°',numcarte)
+                    i.affichercarte()
+                    listechoix.append(numcarte)    
+                if(len(listechoix)==0):
+                    return False
+                print('Quelle carte souhaitez vous jouer ?')
+                choix=input()
             choix=int(choix)-1
             return choix
       

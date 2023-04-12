@@ -358,7 +358,8 @@ class world:
                                 choix=20
                             else:
                                 print("Vous ne pouvez plus vendre ce tour-ci")  
-                        premierchoix=False
+                            premierchoix = False 
+                            choix=20
                     case 2:
                         if "acheter" in possibilite:
                             achat = self.acheter(jou)
@@ -376,11 +377,11 @@ class world:
                     case 3:
                         jouercarte = True
                         while jouercarte:
-                            cartechoix = jou.choixcarte(0)
+                            cartechoix = jou.choixcarte(4)
                             cartechoix = jou.SelectEtRetraitCarte(cartechoix)
                             if cartechoix.type == 0: #Carte deplacement instantanée choisie
                                 print("_________________________")
-                                a, b = cartechoix.use(False) #Probleme ici a corriger
+                                a, b = cartechoix.use()
                                 jou.mouvement(a, b)
                                 print("Vous avez été déplacé dans la zone", a+1, "et dans le port", b+1)
                                 print("_________________________")
@@ -448,7 +449,7 @@ class world:
                                     forceattaq = 0
                                     forcedef = 0
                                     firstturn = 0
-
+                                    gagnant = 0
                                     while combat == 0:
                                         if firstturn == 0:
                                             forceattaq = cartechoix.force
@@ -585,6 +586,7 @@ class world:
                         print("Le bot s'est déplacé au port",jou.posidport,"de la zone",jou.posidzone)
                         premierchoix=False
                         del choixpos[0]
+                        choix=r.choice(choixpos)
                 elif choix == 1:
                     qttpos=0
                     if roll == 0:
@@ -611,7 +613,7 @@ class world:
                             del possibilite[possibilite.index("vendre")]
                     else:
                         if "vendre" in possibilite:
-                            a=jou.vendre(roll)
+                            a=self.vendreIA(jou,roll)
                             print("Ressource vendue !")
                             del possibilite[possibilite.index("vendre")]
                         else:
@@ -620,7 +622,7 @@ class world:
                     choix=r.choice(choixpos)
                 elif choix == 2:
                     if "acheter" in possibilite:
-                        a=self.acheter(jou)
+                        a=self.acheterIA(jou)
                         if(a==0):
                             print("Le bot n'a rien acheté")
                         else:
@@ -628,13 +630,15 @@ class world:
                         del possibilite[possibilite.index("acheter")] 
                     else:
                         print("Le bot ne peut plus acheter ce tour-ci !")
+                    choix=r.choice(choixpos)
                 elif choix == 3:
                     while jouercarte == True:
                         cartechoix=jou.choixcarte(0)
                         cartechoix=jou.SelectEtRetraitCarte(cartechoix)
                         if cartechoix.type == 0: # Carte deplacement instantannée choisie
                             print("_________________________")
-                            a,b=cartechoix.use(True)
+                            a=r.randint(0,5)
+                            b=r.randint(0,5)
                             jou.mouvement(a,b)
                             print("Le bot a été déplacé dans la zone",a+1,"et dans le port",b+1) # Correction here
                             print("_________________________")
@@ -680,6 +684,7 @@ class world:
                                 forceattaq=0
                                 forcedef=0
                                 firstturn=0
+                                gagnant=0
                                 while combat == 0:
                                     if firstturn == 0:
                                         forceattaq = cartechoix.force
@@ -800,9 +805,9 @@ class world:
                                         othercard = r.randint(0,1)
                                     if othercard == 0:
                                         jouercarte=False
-                                    del possibilite[possibilite.index("carte")]
-                                    premierchoix=False
-    
+                    del possibilite[possibilite.index("carte")]
+                    premierchoix=False                
+                    choix=r.choice(choixpos)
     def jouerpartie(self):
         """Fonction permettant au monde de s'actualiser et d'appeler 
         les fonctions dont il a besoin
