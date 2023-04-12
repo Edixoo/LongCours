@@ -311,11 +311,11 @@ class world:
                         if "deplacnorm" in possibilite:
                             jou.deplacementnormal()
                             print("Vous vous trouvez au port",jou.posidport,"de la zone",jou.posidzone)
-                            premierchoix=False
-                            del possibilite[possibilite.index("deplacnorm")]
+                            premierchoix = False
+                            possibilite.remove("deplacnorm")
                         else:
                             print("Vous ne pouvez plus utiliser le déplacement normal")
-                            premierchoix!=True
+                            premierchoix = False
                     case 1:
                         qttpos=0
                         match roll:
@@ -344,7 +344,7 @@ class world:
                                 premierchoix=False
                             except:
                                 premierchoix=False
-                             
+                            
                         else:
                             if "vendre" in possibilite:
                                 a=jou.vendre(roll)
