@@ -23,7 +23,10 @@ class joueur:
 
     def ajout_monnaie(self,n:int):
         """Fonction d'ajout d'un montant N d'argent au joueur"""
-        self.monnaie = self.monnaie + n
+        try:
+            self.monnaie = self.monnaie + n
+        except:
+            self.monnaie = self.monnaie
     
     def retirer_monnaie(self, n:int):
         """Fonction de retrait d'un montant N d'argent au joueur"""

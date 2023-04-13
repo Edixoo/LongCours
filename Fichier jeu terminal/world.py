@@ -29,12 +29,18 @@ class world:
             print('Combien de joueurs désirez vous ?')
             nbjoueur=int(input())
         for i in range (nbjoueur):
-            print('Joueur',i+1,'Quel pseudo désirez vous ?')
+            print('Joueur',i+1,'Quel pseudo désirez vous ? (S\'il s\'agit d\'un bot appelez le BOT ...)')
             pseudo=input()
             couleur=0
             print('Quelle couleur désirez vous ?')
             couleur=input()
             self.listejoueur.append(joueurs.joueur(i,pseudo,couleur))
+
+    def definirjoueursphasetest(self):
+        """Fonction de création des joueurs"""
+        nbjoueur = 2
+        for i in range (nbjoueur):
+            self.listejoueur.append(joueurs.joueur(i,f"BOT {i+1}","osef"))
 
     def actuclass(self,pseudo:str):
         try:
@@ -218,7 +224,8 @@ class world:
     def venteposs(self, jou: joueurs.joueur, marchvendable: int):
         ventepossible = False
         if jou.posidport == 3:
-            return ventepossible
+            qttpos = 0
+            return ventepossible, qttpos, marchvendable
         qttpos = 0
         marchandise = self.map.zones[jou.posidzone].listeport[jou.posidport].marchandise
         if marchvendable == 0 and marchandise.nom == 'gold':
@@ -281,9 +288,9 @@ class world:
     
     def vendreIA(self,jou:joueurs.joueur,marchvendable:int):
         ventepossible,qttpos,marchvendable = self.venteposs(jou,marchvendable)
-        if(ventepossible):
+        if(ventepossible and marchvendable!=None):
             pv=self.getprixdevente(jou)
-            pv=pv*qttpos
+            pv*=qttpos
             jou.ajout_monnaie(pv)
             match marchvendable:
                 case 0:
@@ -683,6 +690,8 @@ class world:
                     while jouercarte == True:
                         cartechoix=jou.choixcarte(0)
                         cartechoix=jou.SelectEtRetraitCarte(cartechoix)
+                        if cartechoix == None:
+                            break
                         if cartechoix.type == 0: # Carte deplacement instantannée choisie
                             print("_________________________")
                             a=r.randint(0,5)
@@ -875,6 +884,25 @@ class world:
         les fonctions dont il a besoin
         """
         self.definirjoueurs()
+        self.distribuercarte()
+        while(self.jeuon==True):
+            for jou in self.listejoueur:
+                self.tourdejeu(jou)
+                if(len(jou.listecartes)==0):
+                    print("Joueur",jou.id+1,"vous n'avez plus de carte à jouer, vous avez donc perdu")
+                    del self.listejoueur[jou.id]
+            if(len(self.listejoueur)==1):
+                print("Joueur",self.listejoueur[0].id+1,"BRAVO ! Vous avez gagné avec",self.listejoueur[0].monnaie,"$")
+                self.actuclass(self.listejoueur[0].pseudo)
+                self.jeuon=False
+                self.afficher_table_classement()
+            self.inflation
+    
+    def jouerpartiephasetest(self):
+        """Fonction permettant au monde de s'actualiser et d'appeler 
+        les fonctions dont il a besoin
+        """
+        self.definirjoueursphasetest()
         self.distribuercarte()
         while(self.jeuon==True):
             for jou in self.listejoueur:
