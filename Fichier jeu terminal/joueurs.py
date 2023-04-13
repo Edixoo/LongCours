@@ -23,7 +23,7 @@ class joueur:
 
     def ajout_monnaie(self,n:int):
         """Fonction d'ajout d'un montant N d'argent au joueur"""
-        self.monnaie += n
+        self.monnaie = self.monnaie + n
     
     def retirer_monnaie(self, n:int):
         """Fonction de retrait d'un montant N d'argent au joueur"""
@@ -110,9 +110,12 @@ class joueur:
       
     def SelectEtRetraitCarte(self, choix):
         """Fonction permettant au joueur de jouer une carte"""
-        cartejoue=self.listecartes[choix]
-        del self.listecartes[choix]
-        return cartejoue
+        try:
+            cartejoue=self.listecartes[choix]
+            del self.listecartes[choix]
+            return cartejoue
+        except:
+            return None
 
     def mouvement(self,idzone,idport):
         """Fonction permettant au joueur de se déplacer"""

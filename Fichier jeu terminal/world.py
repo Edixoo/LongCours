@@ -253,7 +253,6 @@ class world:
                 ventepossible = False
         return ventepossible, qttpos, marchvendable
 
-
     def acheterIA(self, jou: joueurs.joueur):
         if jou.posidport==3:
             return jou
@@ -308,7 +307,7 @@ class world:
             jou (joueurs.joueur): Il s'agit du joueur, cet argument possède 
             toutes les composantes de la classe joueur
         """
-
+        r.seed()
         if "BOT" not in jou.pseudo:
             
             premierchoix=True
@@ -870,6 +869,7 @@ class world:
                         pass
                     premierchoix=False                
                     choix=r.choice(choixpos)
+
     def jouerpartie(self):
         """Fonction permettant au monde de s'actualiser et d'appeler 
         les fonctions dont il a besoin
